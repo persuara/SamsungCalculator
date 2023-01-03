@@ -12,6 +12,10 @@
 		C7120E812951CCFE000FFCB7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7120E802951CCFE000FFCB7 /* ViewController.swift */; };
 		C7120E862951CCFE000FFCB7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7120E852951CCFE000FFCB7 /* Assets.xcassets */; };
 		C7120E892951CCFE000FFCB7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7120E872951CCFE000FFCB7 /* LaunchScreen.storyboard */; };
+		C717ED7229646C4E00C87FDF /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C717ED7129646C4E00C87FDF /* ViewModel.swift */; };
+		C717ED7529646CF300C87FDF /* MainUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C717ED7429646CF300C87FDF /* MainUI.swift */; };
+		C74BB46C2962E140003E8DA0 /* NumbersLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74BB46B2962E140003E8DA0 /* NumbersLogic.swift */; };
+		C7CA4F302963328A00D6A3BD /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CA4F2F2963328A00D6A3BD /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +26,10 @@
 		C7120E852951CCFE000FFCB7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C7120E882951CCFE000FFCB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C7120E8A2951CCFE000FFCB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C717ED7129646C4E00C87FDF /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		C717ED7429646CF300C87FDF /* MainUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainUI.swift; sourceTree = "<group>"; };
+		C74BB46B2962E140003E8DA0 /* NumbersLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersLogic.swift; sourceTree = "<group>"; };
+		C7CA4F2F2963328A00D6A3BD /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +62,50 @@
 		C7120E7B2951CCFE000FFCB7 /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				C7CA4F312963329500D6A3BD /* Model */,
 				C7120E7C2951CCFE000FFCB7 /* AppDelegate.swift */,
 				C7120E7E2951CCFE000FFCB7 /* SceneDelegate.swift */,
-				C7120E802951CCFE000FFCB7 /* ViewController.swift */,
 				C7120E852951CCFE000FFCB7 /* Assets.xcassets */,
 				C7120E872951CCFE000FFCB7 /* LaunchScreen.storyboard */,
 				C7120E8A2951CCFE000FFCB7 /* Info.plist */,
+				C74BB46B2962E140003E8DA0 /* NumbersLogic.swift */,
 			);
 			path = Calculator;
+			sourceTree = "<group>";
+		};
+		C717ED6F29646C1800C87FDF /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C7120E802951CCFE000FFCB7 /* ViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		C717ED7029646C2800C87FDF /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				C7CA4F2F2963328A00D6A3BD /* Model.swift */,
+				C717ED7129646C4E00C87FDF /* ViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		C717ED7329646CD000C87FDF /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				C717ED7429646CF300C87FDF /* MainUI.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		C7CA4F312963329500D6A3BD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C717ED7329646CD000C87FDF /* UI */,
+				C717ED6F29646C1800C87FDF /* ViewController */,
+				C717ED7029646C2800C87FDF /* ViewModel */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,9 +178,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7CA4F302963328A00D6A3BD /* Model.swift in Sources */,
 				C7120E812951CCFE000FFCB7 /* ViewController.swift in Sources */,
 				C7120E7D2951CCFE000FFCB7 /* AppDelegate.swift in Sources */,
 				C7120E7F2951CCFE000FFCB7 /* SceneDelegate.swift in Sources */,
+				C717ED7529646CF300C87FDF /* MainUI.swift in Sources */,
+				C717ED7229646C4E00C87FDF /* ViewModel.swift in Sources */,
+				C74BB46C2962E140003E8DA0 /* NumbersLogic.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
