@@ -66,7 +66,7 @@ class Print {
             if text?.isEmpty == false {
                 
                 viewModel.arrayOfElements.forEach({ c in
-                    if text?.hasSuffix(c) == true {
+                    if text?.last! == c {
                         doesContainSuffix = true
                     }
                 })
@@ -113,10 +113,10 @@ class Print {
         case .nine:
             text =  "\((text ?? "") == "0" ? "9" : "\(text ?? "")9")"
         case .parantheses:
-            if text?.isEmpty == false {
+            if text != nil {
                 
                 viewModel.arrayOfElements.forEach({ c in
-                    if text?.hasSuffix(c) == true {
+                    if text?.last! == c {
                         doesContainSuffix = true
                     }
                 })

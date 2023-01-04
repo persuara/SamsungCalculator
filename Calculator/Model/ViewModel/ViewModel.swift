@@ -8,7 +8,7 @@
 import Foundation
 
 class ViewModel {
-    let arrayOfElements: [String] = ["×","÷","+","-", "*", "/"]
+    let arrayOfElements: [Character] = ["×","÷","+","-", "*", "/"]
     let arrayOfNumbers: [Character] = ["0","1","2","3","4","5","6","7","8","9"]
     
     var iconArray: [ModelButton] = [

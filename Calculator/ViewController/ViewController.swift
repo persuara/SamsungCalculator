@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     var viewModel = ViewModel()
     lazy var ui = MainUI()
     lazy var pe = Print()
-    var temp: String = ""
+    var temp: String?
     var currentStatus: Validity?
     
     
@@ -147,74 +147,92 @@ class ViewController: UIViewController {
         case 5:
             pe.printElementOnDisplay(&displayLabel.text, .parantheses)
             pe.printElementOnResultLabel(&resultLabel.text, .parantheses)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 6:
             pe.printElementOnDisplay(&displayLabel.text, .percentage)
             pe.printElementOnResultLabel(&resultLabel.text, .percentage)
+            displayErrorMassage(.notValid)
             hideResultLabel()
         case 7:
             pe.printElementOnDisplay(&displayLabel.text, .division)
             pe.printElementOnResultLabel(&resultLabel.text, .division)
+            displayErrorMassage(.notValid)
             hideResultLabel()
         case 11:
             pe.printElementOnDisplay(&displayLabel.text, .seven)
             pe.printElementOnResultLabel(&resultLabel.text, .seven)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 12:
             pe.printElementOnDisplay(&displayLabel.text, .eight)
             pe.printElementOnResultLabel(&resultLabel.text, .eight)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 13:
             pe.printElementOnDisplay(&displayLabel.text, .nine)
             pe.printElementOnResultLabel(&resultLabel.text, .nine)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 14:
             pe.printElementOnDisplay(&displayLabel.text, .multiplication)
             pe.printElementOnResultLabel(&resultLabel.text, .multiplication)
+            displayErrorMassage(.notValid)
             hideResultLabel()
         case 18:
             pe.printElementOnDisplay(&displayLabel.text, .four)
             pe.printElementOnResultLabel(&resultLabel.text, .four)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 19:
             pe.printElementOnDisplay(&displayLabel.text, .five)
             pe.printElementOnResultLabel(&resultLabel.text, .five)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 20:
             pe.printElementOnDisplay(&displayLabel.text, .six)
             pe.printElementOnResultLabel(&resultLabel.text, .six)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 21:
             pe.printElementOnDisplay(&displayLabel.text, .subtraction)
             pe.printElementOnResultLabel(&resultLabel.text, .subtraction)
+            displayErrorMassage(.notValid)
             hideResultLabel()
         case 25:
             pe.printElementOnDisplay(&displayLabel.text, .one)
             pe.printElementOnResultLabel(&resultLabel.text, .one)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 26:
             pe.printElementOnDisplay(&displayLabel.text, .two)
             pe.printElementOnResultLabel(&resultLabel.text, .two)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 27:
             pe.printElementOnDisplay(&displayLabel.text, .three)
             pe.printElementOnResultLabel(&resultLabel.text, .three)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 28:
             pe.printElementOnDisplay(&displayLabel.text, .addition)
             pe.printElementOnResultLabel(&resultLabel.text, .addition)
+            displayErrorMassage(.notValid)
             hideResultLabel()
         case 32:
             pe.printElementOnDisplay(&displayLabel.text, .negetive)
             pe.printElementOnResultLabel(&resultLabel.text, .negetive)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 33:
             pe.printElementOnDisplay(&displayLabel.text, .zero)
             pe.printElementOnResultLabel(&resultLabel.text, .zero)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 34:
             pe.printElementOnDisplay(&displayLabel.text, .decimal)
             pe.printElementOnResultLabel(&resultLabel.text, .decimal)
+            displayErrorMassage(.valid)
             hideResultLabel()
         case 35:
             temp = resultLabel.text ?? ""
@@ -228,7 +246,7 @@ class ViewController: UIViewController {
     func hideResultLabel() {
         resultLabel.isHidden = true
     }
-    public func showErrorMessage() -> Void {
+    private func errorMessageConfig() -> Void {
         if currentStatus == .notValid {
             errorMessage.alpha = 1
             UIView.animate(withDuration: 2.5, animations: { () -> Void in
@@ -236,56 +254,53 @@ class ViewController: UIViewController {
             })
         }
     }
-    public func whatIsLast() {
-        
+    private func displayErrorMassage(_ validationStatus: Validity) {
+        if validationStatus == .notValid {
+            errorMessageConfig()
+        }
     }
     
     @objc func addDeleteFunctionality() -> Void {
         
-        var s: String
-        var r: String
+        var s: String?
+        var r: String?
         if let text = displayLabel.text {
             s = text
-//            temp = resultLabel.text ?? ""
+            temp = resultLabel.text ?? ""
             r = resultLabel.text ?? ""
-            if s.isEmpty != true {
-                s.removeLast()
-                r.removeLast()
-                if s.count == 0 {
-                    s = ""
-                    r = ""
+            r = resultLabel.text ?? ""
+            if s?.isEmpty != true {
+                s?.removeLast()
+                r?.removeLast()
+                if s?.count == 0 {
+                    s = nil
                 }
                 displayLabel.text = ""
             }
             print(s as Any)
-            
-            deleteIcon.isEnabled = false
             displayLabel.text = s
-  
+            deleteIcon.isEnabled = false
             resultLabel.isHidden = true
             
-            
             viewModel.arrayOfElements.forEach( { c in
-                if !r.hasSuffix(c) {
+                if !(r?.last! == c) {
                     resultLabel.text = temp
+                    resultLabel.isHidden = false
 //                    resultLabel.text = "\(String(describing: resultLabel.text?.calculate()))"
                 } else {
-                    showErrorMessage()
+                    errorMessageConfig()
                 }
             })
-            
-            
-            
         }
     }
     private func emptyAll() {
-        displayLabel.text = ""
-        resultLabel.text = ""
+        displayLabel.text = nil
+        resultLabel.text = nil
     }
+    
 }
 extension ViewController: NumbersDelegate {
     func didNumbersTapped(_ viewController: ViewController, which tag: Int) {
-        
     }
 }
 
