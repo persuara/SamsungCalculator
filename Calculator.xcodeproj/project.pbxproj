@@ -66,6 +66,7 @@
 		C7120E7B2951CCFE000FFCB7 /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				C7BE90962965D2790030DA58 /* Functionality */,
 				C717ED6F29646C1800C87FDF /* ViewController */,
 				C717ED7329646CD000C87FDF /* UI */,
 				C717ED76296478B500C87FDF /* Extensions */,
@@ -75,7 +76,6 @@
 				C7120E852951CCFE000FFCB7 /* Assets.xcassets */,
 				C7120E872951CCFE000FFCB7 /* LaunchScreen.storyboard */,
 				C7120E8A2951CCFE000FFCB7 /* Info.plist */,
-				C74BB46B2962E140003E8DA0 /* Print.swift */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -111,6 +111,14 @@
 				C717ED77296478C500C87FDF /* Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C7BE90962965D2790030DA58 /* Functionality */ = {
+			isa = PBXGroup;
+			children = (
+				C74BB46B2962E140003E8DA0 /* Print.swift */,
+			);
+			path = Functionality;
 			sourceTree = "<group>";
 		};
 		C7CA4F312963329500D6A3BD /* Model */ = {
