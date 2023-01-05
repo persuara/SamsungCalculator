@@ -345,7 +345,7 @@ class ViewController: UIViewController {
                 
             }
             displayLabel.text = s
-//            ViewController.temp = ""
+            ViewController.temp = r
             ViewController.resultSubstitude = r
             print("Inside Delete Button: Temp =  \(ViewController.resultSubstitude ?? "")")
             
