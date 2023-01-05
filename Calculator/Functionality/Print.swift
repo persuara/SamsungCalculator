@@ -48,8 +48,8 @@ class Print {
         case .addition:
             text =  "\(text ?? "")+"
         case .negetive:
-            if text?.isEmpty == false {
-                text =  "\( -1 * (Double(text ?? "") ?? 1))"
+            if text != nil {
+                text =  "\( -1 * (text?.calculate()!)!)"
             } else {
                 text = "-"
             }
@@ -140,7 +140,7 @@ class Print {
                 }
             }
         case .percentage:
-            text =  "\(text ?? "")%"
+            text =  "\((text ?? "").calculate()! / 100 )*"
         case .division:
             text =  "\(text ?? "")/"
         case .multiplication:
@@ -150,8 +150,8 @@ class Print {
         case .addition:
             text =  "\(text ?? "")+"
         case .negetive:
-            if text?.isEmpty == false {
-                text =  "\( -1 * (Double(text ?? "") ?? 1))"
+            if text != nil {
+                text =  "\( -1 * (text?.calculate()!)!)"
             } else {
                 text = "-"
             }
@@ -213,7 +213,7 @@ class Print {
                 }
             }
         case .percentage:
-            text =  "\(text ?? "")%"
+            text =  "\((text ?? "").calculate()! / 100 )*"
         case .division:
             text =  "\(text ?? "")/"
         case .multiplication:
@@ -223,8 +223,8 @@ class Print {
         case .addition:
             text =  "\(text ?? "")+"
         case .negetive:
-            if text?.isEmpty == false {
-                text =  "\( -1 * (Double(text ?? "") ?? 1))"
+            if text != nil {
+                text =  "\( -1 * (text?.calculate()!)!)"
             } else {
                 text = "-"
             }

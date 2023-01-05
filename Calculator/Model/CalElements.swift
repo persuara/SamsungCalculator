@@ -17,3 +17,7 @@ enum CalElements {
 enum Validity {
     case valid, notValid
 }
+enum ErrorMessage: String {
+//    case equal = "Result stays the same."
+    case normal = "Invalid format used."
+}
