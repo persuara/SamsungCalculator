@@ -9,16 +9,16 @@ import Foundation
 import UIKit
 class ErrorSettings {
     
-    public func showErrorMessage(_ modelText: ErrorMessage, which button: UIButton) {
-        button.alpha = 1
-        button.titleLabel?.text = modelText.rawValue
+    public func showErrorMessage(_ modelText: ErrorMessage, which label: UILabel) {
+        label.alpha = 1
+        label.text = modelText.rawValue
         UIView.animate(withDuration: 2.5, animations: { () -> Void in
-            button.alpha = 0
+            label.alpha = 0
         })
-        button.reloadInputViews()
-        UIButton.transition(with: button, duration: 2.5, animations: {
-            button.titleLabel?.text = modelText.rawValue
-        })
+//        
+//        UIView.transition(with: label, duration: 2.5, animations: {
+//            label.text = modelText.rawValue
+//        })
     }
 }
 enum ErrorMessage: String {

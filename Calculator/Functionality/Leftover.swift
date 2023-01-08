@@ -25,7 +25,7 @@ class Leftover {
         return array.count
     }
     
-    private func diffInParanthesesCount(_ textInQuestion:  String) -> Int {
+    public func diffInParanthesesCount(_ textInQuestion:  String) -> Int {
         var number: Int = 0
         number = numOfRightFacingParantheses(textInQuestion) - numOfLeftFacingParantheses(textInQuestion)
         return abs(number)

@@ -216,7 +216,8 @@ class Print {
                 }
             }
         case .percentage:
-            text =  "\((text ?? "").calculate()! / 100 )*"
+            let double = ((text ?? "").calculate() ?? 1) / 100
+            text =  "\((double))*"
         case .division:
             text =  "\(text ?? "")/"
         case .multiplication:

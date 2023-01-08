@@ -9,9 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var delegate: NumbersDelegate?
     var numbersTag: Int = 0
-    
     lazy var viewModel = ViewModel()
     lazy var ui = MainUI()
     lazy var pe = Print()
@@ -19,15 +17,14 @@ class ViewController: UIViewController {
     lazy var animate = Animation()
     lazy var errorSetting = ErrorSettings()
     lazy var lastElement = Validation()
-    lazy var calculation = Calculation()
+//    lazy var calculation = Calculation()
     var currentLabel: ErrorMessage?
+    var isExtraParanthesesNeeded: Bool = false
     
     static var temp: String?
     static var resultSubstitude: String?
     
-    var currentStatus: Validity?
     var isDeleteButtonTapped: Bool = false
-    var shouldShowErrorMessage: Bool = false
     var isLastCharElement: Bool = false
     
     
@@ -59,16 +56,19 @@ class ViewController: UIViewController {
         view.addTarget(self, action: #selector(addDeleteFunctionality), for: .touchUpInside)
         return view
     }()
-    lazy var errorMessage: UIButton = {
-        let view: UIButton = .init(frame: .zero)
-        view.setTitle("Invalid format used.", for: .normal)
-        view.titleLabel?.font = UIFont.init(name: "Ariel", size: 15)
+    lazy var errorMessage: UILabel = {
+        let view: UILabel = .init(frame: .zero)
+//        view.setTitle("Invalid format used.", for: .normal)
+        view.font = UIFont.init(name: "Ariel", size: 15)
         view.backgroundColor = .white.withAlphaComponent(0.3)
-        view.setTitleColor(.white, for: .normal)
+        view.textColor = .white
+        view.textAlignment = .center
         view.alpha = 0
         view.layer.cornerRadius = 25
         view.isUserInteractionEnabled = false
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 25
+        view.layer.masksToBounds = true
         return view
     }()
     
@@ -130,7 +130,11 @@ class ViewController: UIViewController {
             deleteIcon.isEnabled = false
         }
     }
-    
+    private func emptyAll() {
+        displayLabel.text = nil
+        resultLabel.text = nil
+        ViewController.temp = nil
+    }
     func addButtonIconStack(_ number: Int, from array: [ModelButton]) -> Void {
         for i in 0...number {
             let btn: UIButton = .init(frame: .zero)
@@ -157,18 +161,19 @@ class ViewController: UIViewController {
             stack.addArrangedSubview(btn)
         }
     }
+    func hideResultLabel() {
+        resultLabel.isHidden = true
+    }
+    
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender)
         for _ in 0...sender.tag {
             hideResultLabel()
             if sender.tag == 35 {
-                currentLabel = .nothing
-            } else {
-                errorMessage.titleLabel?.text = "Nothing to compute!"
+                errorMessage.text = "Nothing to compute!"
+                resultLabel.isHidden = false
             }
-            
         }
-        
         switch sender.tag {
         case 4:
             emptyAll()
@@ -332,30 +337,62 @@ class ViewController: UIViewController {
                              element: .zero)
         case 34:
             ViewController.temp = resultLabel.text ?? ""
-            if isDeleteButtonTapped {
-                pe.printElementOnTemp(&ViewController.resultSubstitude, .decimal)
-            } else {
-                pe.printElementOnDisplay(&displayLabel.text, .decimal)
-                pe.printElementOnResultLabel(&resultLabel.text, .decimal)
-            }
+            pe.actuallyPrint(isTapped: isDeleteButtonTapped,
+                             display: &displayLabel,
+                             result: &resultLabel,
+                             substitudeLabel: &ViewController.resultSubstitude,
+                             element: .decimal)
         case 35:
             ViewController.temp = resultLabel.text ?? ""
-            currentLabel = .nothing
-            calculation.calculateResult(which: resultLabel,
-                                        isTapped: isDeleteButtonTapped,
-                                        temp: &ViewController.temp,
-                                        substitude: &ViewController.resultSubstitude,
-                                        labelError: currentLabel!
-            )
+            if isDeleteButtonTapped {
+                if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
+                        //----------------------Mark: Revise Error message on "="
+                        showErrorMessage(.normal)
+                    } else {
+                        if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
+                            ViewController.temp = ViewController.resultSubstitude
+                            resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
+                            ViewController.resultSubstitude = nil
+                            resultLabel.isHidden = false
+                        } else {
+                            isExtraParanthesesNeeded = true
+                            let tempii = leftover.placeParatheses(ViewController.resultSubstitude!)
+                            ViewController.resultSubstitude = "\(ViewController.resultSubstitude ?? "")\(tempii)"
+                            print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
+                            ViewController.temp = ViewController.resultSubstitude
+                            print("Temp: \(String(describing: ViewController.temp))")
+                            resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
+                            print("Ready to Show result: \(String(describing: resultLabel.text))")
+                            ViewController.resultSubstitude = nil
+                            resultLabel.isHidden = false
+                        }
+                    }
+                } else {
+                if resultLabel.text != nil {
+                    if lastElement.isLastAnElement(resultLabel.text!) == true {
+                        showErrorMessage(.normal)
+                        resultLabel.isHidden = true
+                    } else {
+                        if leftover.sameParanthesesCount(resultLabel.text!) {
+                            resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                            print("Same Para: \(String(describing: resultLabel.text))")
+                            resultLabel.isHidden = false
+                        } else {
+                            let tempii = leftover.placeParatheses(resultLabel.text!)
+                            resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
+                            print("Diff Para \(String(describing: resultLabel.text))")
+                            resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                            resultLabel.isHidden = false
+                        }
+                    }
+                } else {
+                    print("Nothing to compute!")
+                }
+            }
         default:
             print(sender.tag)
         }
     }
-    
-    func hideResultLabel() {
-        resultLabel.isHidden = true
-    }
-    
     @objc func addDeleteFunctionality() -> Void {
         isDeleteButtonTapped = true
         var s: String?
@@ -364,26 +401,27 @@ class ViewController: UIViewController {
         s = text
         r = ViewController.temp
         if s?.isEmpty == false && r?.isEmpty == false {
+            if isExtraParanthesesNeeded {
+                for _ in 0...leftover.diffInParanthesesCount(r!) {
+                    r!.removeLast()
+                }
+            }
             s!.removeLast()
             r!.removeLast()
             displayLabel.text = s
             ViewController.temp = r
             ViewController.resultSubstitude = r
-
+            isExtraParanthesesNeeded = !isExtraParanthesesNeeded
             print("Inside Delete Button: Temp =  \(ViewController.resultSubstitude ?? "")")
         } else {
             displayLabel.text = nil
             deleteIcon.isEnabled = false
             resultLabel.isHidden = true
+        
         }
     }
-    private func emptyAll() {
-        displayLabel.text = nil
-        resultLabel.text = nil
-        ViewController.temp = nil
-    }
-    
-    //    ---TODO FIX THIS SHIT
+
+    //    ----------- Error Messages Config
     public func displayErrorMessage(_ text: String?) {
         if text == nil {
             errorMessage.alpha = 1
@@ -403,14 +441,10 @@ class ViewController: UIViewController {
     }
     public func showErrorMessage(_ modelText: ErrorMessage) {
         errorMessage.alpha = 1
-        self.errorMessage.titleLabel?.text = modelText.rawValue
+        self.errorMessage.text = modelText.rawValue
         UIView.animate(withDuration: 2.5, animations: { () -> Void in
             self.errorMessage.alpha = 0
         })
-        self.errorMessage.reloadInputViews()
     }
 }
-extension ViewController: NumbersDelegate {
-    func didNumbersTapped(_ viewController: ViewController, which tag: Int) {
-    }
-}
+
