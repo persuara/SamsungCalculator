@@ -16,6 +16,11 @@ class ViewController: UIViewController {
     lazy var ui = MainUI()
     lazy var pe = Print()
     lazy var leftover = Leftover()
+    lazy var animate = Animation()
+    lazy var errorSetting = ErrorSettings()
+    lazy var lastElement = Validation()
+    lazy var calculation = Calculation()
+    var currentLabel: ErrorMessage?
     
     static var temp: String?
     static var resultSubstitude: String?
@@ -153,6 +158,17 @@ class ViewController: UIViewController {
         }
     }
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
+        animate.animateButton(sender: sender)
+        for _ in 0...sender.tag {
+            hideResultLabel()
+            if sender.tag == 35 {
+                currentLabel = .nothing
+            } else {
+                errorMessage.titleLabel?.text = "Nothing to compute!"
+            }
+            
+        }
+        
         switch sender.tag {
         case 4:
             emptyAll()
@@ -163,14 +179,13 @@ class ViewController: UIViewController {
             if isDeleteButtonTapped {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .parantheses)
             }
-            hideResultLabel()
         case 6:
             if displayLabel.text == nil {
                 showErrorMessage(.normal)
             } else {
                 if (displayLabel.text?.last)! == "%"  {
                     showErrorMessage(.normal)
-                } else if  isLastAnElement(displayLabel.text!) == true {
+                } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
                     showErrorMessage(.normal)
                 } else {
                     pe.printElementOnDisplay(&displayLabel.text, .percentage)
@@ -178,7 +193,6 @@ class ViewController: UIViewController {
                     if isDeleteButtonTapped {
                         pe.printElementOnTemp(&ViewController.resultSubstitude, .percentage)
                     }
-                    hideResultLabel()
                 }
             }
         case 7:
@@ -187,7 +201,7 @@ class ViewController: UIViewController {
             } else {
                 if (displayLabel.text?.last)! == "÷"  {
                     showErrorMessage(.normal)
-                } else if isLastAnElement(displayLabel.text!) == true {
+                } else if lastElement.isLastAnElement(displayLabel.text!) == true {
                     showErrorMessage(.normal)
                 } else {
                     pe.printElementOnDisplay(&displayLabel.text, .division)
@@ -195,7 +209,6 @@ class ViewController: UIViewController {
                     if isDeleteButtonTapped {
                         pe.printElementOnTemp(&ViewController.resultSubstitude, .division)
                     }
-                    hideResultLabel()
                 }
             }
         case 11:
@@ -218,14 +231,13 @@ class ViewController: UIViewController {
             if isDeleteButtonTapped {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .nine)
             }
-            hideResultLabel()
         case 14:
             if displayLabel.text == nil {
                 showErrorMessage(.normal)
             } else {
                 if (displayLabel.text?.last)! == "×"  {
                     showErrorMessage(.normal)
-                } else if  isLastAnElement(displayLabel.text!) == true {
+                } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
                     showErrorMessage(.normal)
                 } else {
                     pe.printElementOnDisplay(&displayLabel.text, .multiplication)
@@ -233,7 +245,7 @@ class ViewController: UIViewController {
                     if isDeleteButtonTapped {
                         pe.printElementOnTemp(&ViewController.resultSubstitude, .multiplication)
                     }
-                    hideResultLabel()
+
                 }
             }
         case 18:
@@ -242,7 +254,6 @@ class ViewController: UIViewController {
             if isDeleteButtonTapped {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .four)
             }
-            hideResultLabel()
         case 19:
             if isDeleteButtonTapped {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .five)
@@ -250,21 +261,19 @@ class ViewController: UIViewController {
             pe.printElementOnDisplay(&displayLabel.text, .five)
             pe.printElementOnResultLabel(&resultLabel.text, .five)
             
-            hideResultLabel()
         case 20:
             if isDeleteButtonTapped {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .six)
             }
             pe.printElementOnDisplay(&displayLabel.text, .six)
             pe.printElementOnResultLabel(&resultLabel.text, .six)
-            hideResultLabel()
         case 21:
             if displayLabel.text == nil {
                 showErrorMessage(.normal)
             } else {
                 if (displayLabel.text?.last)! == "-"  {
                     showErrorMessage(.normal)
-                } else if  isLastAnElement(displayLabel.text!) == true {
+                } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
                     showErrorMessage(.normal)
                 } else {
                     pe.printElementOnDisplay(&displayLabel.text, .subtraction)
@@ -272,7 +281,6 @@ class ViewController: UIViewController {
                     if isDeleteButtonTapped {
                         pe.printElementOnTemp(&ViewController.resultSubstitude, .subtraction)
                     }
-                    hideResultLabel()
                 }
             }
         case 25:
@@ -282,7 +290,6 @@ class ViewController: UIViewController {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .one)
             }
             
-            hideResultLabel()
         case 26:
             pe.printElementOnDisplay(&displayLabel.text, .two)
             pe.printElementOnResultLabel(&resultLabel.text, .two)
@@ -290,7 +297,6 @@ class ViewController: UIViewController {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .two)
             }
             
-            hideResultLabel()
         case 27:
             pe.printElementOnDisplay(&displayLabel.text, .three)
             pe.printElementOnResultLabel(&resultLabel.text, .three)
@@ -298,14 +304,13 @@ class ViewController: UIViewController {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .three)
             }
             
-            hideResultLabel()
         case 28:
             if displayLabel.text == nil {
                 showErrorMessage(.normal)
             } else {
                 if (displayLabel.text?.last)! == "+"  {
                     showErrorMessage(.normal)
-                } else if  isLastAnElement(displayLabel.text!) == true {
+                } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
                     showErrorMessage(.normal)
                 } else {
                     pe.printElementOnDisplay(&displayLabel.text, .addition)
@@ -313,7 +318,6 @@ class ViewController: UIViewController {
                     if isDeleteButtonTapped {
                         pe.printElementOnTemp(&ViewController.resultSubstitude, .addition)
                     }
-                    hideResultLabel()
                 }
             }
         case 32:
@@ -323,85 +327,38 @@ class ViewController: UIViewController {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .negetive)
             }
             
-            hideResultLabel()
         case 33:
             pe.printElementOnDisplay(&displayLabel.text, .zero)
             pe.printElementOnResultLabel(&resultLabel.text, .zero)
             if isDeleteButtonTapped {
                 pe.printElementOnTemp(&ViewController.resultSubstitude, .zero)
             }
-            
-            hideResultLabel()
         case 34:
-            pe.printElementOnDisplay(&displayLabel.text, .decimal)
-            pe.printElementOnResultLabel(&resultLabel.text, .decimal)
-            if isDeleteButtonTapped {
-                pe.printElementOnTemp(&ViewController.resultSubstitude, .decimal)
-            }
-            
-            hideResultLabel()
-        case 35:
             ViewController.temp = resultLabel.text ?? ""
             if isDeleteButtonTapped {
-                    if isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
-                        //----------------------Mark: Revise Error message on "="
-                        showErrorMessage(.normal)
-                    } else {
-                        if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
-                            ViewController.temp = ViewController.resultSubstitude
-                            resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
-                            ViewController.resultSubstitude = nil
-                            resultLabel.isHidden = false
-                        } else {
-                            ViewController.resultSubstitude = leftover.placeParatheses(&ViewController.resultSubstitude!)
-                            print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
-                            ViewController.temp = ViewController.resultSubstitude
-                            print("Temp: \(String(describing: ViewController.temp))")
-                            resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
-                            print("Ready to Show result: \(String(describing: resultLabel.text))")
-                            ViewController.resultSubstitude = nil
-                            resultLabel.isHidden = false
-                        }
-                    }
-                } else {
-                if resultLabel.text != nil {
-                    if isLastAnElement(resultLabel.text!) == true {
-                        showErrorMessage(.normal)
-                        resultLabel.isHidden = true
-                    } else {
-                        if leftover.sameParanthesesCount(resultLabel.text!) {
-                            resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
-                            print("Same Para: \(String(describing: resultLabel.text))") 
-                            resultLabel.isHidden = false
-                        } else {
-                            resultLabel.text = leftover.placeParatheses(&resultLabel.text!)
-                            print("Diff Para \(String(describing: resultLabel.text))")
-                            resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
-                            resultLabel.isHidden = false
-                        }
-                    }
-                } else {
-                    print("Nothing to compute!")
-                }
+                pe.printElementOnTemp(&ViewController.resultSubstitude, .decimal)
+            } else {
+                pe.printElementOnDisplay(&displayLabel.text, .decimal)
+                pe.printElementOnResultLabel(&resultLabel.text, .decimal)
             }
-
+        case 35:
+            ViewController.temp = resultLabel.text ?? ""
+            currentLabel = .nothing
+            calculation.calculateResult(which: resultLabel,
+                                        isTapped: isDeleteButtonTapped,
+                                        temp: &ViewController.temp,
+                                        substitude: &ViewController.resultSubstitude,
+                                        labelError: currentLabel!
+            )
         default:
             print(sender.tag)
-            hideResultLabel()
         }
     }
-    func isLastAnElement(_ text: String) -> Bool {
-        var flag: Bool = false
-        viewModel.arrayOfElements.forEach({ c in
-            if text.last == c {
-                flag = true
-            }
-        })
-        return flag
-    }
+    
     func hideResultLabel() {
         resultLabel.isHidden = true
     }
+    
     @objc func addDeleteFunctionality() -> Void {
         isDeleteButtonTapped = true
         var s: String?
@@ -449,10 +406,11 @@ class ViewController: UIViewController {
     }
     public func showErrorMessage(_ modelText: ErrorMessage) {
         errorMessage.alpha = 1
+        self.errorMessage.titleLabel?.text = modelText.rawValue
         UIView.animate(withDuration: 2.5, animations: { () -> Void in
-            self.errorMessage.titleLabel?.text = modelText.rawValue
             self.errorMessage.alpha = 0
         })
+        self.errorMessage.reloadInputViews()
     }
 }
 extension ViewController: NumbersDelegate {

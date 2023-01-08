@@ -12,6 +12,7 @@ protocol NumbersDelegate {
 }
 class Print {
     lazy var viewModel = ViewModel()
+    
 
     var doesContainSuffix: Bool = false
     var isLastCharacterANumber: Bool = false
@@ -239,4 +240,6 @@ class Print {
             }
         }
     }
+    
+    public func actuallyPrint() {}
 }

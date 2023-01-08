@@ -32,15 +32,15 @@ class Leftover {
     }
 
 
-    public func placeParatheses(_ text: inout String) -> String{
+    public func placeParatheses(_ text: String) -> String{
         var endResultString: String = ""
         if diffInParanthesesCount(text) > 0 {
-            for _ in 0...numOfRightFacingParantheses(text) {
-                endResultString = "\(text))"
+            for _ in 0...numOfRightFacingParantheses(text) - 1 {
+                endResultString = "\(endResultString))"
             }
         } else if diffInParanthesesCount(text) > 0 {
-            for _ in 0...numOfLeftFacingParantheses(text) {
-                endResultString = "\(text)("
+            for _ in 0...numOfLeftFacingParantheses(text) - 1 {
+                endResultString = "\(endResultString)("
             }
         }
         return endResultString
