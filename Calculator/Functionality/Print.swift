@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol NumbersDelegate {
     func didNumbersTapped(_ viewController: ViewController, which tag: Int) -> Void
@@ -241,5 +242,11 @@ class Print {
         }
     }
     
-    public func actuallyPrint() {}
+    public func actuallyPrint(isTapped status: Bool, display dLabel: inout UILabel, result rLabel: inout UILabel, substitudeLabel: inout String?, element: CalElements) {
+        printElementOnDisplay(&dLabel.text, element)
+        printElementOnResultLabel(&rLabel.text, element)
+        if status {
+            printElementOnTemp(&substitudeLabel, element)
+        }
+    }
 }
