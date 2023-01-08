@@ -11,11 +11,15 @@ class ViewController: UIViewController {
     
     var delegate: NumbersDelegate?
     var numbersTag: Int = 0
-    var viewModel = ViewModel()
+    
+    lazy var viewModel = ViewModel()
     lazy var ui = MainUI()
     lazy var pe = Print()
+    lazy var leftover = Leftover()
+    
     static var temp: String?
     static var resultSubstitude: String?
+    
     var currentStatus: Validity?
     var isDeleteButtonTapped: Bool = false
     var shouldShowErrorMessage: Bool = false
@@ -79,6 +83,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black
         configureStackView()
+
         
         view.addSubview(ui.straightView)
         view.addSubview(deleteIcon)
@@ -148,7 +153,6 @@ class ViewController: UIViewController {
         }
     }
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
-        
         switch sender.tag {
         case 4:
             emptyAll()
@@ -339,22 +343,42 @@ class ViewController: UIViewController {
         case 35:
             ViewController.temp = resultLabel.text ?? ""
             if isDeleteButtonTapped {
-                if isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
-                    showErrorMessage(.normal)
+                    if isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
+                        //----------------------Mark: Revise Error message on "="
+                        showErrorMessage(.normal)
+                    } else {
+                        if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
+                            ViewController.temp = ViewController.resultSubstitude
+                            resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
+                            ViewController.resultSubstitude = nil
+                            resultLabel.isHidden = false
+                        } else {
+                            ViewController.resultSubstitude = leftover.placeParatheses(&ViewController.resultSubstitude!)
+                            print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
+                            ViewController.temp = ViewController.resultSubstitude
+                            print("Temp: \(String(describing: ViewController.temp))")
+                            resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
+                            print("Ready to Show result: \(String(describing: resultLabel.text))")
+                            ViewController.resultSubstitude = nil
+                            resultLabel.isHidden = false
+                        }
+                    }
                 } else {
-                    ViewController.temp = ViewController.resultSubstitude
-                    resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
-                    ViewController.resultSubstitude = nil
-                    resultLabel.isHidden = false
-                }
-            } else {
                 if resultLabel.text != nil {
                     if isLastAnElement(resultLabel.text!) == true {
                         showErrorMessage(.normal)
                         resultLabel.isHidden = true
                     } else {
-                        resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
-                        resultLabel.isHidden = false
+                        if leftover.sameParanthesesCount(resultLabel.text!) {
+                            resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                            print("Same Para: \(String(describing: resultLabel.text))") 
+                            resultLabel.isHidden = false
+                        } else {
+                            resultLabel.text = leftover.placeParatheses(&resultLabel.text!)
+                            print("Diff Para \(String(describing: resultLabel.text))")
+                            resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                            resultLabel.isHidden = false
+                        }
                     }
                 } else {
                     print("Nothing to compute!")

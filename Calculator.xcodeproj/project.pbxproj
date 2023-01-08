@@ -17,6 +17,7 @@
 		C717ED78296478C500C87FDF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C717ED77296478C500C87FDF /* Extensions.swift */; };
 		C717ED7A29647A4800C87FDF /* CalElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = C717ED7929647A4800C87FDF /* CalElements.swift */; };
 		C74BB46C2962E140003E8DA0 /* Print.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74BB46B2962E140003E8DA0 /* Print.swift */; };
+		C7BDB00C29671DAD0078C0DC /* Leftover.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BDB00B29671DAD0078C0DC /* Leftover.swift */; };
 		C7CA4F302963328A00D6A3BD /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CA4F2F2963328A00D6A3BD /* Model.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		C717ED77296478C500C87FDF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C717ED7929647A4800C87FDF /* CalElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalElements.swift; sourceTree = "<group>"; };
 		C74BB46B2962E140003E8DA0 /* Print.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Print.swift; sourceTree = "<group>"; };
+		C7BDB00B29671DAD0078C0DC /* Leftover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leftover.swift; sourceTree = "<group>"; };
 		C7CA4F2F2963328A00D6A3BD /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				C74BB46B2962E140003E8DA0 /* Print.swift */,
+				C7BDB00B29671DAD0078C0DC /* Leftover.swift */,
 			);
 			path = Functionality;
 			sourceTree = "<group>";
@@ -200,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7BDB00C29671DAD0078C0DC /* Leftover.swift in Sources */,
 				C7CA4F302963328A00D6A3BD /* Model.swift in Sources */,
 				C7120E812951CCFE000FFCB7 /* ViewController.swift in Sources */,
 				C7120E7D2951CCFE000FFCB7 /* AppDelegate.swift in Sources */,
