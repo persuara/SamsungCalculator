@@ -8,11 +8,9 @@
 import Foundation
 import UIKit
 
-protocol NumbersDelegate {
-    func didNumbersTapped(_ viewController: ViewController, which tag: Int) -> Void
-}
 class Print {
     lazy var viewModel = ViewModel()
+    lazy var validation = Validation()
     
 
     var doesContainSuffix: Bool = false
@@ -147,7 +145,9 @@ class Print {
                 }
             }
         case .percentage:
-            text =  "\((text ?? "").calculate()! / 100 )*"
+            if validation.validToParse((text ?? "")) {
+                text = "\((text ?? "").calculate()! / 100 )*"
+            }
         case .division:
             text =  "\(text ?? "")/"
         case .multiplication:
@@ -158,7 +158,7 @@ class Print {
             text =  "\(text ?? "")+"
         case .negetive:
             if text != nil {
-                if text?.calculate() != nil {
+                if validation.validToParse(text!) {
                     text =  "\( -1 * (text?.calculate()!)!)"
                 } else {
                     text = "-\((text ?? ""))"
@@ -225,8 +225,8 @@ class Print {
             }
         case .percentage:
             
-            if (text ?? "").calculate() != nil {
-                text =  "\(((text ?? "").calculate())! / 100)*"
+            if validation.validToParse((text ?? "")) {
+                text = "\((text ?? "").calculate()! / 100 )*"
             }
         case .division:
             text =  "\(text ?? "")/"
@@ -238,8 +238,7 @@ class Print {
             text =  "\(text ?? "")+"
         case .negetive:
             if text != nil {
-                if text?.calculate() != nil {
-                    print("Text is parsable")
+                if validation.validToParse(text!) {
                     text =  "\( -1 * (text?.calculate()!)!)"
                 } else {
                     text = "-\((text ?? ""))"
