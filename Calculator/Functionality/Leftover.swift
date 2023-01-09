@@ -18,12 +18,10 @@ class Leftover {
     
     private func numOfRightFacingParantheses(_ thistext: String) -> Int {
         let array = thistext.matches(for: "\\(", in: thistext)
-        print("array Right Facing: \(array)")
         return array.count
     }
     private func numOfLeftFacingParantheses(_ thistext: String) -> Int {
         let array = thistext.matches(for: "\\)", in: thistext)
-        print("array Left Facing: \(array)")
         return array.count
     }
     

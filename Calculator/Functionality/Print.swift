@@ -224,8 +224,10 @@ class Print {
                 }
             }
         case .percentage:
-            let double = ((text ?? "").calculate() ?? 1) / 100
-            text =  "\((double))*"
+            
+            if (text ?? "").calculate() != nil {
+                text =  "\(((text ?? "").calculate())! / 100)*"
+            }
         case .division:
             text =  "\(text ?? "")/"
         case .multiplication:
@@ -237,6 +239,7 @@ class Print {
         case .negetive:
             if text != nil {
                 if text?.calculate() != nil {
+                    print("Text is parsable")
                     text =  "\( -1 * (text?.calculate()!)!)"
                 } else {
                     text = "-\((text ?? ""))"

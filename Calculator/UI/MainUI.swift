@@ -90,7 +90,7 @@ class MainUI: UIView {
             superView.addSubview(c)
         })
         NSLayoutConstraint.activate([
-            rowOneStackView.bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -60),
+            rowOneStackView.bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -40),
             rowOneStackView.widthAnchor.constraint(equalToConstant: 650),
             rowOneStackView.trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -15),
             rowOneStackView.heightAnchor.constraint(equalToConstant: 80),
@@ -112,6 +112,40 @@ class MainUI: UIView {
             
             rowFiveStackView.bottomAnchor.constraint(equalTo: rowFourStackView.topAnchor, constant: -10),
             rowFiveStackView.widthAnchor.constraint(equalToConstant: 650),
+            rowFiveStackView.trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -15),
+            rowFiveStackView.heightAnchor.constraint(equalToConstant: 80),
+            
+            rowIconsStackView.leadingAnchor.constraint(equalTo: superView.leadingAnchor, constant: 35),
+            rowIconsStackView.heightAnchor.constraint(equalToConstant: 24),
+            rowIconsStackView.widthAnchor.constraint(equalToConstant: 142),
+            rowIconsStackView.bottomAnchor.constraint(equalTo: rowFiveStackView.topAnchor, constant: -40)
+        ])
+    }
+    public func transitionToLandscape(_ superView: UIView) {
+        
+        NSLayoutConstraint.activate([
+            rowOneStackView.bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -10),
+            rowOneStackView.widthAnchor.constraint(equalToConstant: 800),
+            rowOneStackView.trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -15),
+            rowOneStackView.heightAnchor.constraint(equalToConstant: 80),
+            
+            rowTwoStackView.bottomAnchor.constraint(equalTo: rowOneStackView.topAnchor, constant: -10),
+            rowTwoStackView.widthAnchor.constraint(equalToConstant: 800),
+            rowTwoStackView.trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -15),
+            rowTwoStackView.heightAnchor.constraint(equalToConstant: 80),
+            
+            rowThreeStackView.bottomAnchor.constraint(equalTo: rowTwoStackView.topAnchor, constant: -10),
+            rowThreeStackView.widthAnchor.constraint(equalToConstant: 800),
+            rowThreeStackView.trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -15),
+            rowThreeStackView.heightAnchor.constraint(equalToConstant: 80),
+            
+            rowFourStackView.bottomAnchor.constraint(equalTo: rowThreeStackView.topAnchor, constant: -10),
+            rowFourStackView.widthAnchor.constraint(equalToConstant: 800),
+            rowFourStackView.trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -15),
+            rowFourStackView.heightAnchor.constraint(equalToConstant: 80),
+            
+            rowFiveStackView.bottomAnchor.constraint(equalTo: rowFourStackView.topAnchor, constant: -10),
+            rowFiveStackView.widthAnchor.constraint(equalToConstant: 800),
             rowFiveStackView.trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -15),
             rowFiveStackView.heightAnchor.constraint(equalToConstant: 80),
             

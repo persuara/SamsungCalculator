@@ -22,8 +22,9 @@ class ErrorSettings {
     }
 }
 enum ErrorMessage: String {
-    
-    case nothing = "Nothing to compute."
+    case error = "Couldn't Compute the given input!"
+    case sameStatus = "Result stays the same!"
+    case nothing = "WTF Comrade!"
     case normal = "Invalid format used."
 
 }

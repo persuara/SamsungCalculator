@@ -21,6 +21,7 @@ class ViewController: UIViewController {
     var currentLabel: ErrorMessage?
     var isExtraParanthesesNeeded: Bool = false
     var historyArray =  [String]()
+    var distanceFromButton: Int = 0
     
     static var temp: String?
     static var resultSubstitude: String?
@@ -59,13 +60,13 @@ class ViewController: UIViewController {
     }()
     lazy var errorMessage: UILabel = {
         let view: UILabel = .init(frame: .zero)
-//        view.setTitle("Invalid format used.", for: .normal)
         view.font = UIFont.init(name: "Ariel", size: 15)
         view.backgroundColor = .white.withAlphaComponent(0.3)
         view.textColor = .white
         view.textAlignment = .center
         view.alpha = 0
         view.layer.cornerRadius = 25
+        view.adjustsFontSizeToFitWidth = true
         view.isUserInteractionEnabled = false
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 25
@@ -125,12 +126,21 @@ class ViewController: UIViewController {
     }
     override func viewDidLayoutSubviews() {
         
-      
         if displayLabel.text != nil {
             deleteIcon.isEnabled = true
         } else {
             deleteIcon.isEnabled = false
         }
+    }
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if UIDevice.current.orientation.isPortrait {
+            print("We are portrait")
+            
+        } else if UIDevice.current.orientation.isLandscape {
+         print("We are landscape")
+            ui.transitionToLandscape(view)
+        } 
     }
     private func emptyAll() {
         displayLabel.text = nil
@@ -346,16 +356,17 @@ class ViewController: UIViewController {
                              substitudeLabel: &ViewController.resultSubstitude,
                              element: .decimal)
         case 35:
-//            ViewController.temp = resultLabel.text ?? ""
+            ViewController.temp = resultLabel.text ?? ""
             if isDeleteButtonTapped {
-                ViewController.temp = resultLabel.text ?? ""
                 if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
                     displayErrorMessage(.normal, from: displayLabel.text)
                     } else {
                         if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
                             ViewController.temp = ViewController.resultSubstitude
-                            resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
-                            ViewController.resultSubstitude = nil
+                            if lastElement.validToParse(ViewController.resultSubstitude ?? "") == true {
+                                resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
+                                ViewController.resultSubstitude = nil
+                            }
                             resultLabel.isHidden = false
                         } else {
                             isExtraParanthesesNeeded = true
@@ -364,36 +375,50 @@ class ViewController: UIViewController {
                             print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
                             ViewController.temp = ViewController.resultSubstitude
                             print("Temp: \(String(describing: ViewController.temp))")
-                            resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
+                            if lastElement.validToParse(ViewController.temp!) {
+                                resultLabel.text = "\(ViewController.temp!.calculate()!.truncate(places: 5))"
+                            }
                             print("Ready to Show result: \(String(describing: resultLabel.text))")
                             ViewController.resultSubstitude = nil
                             resultLabel.isHidden = false
                         }
                     }
                 } else {
-                    ViewController.temp = resultLabel.text ?? ""
                 if resultLabel.text != nil {
                     if lastElement.isLastAnElement(resultLabel.text!) == true {
                         displayErrorMessage(.normal, from: displayLabel.text)
                         resultLabel.isHidden = true
                     } else {
                         if leftover.sameParanthesesCount(resultLabel.text!) {
-                            resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
-                            print("Same Para: \(String(describing: resultLabel.text))")
-                            resultLabel.isHidden = false
+                            if lastElement.validToParse(resultLabel.text!) == true {
+                                print("Valid to Parse: \(String(describing: resultLabel.text))")
+                                resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                                resultLabel.isHidden = false
+                            } else {
+                                displayErrorMessage(.error, from: resultLabel.text)
+                            }
                         } else {
                             
                             if leftover.diffInParanthesesCount(resultLabel.text!) > 0 {
                                 let tempii = leftover.placeParatheses(resultLabel.text!)
                                 resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
+                                
                             } else {
                                 let tempii = leftover.placeParatheses(resultLabel.text!)
                                 print("We are here: \(tempii)")
                                 resultLabel.text = "\(tempii)\(resultLabel.text ?? "")"
+                                
                             }
+                            
                             print("Diff Para \(String(describing: resultLabel.text))")
-                            resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
-                            resultLabel.isHidden = false
+                            if lastElement.validToParse(resultLabel.text!) == true {
+                                print("Valid to parse: And Barakets added:  YAAY \(String(describing: resultLabel.text))")
+                                resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                                resultLabel.isHidden = false
+                            } else {
+                                displayErrorMessage(.error, from: resultLabel.text)
+                            }
+                            
                         }
                     }
                 } else {
@@ -412,18 +437,20 @@ class ViewController: UIViewController {
         s = text
         r = ViewController.temp
         if s?.isEmpty == false && r?.isEmpty == false {
-            var absDiff = abs(leftover.diffInParanthesesCount(r!))
+            let absDiff = abs(leftover.diffInParanthesesCount(r!))
             if isExtraParanthesesNeeded {
+                print("Extra delete needed!x")
                 for _ in 0...absDiff{
                     r!.removeLast()
                 }
+                isExtraParanthesesNeeded = !isExtraParanthesesNeeded
             } else {
+                print("Normal Delete")
                 s!.removeLast()
                 r!.removeLast()
                 displayLabel.text = s
                 ViewController.temp = r
                 ViewController.resultSubstitude = r
-                isExtraParanthesesNeeded = !isExtraParanthesesNeeded
                 print("Inside Delete Button: Temp =  \(ViewController.resultSubstitude ?? "")")
             }
         } else {
@@ -432,6 +459,7 @@ class ViewController: UIViewController {
             resultLabel.isHidden = true
         
         }
+//        isDeleteButtonTapped = !isDeleteButtonTapped
     }
 
     //    ----------- Error Messages Config
@@ -439,15 +467,22 @@ class ViewController: UIViewController {
         if text == nil {
             errorMessage.alpha = 1
             errorMessage.text = modelText.rawValue
-            UIView.animate(withDuration: 3.1, delay: 0.1, options: .autoreverse ,animations: { () -> Void in
+            UIView.animate(withDuration: 3.1, delay: 0.1, options: .curveLinear ,animations: { () -> Void in
                 self.errorMessage.alpha = 0
             })
         } else {
+            if lastElement.validToParse(text!) != true {
+                errorMessage.alpha = 1
+                errorMessage.text = modelText.rawValue
+                UIView.animate(withDuration: 3.1, delay: 0.1, options: .curveLinear, animations: { () -> Void in
+                    self.errorMessage.alpha = 0
+                })
+            }
             viewModel.arrayOfElements.forEach({ c in
                 if text?.last == c {
                     errorMessage.alpha = 1
                     errorMessage.text = modelText.rawValue
-                    UIView.animate(withDuration: 3.1, delay: 0.1, options: .autoreverse, animations: { () -> Void in
+                    UIView.animate(withDuration: 3.1, delay: 0.1, options: .curveLinear, animations: { () -> Void in
                         self.errorMessage.alpha = 0
                     })
                 }
