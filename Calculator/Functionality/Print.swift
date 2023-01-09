@@ -52,7 +52,11 @@ class Print {
             text =  "\(text ?? "")+"
         case .negetive:
             if text != nil {
-                text =  "\( -1 * (text?.calculate()!)!)"
+                if text?.calculate() != nil {
+                    text =  "\( -1 * (text?.calculate()!)!)"
+                } else {
+                    text = "-\((text ?? ""))"
+                }
             } else {
                 text = "-"
             }
@@ -154,7 +158,11 @@ class Print {
             text =  "\(text ?? "")+"
         case .negetive:
             if text != nil {
-                text =  "\( -1 * (text?.calculate()!)!)"
+                if text?.calculate() != nil {
+                    text =  "\( -1 * (text?.calculate()!)!)"
+                } else {
+                    text = "-\((text ?? ""))"
+                }
             } else {
                 text = "-"
             }
@@ -228,7 +236,11 @@ class Print {
             text =  "\(text ?? "")+"
         case .negetive:
             if text != nil {
-                text =  "\( -1 * (text?.calculate()!)!)"
+                if text?.calculate() != nil {
+                    text =  "\( -1 * (text?.calculate()!)!)"
+                } else {
+                    text = "-\((text ?? ""))"
+                }
             } else {
                 text = "-"
             }

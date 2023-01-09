@@ -20,6 +20,7 @@ class ViewController: UIViewController {
 //    lazy var calculation = Calculation()
     var currentLabel: ErrorMessage?
     var isExtraParanthesesNeeded: Bool = false
+    var historyArray =  [String]()
     
     static var temp: String?
     static var resultSubstitude: String?
@@ -124,6 +125,7 @@ class ViewController: UIViewController {
     }
     override func viewDidLayoutSubviews() {
         
+      
         if displayLabel.text != nil {
             deleteIcon.isEnabled = true
         } else {
@@ -143,6 +145,7 @@ class ViewController: UIViewController {
             ui.rowIconsStackView.addArrangedSubview(btn)
             if i == 0 {
                 btn.transform = CGAffineTransform.init(rotationAngle: 1.6)
+                
             }
         }
     }
@@ -166,11 +169,11 @@ class ViewController: UIViewController {
     }
     
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
-        animate.animateButton(sender: sender)
+        animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
         for _ in 0...sender.tag {
             hideResultLabel()
+            
             if sender.tag == 35 {
-                errorMessage.text = "Nothing to compute!"
                 resultLabel.isHidden = false
             }
         }
@@ -186,12 +189,12 @@ class ViewController: UIViewController {
                              element: .parantheses)
         case 6:
             if displayLabel.text == nil {
-                showErrorMessage(.normal)
+                displayErrorMessage(.normal, from: displayLabel.text)
             } else {
                 if (displayLabel.text?.last)! == "%"  {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else {
                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
                                      display: &displayLabel,
@@ -205,9 +208,9 @@ class ViewController: UIViewController {
                 showErrorMessage(.normal)
             } else {
                 if (displayLabel.text?.last)! == "÷"  {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else if lastElement.isLastAnElement(displayLabel.text!) == true {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else {
                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
                                      display: &displayLabel,
@@ -239,9 +242,9 @@ class ViewController: UIViewController {
                 showErrorMessage(.normal)
             } else {
                 if (displayLabel.text?.last)! == "×"  {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else {
                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
                                      display: &displayLabel,
@@ -274,9 +277,9 @@ class ViewController: UIViewController {
                 showErrorMessage(.normal)
             } else {
                 if (displayLabel.text?.last)! == "-"  {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else {
                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
                                      display: &displayLabel,
@@ -311,7 +314,7 @@ class ViewController: UIViewController {
                 showErrorMessage(.normal)
             } else {
                 if (displayLabel.text?.last)! == "+"  {
-                    showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                 } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
                     showErrorMessage(.normal)
                 } else {
@@ -343,15 +346,15 @@ class ViewController: UIViewController {
                              substitudeLabel: &ViewController.resultSubstitude,
                              element: .decimal)
         case 35:
-            ViewController.temp = resultLabel.text ?? ""
+//            ViewController.temp = resultLabel.text ?? ""
             if isDeleteButtonTapped {
+                ViewController.temp = resultLabel.text ?? ""
                 if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
-                        //----------------------Mark: Revise Error message on "="
-                        showErrorMessage(.normal)
+                    displayErrorMessage(.normal, from: displayLabel.text)
                     } else {
                         if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
                             ViewController.temp = ViewController.resultSubstitude
-                            resultLabel.text = "\(ViewController.resultSubstitude!.calculate()?.truncate(places: 5) ?? 0)"
+                            resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
                             ViewController.resultSubstitude = nil
                             resultLabel.isHidden = false
                         } else {
@@ -368,9 +371,10 @@ class ViewController: UIViewController {
                         }
                     }
                 } else {
+                    ViewController.temp = resultLabel.text ?? ""
                 if resultLabel.text != nil {
                     if lastElement.isLastAnElement(resultLabel.text!) == true {
-                        showErrorMessage(.normal)
+                        displayErrorMessage(.normal, from: displayLabel.text)
                         resultLabel.isHidden = true
                     } else {
                         if leftover.sameParanthesesCount(resultLabel.text!) {
@@ -378,15 +382,22 @@ class ViewController: UIViewController {
                             print("Same Para: \(String(describing: resultLabel.text))")
                             resultLabel.isHidden = false
                         } else {
-                            let tempii = leftover.placeParatheses(resultLabel.text!)
-                            resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
+                            
+                            if leftover.diffInParanthesesCount(resultLabel.text!) > 0 {
+                                let tempii = leftover.placeParatheses(resultLabel.text!)
+                                resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
+                            } else {
+                                let tempii = leftover.placeParatheses(resultLabel.text!)
+                                print("We are here: \(tempii)")
+                                resultLabel.text = "\(tempii)\(resultLabel.text ?? "")"
+                            }
                             print("Diff Para \(String(describing: resultLabel.text))")
                             resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
                             resultLabel.isHidden = false
                         }
                     }
                 } else {
-                    print("Nothing to compute!")
+                    displayErrorMessage(.nothing, from: displayLabel.text)
                 }
             }
         default:
@@ -401,18 +412,20 @@ class ViewController: UIViewController {
         s = text
         r = ViewController.temp
         if s?.isEmpty == false && r?.isEmpty == false {
+            var absDiff = abs(leftover.diffInParanthesesCount(r!))
             if isExtraParanthesesNeeded {
-                for _ in 0...leftover.diffInParanthesesCount(r!) {
+                for _ in 0...absDiff{
                     r!.removeLast()
                 }
+            } else {
+                s!.removeLast()
+                r!.removeLast()
+                displayLabel.text = s
+                ViewController.temp = r
+                ViewController.resultSubstitude = r
+                isExtraParanthesesNeeded = !isExtraParanthesesNeeded
+                print("Inside Delete Button: Temp =  \(ViewController.resultSubstitude ?? "")")
             }
-            s!.removeLast()
-            r!.removeLast()
-            displayLabel.text = s
-            ViewController.temp = r
-            ViewController.resultSubstitude = r
-            isExtraParanthesesNeeded = !isExtraParanthesesNeeded
-            print("Inside Delete Button: Temp =  \(ViewController.resultSubstitude ?? "")")
         } else {
             displayLabel.text = nil
             deleteIcon.isEnabled = false
@@ -422,18 +435,20 @@ class ViewController: UIViewController {
     }
 
     //    ----------- Error Messages Config
-    public func displayErrorMessage(_ text: String?) {
+    public func displayErrorMessage(_ modelText: ErrorMessage, from text: String?) {
         if text == nil {
             errorMessage.alpha = 1
-            UIView.animate(withDuration: 10.5, delay: 2, options: .transitionCurlUp ,animations: { () -> Void in
-                self.errorMessage.alpha = 0.2
+            errorMessage.text = modelText.rawValue
+            UIView.animate(withDuration: 3.1, delay: 0.1, options: .autoreverse ,animations: { () -> Void in
+                self.errorMessage.alpha = 0
             })
         } else {
             viewModel.arrayOfElements.forEach({ c in
                 if text?.last == c {
                     errorMessage.alpha = 1
-                    UIView.animate(withDuration: 10.5, delay: 2, options: .transitionCurlUp, animations: { () -> Void in
-                        self.errorMessage.alpha = 0.2
+                    errorMessage.text = modelText.rawValue
+                    UIView.animate(withDuration: 3.1, delay: 0.1, options: .autoreverse, animations: { () -> Void in
+                        self.errorMessage.alpha = 0
                     })
                 }
             })
