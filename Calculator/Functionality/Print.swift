@@ -69,14 +69,13 @@ class Print {
             if text == nil {
                 text = "\(text ?? "")("
             } else {
-//                
-//                let tempie = validation.changeText(text)
-//                text = tempie
+                validation.placeArithmicElementifOnlyOneNumber(&text!, which: "×")
                 viewModel.arrayOfElements.forEach({ c in
                     if text?.last! == c {
                         doesContainSuffix = true
                     }
                 })
+                
                 viewModel.arrayOfNumbers.forEach({ c in
                     if text?.last! == c {
                         isLastCharacterANumber = true
@@ -122,11 +121,13 @@ class Print {
             if text == nil {
                 text = "\(text ?? "")("
             } else {
+                validation.placeArithmicElementifOnlyOneNumber(&text!, which: "*")
                 viewModel.arrayOfElements.forEach({ c in
                     if text?.last! == c {
                         doesContainSuffix = true
                     }
                 })
+                
                 viewModel.arrayOfNumbers.forEach({ c in
                     if text?.last! == c {
                         isLastCharacterANumber = true
@@ -145,6 +146,7 @@ class Print {
         case .percentage:
             
             if validation.validToParse((text ?? "")) {
+                
                 text = "\((text ?? "").calculate()! / 100 )*"
             }
         case .division:
@@ -198,7 +200,7 @@ class Print {
             if text == nil {
                 text = "\(text ?? "")("
             } else {
-                
+                validation.placeArithmicElementifOnlyOneNumber(&text!, which: "*")
                 viewModel.arrayOfElements.forEach({ c in
                     if text?.last! == c {
                         doesContainSuffix = true

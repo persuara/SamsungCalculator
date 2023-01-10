@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     lazy var animate = Animation()
     lazy var errorSetting = ErrorSettings()
     lazy var lastElement = Validation()
-//    lazy var calculation = Calculation()
+    //    lazy var calculation = Calculation()
     var currentLabel: ErrorMessage?
     var isExtraParanthesesNeeded: Bool = false
     var historyArray =  [String]()
@@ -76,52 +76,57 @@ class ViewController: UIViewController {
     
     fileprivate func configureStackView() {
         
-        ui.addAllToSuperView(view)
+        //        ui.addAllToSuperView(view)
         
-        addButtonIconStack(2, from: viewModel.iconArray)
-        addButton(6, from: viewModel.stack5Array, which: ui.rowFiveStackView)
-        addButton(6, from: viewModel.stack4Array, which: ui.rowFourStackView)
-        addButton(6, from: viewModel.stack3Array, which: ui.rowThreeStackView)
-        addButton(6, from: viewModel.stack2Array, which: ui.rowTwoStackView)
-        addButton(6, from: viewModel.stack1Array, which: ui.rowOneStackView)
+        //        addButtonIconStack(2, from: viewModel.iconArray)
+        //        addButton(6, from: viewModel.stack5Array, which: ui.rowFiveStackView)
+        //        addButton(6, from: viewModel.stack4Array, which: ui.rowFourStackView)
+        //        addButton(6, from: viewModel.stack3Array, which: ui.rowThreeStackView)
+        //        addButton(6, from: viewModel.stack2Array, which: ui.rowTwoStackView)
+        //        addButton(6, from: viewModel.stack1Array, which: ui.rowOneStackView)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         configureStackView()
-
         
-        view.addSubview(ui.straightView)
+        ui.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ui)
+        //        view.addSubview(ui.straightView)
         view.addSubview(deleteIcon)
         view.addSubview(displayLabel)
         view.addSubview(resultLabel)
         view.addSubview(errorMessage)
         
         NSLayoutConstraint.activate([
-            ui.straightView.widthAnchor.constraint(equalToConstant: 800),
-            ui.straightView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-            ui.straightView.bottomAnchor.constraint(equalTo: ui.rowFiveStackView.topAnchor, constant: -20),
-            ui.straightView.heightAnchor.constraint(equalToConstant: 2),
-            deleteIcon.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
-            deleteIcon.heightAnchor.constraint(equalToConstant: 20),
-            deleteIcon.widthAnchor.constraint(equalToConstant: 25),
-            deleteIcon.bottomAnchor.constraint(equalTo: ui.straightView.topAnchor, constant: -30),
+            //            ui.straightView.widthAnchor.constraint(equalToConstant: 800),
+            //            ui.straightView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            //            ui.straightView.bottomAnchor.constraint(equalTo: ui.rowFiveStackView.topAnchor, constant: -20),
+            //            ui.straightView.heightAnchor.constraint(equalToConstant: 2),
+            //            deleteIcon.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            //            deleteIcon.heightAnchor.constraint(equalToConstant: 20),
+            //            deleteIcon.widthAnchor.constraint(equalToConstant: 25),
+            //            deleteIcon.bottomAnchor.constraint(equalTo: ui.straightView.topAnchor, constant: -30),
+            ui.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            ui.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            ui.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
+            ui.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 100),
             
-            displayLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            displayLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            displayLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
-            displayLabel.heightAnchor.constraint(equalToConstant: 200),
-            
-            resultLabel.bottomAnchor.constraint(equalTo: deleteIcon.topAnchor, constant: -20),
-            resultLabel.trailingAnchor.constraint(equalTo: deleteIcon.trailingAnchor, constant: 0),
-            resultLabel.widthAnchor.constraint(equalToConstant: 200),
-            resultLabel.heightAnchor.constraint(equalToConstant: 70),
-            
-            errorMessage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
-            errorMessage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
-            errorMessage.widthAnchor.constraint(equalToConstant: 190),
-            errorMessage.heightAnchor.constraint(equalToConstant: 50),
+            //            displayLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            //            displayLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            //            displayLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            //            displayLabel.heightAnchor.constraint(equalToConstant: 200),
+            //
+            //            resultLabel.bottomAnchor.constraint(equalTo: deleteIcon.topAnchor, constant: -20),
+            //            resultLabel.trailingAnchor.constraint(equalTo: deleteIcon.trailingAnchor, constant: 0),
+            //            resultLabel.widthAnchor.constraint(equalToConstant: 200),
+            //            resultLabel.heightAnchor.constraint(equalToConstant: 70),
+            //
+            //            errorMessage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
+            //            errorMessage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
+            //            errorMessage.widthAnchor.constraint(equalToConstant: 190),
+            //            errorMessage.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
     override func viewDidLayoutSubviews() {
@@ -131,16 +136,6 @@ class ViewController: UIViewController {
         } else {
             deleteIcon.isEnabled = false
         }
-    }
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        if UIDevice.current.orientation.isPortrait {
-            print("We are portrait")
-            
-        } else if UIDevice.current.orientation.isLandscape {
-         print("We are landscape")
-            ui.transitionToLandscape(view)
-        } 
     }
     private func emptyAll() {
         displayLabel.text = nil
@@ -169,7 +164,9 @@ class ViewController: UIViewController {
             btn.setTitleColor(UIColor(cgColor: CGColor(red: array[i].titleColor[0]/255.0, green: array[i].titleColor[1]/255.0, blue: array[i].titleColor[2]/255.0, alpha: 1.0)), for: .normal)
             btn.backgroundColor = UIColor(cgColor: CGColor(red: array[i].backGroundColor[0]/255.0, green: array[i].backGroundColor[1]/255.0, blue: array[i].backGroundColor[2]/255.0, alpha: 1.0))
             btn.titleLabel?.font = UIFont.init(name: array[i].font, size: CGFloat(array[i].size))
-            
+            //            let gesture = UILongPressGestureRecognizer.init(target: self, action: #selector(longpressAction))
+            //            gesture.minimumPressDuration = 0.5
+            //            btn.addGestureRecognizer(gesture)
             btn.addTarget(self, action: #selector(addPrintFunctionality), for: .touchUpInside)
             stack.addArrangedSubview(btn)
         }
@@ -190,7 +187,7 @@ class ViewController: UIViewController {
         switch sender.tag {
         case 4:
             emptyAll()
-           
+            
         case 5:
             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
                              display: &displayLabel,
@@ -360,30 +357,30 @@ class ViewController: UIViewController {
             if isDeleteButtonTapped {
                 if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
                     displayErrorMessage(.normal, from: displayLabel.text)
-                    } else {
-                        if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
-                            ViewController.temp = ViewController.resultSubstitude
-                            if lastElement.validToParse(ViewController.resultSubstitude ?? "") == true {
-                                resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
-                                ViewController.resultSubstitude = nil
-                            }
-                            resultLabel.isHidden = false
-                        } else {
-                            isExtraParanthesesNeeded = true
-                            let tempii = leftover.placeParatheses(ViewController.resultSubstitude!)
-                            ViewController.resultSubstitude = "\(ViewController.resultSubstitude ?? "")\(tempii)"
-                            print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
-                            ViewController.temp = ViewController.resultSubstitude
-                            print("Temp: \(String(describing: ViewController.temp))")
-                            if lastElement.validToParse(ViewController.temp!) {
-                                resultLabel.text = "\(ViewController.temp!.calculate()!.truncate(places: 5))"
-                            }
-                            print("Ready to Show result: \(String(describing: resultLabel.text))")
-                            ViewController.resultSubstitude = nil
-                            resultLabel.isHidden = false
-                        }
-                    }
                 } else {
+                    if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
+                        ViewController.temp = ViewController.resultSubstitude
+                        if lastElement.validToParse(ViewController.resultSubstitude ?? "") == true {
+                            resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
+                            ViewController.resultSubstitude = nil
+                        }
+                        resultLabel.isHidden = false
+                    } else {
+                        isExtraParanthesesNeeded = true
+                        let tempii = leftover.placeParatheses(ViewController.resultSubstitude!)
+                        ViewController.resultSubstitude = "\(ViewController.resultSubstitude ?? "")\(tempii)"
+                        print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
+                        ViewController.temp = ViewController.resultSubstitude
+                        print("Temp: \(String(describing: ViewController.temp))")
+                        if lastElement.validToParse(ViewController.temp!) {
+                            resultLabel.text = "\(ViewController.temp!.calculate()!.truncate(places: 5))"
+                        }
+                        print("Ready to Show result: \(String(describing: resultLabel.text))")
+                        ViewController.resultSubstitude = nil
+                        resultLabel.isHidden = false
+                    }
+                }
+            } else {
                 if resultLabel.text != nil {
                     if lastElement.isLastAnElement(resultLabel.text!) == true {
                         displayErrorMessage(.normal, from: displayLabel.text)
@@ -459,11 +456,11 @@ class ViewController: UIViewController {
             displayLabel.text = nil
             deleteIcon.isEnabled = false
             resultLabel.isHidden = true
-        
+            
         }
-//        isDeleteButtonTapped = !isDeleteButtonTapped
+        //        isDeleteButtonTapped = !isDeleteButtonTapped
     }
-
+    
     //    ----------- Error Messages Config
     public func displayErrorMessage(_ modelText: ErrorMessage, from text: String?) {
         if text == nil {

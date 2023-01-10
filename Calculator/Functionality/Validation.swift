@@ -40,7 +40,7 @@ class Validation {
         }
         return flag
     }
-    private func lastNumber(_ textInQuestion: String) -> Double {
+    public func lastNumber(_ textInQuestion: String) -> Double {
         var dignified = [String]()
         let arrayNum = textInQuestion.matches(for:  "(\\d)*(\\d*\\.?\\d*)", in: textInQuestion)
         arrayNum.forEach({ c in
@@ -85,5 +85,10 @@ class Validation {
             flag = false
         }
         return flag
+    }
+    public func placeArithmicElementifOnlyOneNumber(_ text: inout String, which element: String) -> Void {
+        if isOnlyOneNumber(text) {
+            text = "\(text)\(element)("
+        }
     }
 }

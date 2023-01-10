@@ -18,9 +18,9 @@ class Animation: UIView {
         let blue = 71.0/255.0
         let green = 71.0/255.0
         let alpha = 1.0
-        UIButton.animate(withDuration: 0.5, delay: 0.1, usingSpringWithDamping: 0.40,
+        UIButton.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.40,
                          initialSpringVelocity: 5.0, options: [.allowUserInteraction],
-                       animations: {
+                         animations: {
             sender.titleLabel!.transform = .identity
             sender.backgroundColor = UIColor.init(red: red, green: green, blue: blue, alpha: alpha)
         } , completion: { _ in
