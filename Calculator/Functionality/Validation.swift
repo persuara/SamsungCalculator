@@ -17,10 +17,61 @@ class Validation {
         })
         return flag
     }
+    func isLastANumber(_ text: String) -> Bool {
+        var flag: Bool = false
+        viewModel.arrayOfNumbers.forEach({ c in
+            if text.last == c {
+                flag = true
+            }
+        })
+        return flag
+    }
+    func isOnlyOneNumber(_ textInQuestion: String) -> Bool {
+        var flag: Bool = false
+        var dignifiled = [String]()
+        let arrayNum = textInQuestion.matches(for:  "(\\d)*(\\d*\\.?\\d*)", in: textInQuestion)
+        arrayNum.forEach({ c in
+            if c != "" {
+                dignifiled.append(c)
+            }
+        })
+        if dignifiled.count == 1 {
+            flag = true
+        }
+        return flag
+    }
+    private func lastNumber(_ textInQuestion: String) -> Double {
+        var dignified = [String]()
+        let arrayNum = textInQuestion.matches(for:  "(\\d)*(\\d*\\.?\\d*)", in: textInQuestion)
+        arrayNum.forEach({ c in
+            if c != "" {
+                dignified.append(c)
+            }
+        })
+        return Double(dignified[dignified.count - 1]) ?? 0
+    }
+    
+    public func negetateAndReplaceLastNum(_ textInQuestion: inout String) -> Void {
+        let lastNum: Double = lastNumber(textInQuestion)
+        if lastNum.truncatingRemainder(dividingBy: 1) != 0 {
+            textInQuestion = textInQuestion.replacingOccurrences(of: "\(lastNum)", with: "(-\(lastNum))")
+        } else {
+            textInQuestion = textInQuestion.replacingOccurrences(of: "\(Int(lastNum))", with: "(-\(Int(lastNum))")
+        }
+    }
+    func changeText(_ text: String? ) -> String {
+        var endResult = ""
+        guard text != nil else {return "" }
+        if (isOnlyOneNumber(text!) == true) && (isLastANumber(text!) == true) {
+            endResult = "\(text!)*("
+        }
+        return endResult
+    }
+    
     func validToParse(_ ourText: String) -> Bool {
         var flag: Bool = true
         var dignifiled = [String]()
-        var arrayNum = ourText.matches(for: "(\\d)*(\\d*\\.?\\d*)*", in: ourText)
+        let arrayNum = ourText.matches(for: "(\\d)*(\\d*\\.?\\d*)*", in: ourText)
         arrayNum.forEach({ c in
             if c != "" {
                 dignifiled.append(c)
@@ -32,4 +83,5 @@ class Validation {
         }
         return flag
     }
+//    func changeTextEizan
 }

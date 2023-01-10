@@ -15,10 +15,6 @@ class ErrorSettings {
         UIView.animate(withDuration: 2.5, animations: { () -> Void in
             label.alpha = 0
         })
-//        
-//        UIView.transition(with: label, duration: 2.5, animations: {
-//            label.text = modelText.rawValue
-//        })
     }
 }
 enum ErrorMessage: String {

@@ -11,6 +11,7 @@ import UIKit
 class Print {
     lazy var viewModel = ViewModel()
     lazy var validation = Validation()
+    lazy var leftOver = Leftover()
     
 
     var doesContainSuffix: Bool = false
@@ -50,11 +51,7 @@ class Print {
             text =  "\(text ?? "")+"
         case .negetive:
             if text != nil {
-                if text?.calculate() != nil {
-                    text =  "\( -1 * (text?.calculate()!)!)"
-                } else {
-                    text = "-\((text ?? ""))"
-                }
+                validation.negetateAndReplaceLastNum(&text!)
             } else {
                 text = "-"
             }
@@ -72,8 +69,9 @@ class Print {
             if text == nil {
                 text = "\(text ?? "")("
             } else {
-                
-                
+//                
+//                let tempie = validation.changeText(text)
+//                text = tempie
                 viewModel.arrayOfElements.forEach({ c in
                     if text?.last! == c {
                         doesContainSuffix = true
@@ -145,6 +143,7 @@ class Print {
                 }
             }
         case .percentage:
+            
             if validation.validToParse((text ?? "")) {
                 text = "\((text ?? "").calculate()! / 100 )*"
             }
@@ -158,11 +157,7 @@ class Print {
             text =  "\(text ?? "")+"
         case .negetive:
             if text != nil {
-                if validation.validToParse(text!) {
-                    text =  "\( -1 * (text?.calculate()!)!)"
-                } else {
-                    text = "-\((text ?? ""))"
-                }
+                validation.negetateAndReplaceLastNum(&text!)
             } else {
                 text = "-"
             }
@@ -203,6 +198,7 @@ class Print {
             if text == nil {
                 text = "\(text ?? "")("
             } else {
+                
                 viewModel.arrayOfElements.forEach({ c in
                     if text?.last! == c {
                         doesContainSuffix = true
@@ -238,11 +234,7 @@ class Print {
             text =  "\(text ?? "")+"
         case .negetive:
             if text != nil {
-                if validation.validToParse(text!) {
-                    text =  "\( -1 * (text?.calculate()!)!)"
-                } else {
-                    text = "-\((text ?? ""))"
-                }
+                validation.negetateAndReplaceLastNum(&text!)
             } else {
                 text = "-"
             }
