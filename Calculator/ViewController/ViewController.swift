@@ -395,6 +395,7 @@ class ViewController: UIViewController {
                                 resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
                                 resultLabel.isHidden = false
                             } else {
+                                print("Invalid to parse")
                                 displayErrorMessage(.error, from: resultLabel.text)
                             }
                         } else {
@@ -416,6 +417,7 @@ class ViewController: UIViewController {
                                 resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
                                 resultLabel.isHidden = false
                             } else {
+                                print("Does not compute")
                                 displayErrorMessage(.error, from: resultLabel.text)
                             }
                             

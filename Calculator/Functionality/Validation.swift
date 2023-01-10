@@ -72,16 +72,18 @@ class Validation {
         var flag: Bool = true
         var dignifiled = [String]()
         let arrayNum = ourText.matches(for: "(\\d)*(\\d*\\.?\\d*)*", in: ourText)
+        print("ArrayNum in Valid to parse method: \(arrayNum)")
         arrayNum.forEach({ c in
             if c != "" {
                 dignifiled.append(c)
             }
         })
         let arrayEle = ourText.matches(for: "[\\+\\-\\*\\/\\%]", in: ourText)
-        if arrayEle.count != dignifiled.count - 1 {
+        print("array of Elements in Valid to parse method: \(arrayEle)")
+        print("diginified Set in Valid to parse method: \(dignifiled)")
+        if arrayEle.count > dignifiled.count  {
             flag = false
         }
         return flag
     }
-//    func changeTextEizan
 }
