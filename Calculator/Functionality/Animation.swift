@@ -24,7 +24,7 @@ class Animation: UIView {
             sender.titleLabel!.transform = .identity
             sender.backgroundColor = UIColor.init(red: red, green: green, blue: blue, alpha: alpha)
         } , completion: { _ in
-            if sender.tag == 35 {
+            if sender.tag == 20 {
                 sender.backgroundColor = UIColor.init(
                     red: 208.0/255.0,
                     green: 179.0/255.0,
