@@ -10,37 +10,12 @@ import UIKit
 class ViewController: UIViewController {
     
     
-    lazy var viewModel = ViewModel()
     lazy var ui = MainUI()
-    lazy var pe = Print()
-    lazy var leftover = Leftover()
-    lazy var animate = Animation()
     lazy var errorSetting = ErrorSettings()
-    lazy var lastElement = Validation()
-    //    lazy var calculation = Calculation()
-    var currentLabel: ErrorMessage?
-    
-    var historyArray =  [String]()
-    var distanceFromButton: Int = 0
     
     static var temp: String?
     static var resultSubstitude: String?
-    
 
-    
-    
-    
-
-    
-    lazy var deleteIcon: UIButton = {
-        let view: UIButton = .init(frame: .zero)
-        view.setBackgroundImage(UIImage(systemName: "delete.left"), for: .normal)
-        view.tintColor = UIColor(cgColor: CGColor(red: 197.0/255.0, green: 163.0/255.0, blue: 154.0/255.0, alpha: 1))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isEnabled = false
-//        view.addTarget(self, action: #selector(addDeleteFunctionality), for: .touchUpInside)
-        return view
-    }()
     lazy var errorMessage: UILabel = {
         let view: UILabel = .init(frame: .zero)
         view.font = UIFont.init(name: "Ariel", size: 15)
@@ -80,20 +55,6 @@ class ViewController: UIViewController {
             ui.deleteButton.isEnabled = false
         }
     }
-
-    func addButtonIconStack(_ number: Int, from array: [ModelButton]) -> Void {
-        for i in 0...number {
-            let btn: UIButton = .init(frame: .zero)
-            
-            btn.setImage(UIImage(systemName: array[i].title), for: .normal)
-            btn.tintColor = UIColor(cgColor: CGColor(red: array[i].titleColor[0]/255.0, green: array[i].titleColor[1]/255.0, blue: array[i].titleColor[2]/255.0, alpha: 1.0))
-//            ui.rowIconsStackView.addArrangedSubview(btn)
-            if i == 0 {
-                btn.transform = CGAffineTransform.init(rotationAngle: 1.6)
-                
-            }
-        }
-    }
   
 //    @objc func addDeleteFunctionality() -> Void {
 //        isDeleteButtonTapped = true
@@ -108,6 +69,11 @@ class ViewController: UIViewController {
 //                print("Extra delete needed!x")
 //                for _ in 0...absDiff{
 //                    r!.removeLast()
+//                }
+//                if s?.last == "%" {
+//                    for _ in 1...4 {
+//                        r!.removeLast()
+//                    }
 //                }
 //                isExtraParanthesesNeeded = !isExtraParanthesesNeeded
 //            } else {

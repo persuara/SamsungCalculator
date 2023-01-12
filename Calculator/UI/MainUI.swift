@@ -8,57 +8,34 @@
 import UIKit
 
 class MainUI: UIView {
+    
     var numbersTag: Int = 0
+    
     lazy var viewModel = ViewModel()
+    lazy var config = ConfigUi()
     lazy var animate = Animation()
     lazy var pe = Print()
+    lazy var errorSetting = ErrorSettings()
     lazy var lastElement = Validation()
     lazy var leftover = Leftover()
+    
     var isDeleteButtonTapped: Bool = false
     var isLastCharElement: Bool = false
     var isExtraParanthesesNeeded: Bool = false
     
-    private func stackView(spacing: CGFloat = 16.0, axis: NSLayoutConstraint.Axis = .horizontal) -> UIStackView {
-        let view: UIStackView = .init(frame: .zero)
-        view.axis = axis
-        view.distribution = .fillEqually
-        view.spacing = spacing
-        view.backgroundColor = .clear
-        return view
-    }
-    private func label(numberOfLines: Int = 1, isHidden: Bool = false, alpha: CGFloat = 1, color: UIColor = .clear, size: CGFloat = 28) -> UILabel {
-        let view: UILabel = .init(frame: .zero)
-        view.textColor = UIColor.init(red: 197.0/255.0, green: 163.0/255.0, blue: 154.0/255.0, alpha: alpha)
-        view.font = UIFont(name: "Arial", size: size)
-        view.backgroundColor = color
-        view.textAlignment = .right
-        view.numberOfLines = numberOfLines
-        view.isHidden = isHidden
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-    private func button() -> UIButton {
-        let view: UIButton = .init(frame: .zero)
-        view.setBackgroundImage(UIImage(systemName: "delete.left"), for: .normal)
-        view.tintColor = UIColor(cgColor: CGColor(red: 197.0/255.0, green: 163.0/255.0, blue: 154.0/255.0, alpha: 1))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isEnabled = false
-        return view
-    }
-    
     private lazy var cstacksArray: [UIStackView] = [
         rowFiveStackView, rowFourStackView, rowThreeStackView, rowTwoStackView, rowOneStackView
     ]
-    private lazy var mainStackView = stackView(spacing: 10, axis: .vertical)
-    
-    lazy var displayLabel = label()
-    lazy var resultLabel = label(numberOfLines: 1, isHidden: false, alpha: 0.7, size: 25)
-    lazy var rowOneStackView = stackView()
-    lazy var rowTwoStackView = stackView()
-    lazy var rowThreeStackView = stackView()
-    lazy var rowFourStackView = stackView()
-    lazy var rowFiveStackView = stackView()
-    lazy var deleteButton = button()
+    private lazy var mainStackView = config.stackView(spacing: 10, axis: .vertical)
+    public lazy var displayLabel = config.label()
+    public lazy var resultLabel = config.label(numberOfLines: 1, isHidden: false, alpha: 0.7, size: 25)
+    private lazy var rowOneStackView = config.stackView()
+    private lazy var rowTwoStackView = config.stackView()
+    private lazy var rowThreeStackView = config.stackView()
+    private lazy var rowFourStackView = config.stackView()
+    private lazy var rowFiveStackView = config.stackView()
+    public lazy var deleteButton = config.button()
+    private lazy var errorMessage = config.label(numberOfLines: 1, isHidden: false, backgroundColor: .gray.withAlphaComponent(0.7), size: 27)
     
     private lazy var hairline: UIView = {
         let view = UIView()
@@ -69,14 +46,13 @@ class MainUI: UIView {
         super.init(frame: frame)
         
         backgroundColor = .black
+        pe.label = displayLabel
         
         addSubview(mainStackView)
         mainStackView.constraintLeadingTrainlingToSuperview()
         
         addSubview(displayLabel)
         displayLabel.constraintLeadingTrainlingToSuperview(leadingConstant: 15, trailingConstant: -20)
-//        displayLabel.constraintTopBottomToSuperview(topConstant: 10, bottomConstant: -700)
-        
         
         addSubview(hairline)
         hairline.constraintLeadingTrainlingToSuperview()
@@ -86,19 +62,19 @@ class MainUI: UIView {
         addSubview(resultLabel)
         resultLabel.constraintLeadingTrainlingToSuperview(leadingConstant: 20, trailingConstant: -30)
         
+        addSubview(errorMessage)
+        errorSetting.label = errorMessage
         
         cstacksArray.enumerated().forEach { [weak self] element in
             guard let self else { return }
             element.element.backgroundColor = .black
             self.mainStackView.addArrangedSubview(element.element)
-            
         }
         for i in 0...cstacksArray.count - 1 {
             addButton(3, from: viewModel.arrayOfArrays[i], which: cstacksArray[i])
         }
         
         let constraints: [NSLayoutConstraint] = [
- 
             displayLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             displayLabel.heightAnchor.constraint(equalToConstant: 130),
             hairline.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 50),
@@ -113,14 +89,10 @@ class MainUI: UIView {
             mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             resultLabel.bottomAnchor.constraint(equalTo: deleteButton.topAnchor, constant: -25),
-            resultLabel.heightAnchor.constraint(equalToConstant: 40),
-
-        
+            resultLabel.heightAnchor.constraint(equalToConstant: 40)
         ]
-        
         NSLayoutConstraint.activate(constraints)
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -128,7 +100,6 @@ class MainUI: UIView {
     func addButton(_ number: Int, from array: [ModelButton], which stack: UIStackView) -> Void {
         for i in 0...number {
             numbersTag += 1
-            
             let btn: UIButton = .init(frame: .zero)
             btn.tag = numbersTag
             btn.heightAnchor.constraint(equalToConstant: 80).isActive = true
@@ -140,34 +111,7 @@ class MainUI: UIView {
             btn.addTarget(self, action: #selector(addPrintFunctionality), for: .touchUpInside)
             stack.addArrangedSubview(btn)
         }
-        
     }
-//    public func displayErrorMessage(_ modelText: ErrorMessage, from text: String?) {
-//        if text == nil {
-//            errorMessage.alpha = 1
-//            errorMessage.text = modelText.rawValue
-//            UIView.animate(withDuration: 3.1, delay: 0.1, options: .curveLinear ,animations: { () -> Void in
-//                self.errorMessage.alpha = 0
-//            })
-//        } else {
-//            if lastElement.validToParse(text!) != true {
-//                errorMessage.alpha = 1
-//                errorMessage.text = modelText.rawValue
-//                UIView.animate(withDuration: 3.1, delay: 0.1, options: .curveLinear, animations: { () -> Void in
-//                    self.errorMessage.alpha = 0
-//                })
-//            }
-//            viewModel.arrayOfElements.forEach({ c in
-//                if text?.last == c {
-//                    errorMessage.alpha = 1
-//                    errorMessage.text = modelText.rawValue
-//                    UIView.animate(withDuration: 3.1, delay: 0.1, options: .curveLinear, animations: { () -> Void in
-//                        self.errorMessage.alpha = 0
-//                    })
-//                }
-//            })
-//        }
-//    }
      func hideResultLabel() {
          resultLabel.isHidden = true
      }
@@ -179,9 +123,34 @@ class MainUI: UIView {
      
      @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
          animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
+         if sender.tag == 19 {
+             pe.decimalRegulation(sender, on: &displayLabel.text)
+             pe.decimalRegulation(sender, on: &resultLabel.text)
+             pe.decimalRegulation(sender, on: &ViewController.temp)
+         } else if sender.tag == 17 {
+             pe.negatationRegulation(sender, on: &displayLabel.text)
+             pe.negatationRegulation(sender, on: &resultLabel.text)
+             pe.negatationRegulation(sender, on: &ViewController.temp)
+         }
+         else {
+             if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16  {
+                 if displayLabel.text != nil {
+                     pe.arithmicExpressionRegulation(on: &displayLabel.text, sender: sender)
+                     pe.arithmicExpressionRegulation(on: &resultLabel.text, sender: sender)
+                     pe.arithmicExpressionRegulation(on: &ViewController.temp, sender: sender)
+                 } else {
+                     print("An error message will pop up here :]")
+                 }
+             } else {
+                 pe.printTitle(sender, On: &displayLabel.text, sign: "×")
+                 pe.printTitle(sender, On: &resultLabel.text, sign: "*")
+                 pe.printTitle(sender, On: &ViewController.temp, sign: "*")
+             }
+         }
+         
          for _ in 0...sender.tag {
-             hideResultLabel()
-
+//             hideResultLabel()
+             resultLabel.isHidden = false
              if sender.tag == 35 {
                  resultLabel.isHidden = false
              }
@@ -189,13 +158,6 @@ class MainUI: UIView {
          switch sender.tag {
          case 1:
              emptyAll()
-
-         case 2:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .parantheses)
          case 3:
              if displayLabel.text == nil {
 //                 displayErrorMessage(.normal, from: displayLabel.text)
@@ -205,11 +167,11 @@ class MainUI: UIView {
                  } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
 //                     displayErrorMessage(.normal, from: displayLabel.text)
                  } else {
-                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                                      display: &displayLabel,
-                                      result: &resultLabel,
-                                      substitudeLabel: &ViewController.resultSubstitude,
-                                      element: .percentage)
+//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
+//                                      display: &displayLabel,
+//                                      result: &resultLabel,
+//                                      substitudeLabel: &ViewController.resultSubstitude,
+//                                      element: .percentage)
                  }
              }
          case 4:
@@ -221,31 +183,13 @@ class MainUI: UIView {
                  } else if lastElement.isLastAnElement(displayLabel.text!) == true {
 //                     displayErrorMessage(.normal, from: displayLabel.text)
                  } else {
-                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                                      display: &displayLabel,
-                                      result: &resultLabel,
-                                      substitudeLabel: &ViewController.resultSubstitude,
-                                      element: .division)
+//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
+//                                      display: &displayLabel,
+//                                      result: &resultLabel,
+//                                      substitudeLabel: &ViewController.resultSubstitude,
+//                                      element: .division)
                  }
              }
-         case 5:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .seven)
-         case 6:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .eight)
-         case 7:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .nine)
          case 8:
              if displayLabel.text == nil {
 //                 showErrorMessage(.normal)
@@ -255,32 +199,13 @@ class MainUI: UIView {
                  } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
 //                     displayErrorMessage(.normal, from: displayLabel.text)
                  } else {
-                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                                      display: &displayLabel,
-                                      result: &resultLabel,
-                                      substitudeLabel: &ViewController.resultSubstitude,
-                                      element: .multiplication)
+//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
+//                                      display: &displayLabel,
+//                                      result: &resultLabel,
+//                                      substitudeLabel: &ViewController.resultSubstitude,
+//                                      element: .multiplication)
                  }
              }
-         case 9:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .four)
-         case 10:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .five)
-
-         case 11:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .six)
          case 12:
              if displayLabel.text == nil {
 //                 showErrorMessage(.normal)
@@ -290,34 +215,13 @@ class MainUI: UIView {
                  } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
 //                     displayErrorMessage(.normal, from: displayLabel.text)
                  } else {
-                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                                      display: &displayLabel,
-                                      result: &resultLabel,
-                                      substitudeLabel: &ViewController.resultSubstitude,
-                                      element: .subtraction)
+//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
+//                                      display: &displayLabel,
+//                                      result: &resultLabel,
+//                                      substitudeLabel: &ViewController.resultSubstitude,
+//                                      element: .subtraction)
                  }
              }
-         case 13:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .one)
-
-         case 14:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .two)
-
-         case 15:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .three)
-
          case 16:
              if displayLabel.text == nil {
 //                 showErrorMessage(.normal)
@@ -327,33 +231,13 @@ class MainUI: UIView {
                  } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
 //                     showErrorMessage(.normal)
                  } else {
-                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                                      display: &displayLabel,
-                                      result: &resultLabel,
-                                      substitudeLabel: &ViewController.resultSubstitude,
-                                      element: .addition)
+//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
+//                                      display: &displayLabel,
+//                                      result: &resultLabel,
+//                                      substitudeLabel: &ViewController.resultSubstitude,
+//                                      element: .addition)
                  }
              }
-         case 17:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .negetive)
-
-         case 18:
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .zero)
-         case 19:
-             ViewController.temp = resultLabel.text ?? ""
-             pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-                              display: &displayLabel,
-                              result: &resultLabel,
-                              substitudeLabel: &ViewController.resultSubstitude,
-                              element: .decimal)
          case 20:
              ViewController.temp = resultLabel.text ?? ""
              if isDeleteButtonTapped {

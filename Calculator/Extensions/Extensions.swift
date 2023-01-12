@@ -21,7 +21,7 @@ extension String {
 
     private func allNumsToDouble() -> String {
 
-        let symbolsCharSet = ".,"
+        let symbolsCharSet = ".,()"
         let fullCharSet = "0123456789" + symbolsCharSet
         var i = 0
         var result = ""

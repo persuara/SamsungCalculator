@@ -8,7 +8,7 @@
 import Foundation
 
 class ViewModel {
-    let arrayOfElements: [Character] = ["×","÷","+","-", "*", "/", "%"]
+    let arrayOfElements: [Character] = ["×","÷","+","-", "*", "/", "%","–"]
     let arrayOfNumbers: [Character] = ["0","1","2","3","4","5","6","7","8","9"]
     lazy var arrayOfArrays: [[ModelButton]] = [stack5Array, stack4Array, stack3Array, stack2Array, stack1Array]
     

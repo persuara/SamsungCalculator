@@ -17,4 +17,6 @@ enum CalElements {
 enum Validity {
     case valid, notValid
 }
+//enum CalculatorElements: String {
+//}
 
