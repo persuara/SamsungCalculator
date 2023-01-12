@@ -8,20 +8,14 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
-    
     lazy var ui = MainUI()
-    lazy var errorSetting = ErrorSettings()
-    
     static var resultSubstitude: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        
         ui.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(ui)
-        
         let constraints: [NSLayoutConstraint] = [
             ui.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
             ui.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
@@ -38,4 +32,3 @@ class ViewController: UIViewController {
         }
     }
 }
-

@@ -186,7 +186,7 @@ class MainUI: UIView {
             temp = resultLabel.text ?? ""
             if isDeleteButtonTapped {
                 if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
-                    //                     displayErrorMessage(.normal, from: displayLabel.text)
+                    errorSetting.displayErrorMessage(.normal, from: displayLabel.text)
                 } else {
                     if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
                         temp = ViewController.resultSubstitude
@@ -256,9 +256,7 @@ class MainUI: UIView {
         }
     }
 }
-
 extension UIView {
-    
     public func constraintLeadingTrainlingToSuperview(leadingConstant: CGFloat = 0.0,
                                                       trailingConstant: CGFloat = 0.0) {
         guard let superview else { return }
@@ -272,5 +270,4 @@ extension UIView {
         topAnchor.constraint(equalTo: superview.topAnchor, constant: topConstant).isActive = true
         bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: bottomConstant).isActive = true
     }
-    
 }

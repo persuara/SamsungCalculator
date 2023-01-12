@@ -17,7 +17,6 @@ class Regulations {
     var label = UILabel()
     var resLabel = UILabel()
     var temp: String?
-
     
     var flag : Bool = false
     var decimalFlag = false
