@@ -21,7 +21,8 @@ class ConfigUi: UIView {
                       isHidden: Bool = false,
                       alpha: CGFloat = 1,
                       backgroundColor: UIColor = .clear,
-                      colors: [CGFloat] = [197.0, 163.0, 154.0], size: CGFloat = 28) -> UILabel {
+                      colors: [CGFloat] = [197.0, 163.0, 154.0], size: CGFloat = 28,
+                      primaryAlpha: CGFloat = 1.0) -> UILabel {
         let view: UILabel = .init(frame: .zero)
         view.textColor = UIColor.init(red: colors[0]/255.0, green: colors[1]/255.0, blue: colors[2]/255.0, alpha: alpha)
         view.font = UIFont(name: "Arial", size: size)
@@ -29,7 +30,10 @@ class ConfigUi: UIView {
         view.textAlignment = .right
         view.numberOfLines = numberOfLines
         view.isHidden = isHidden
+        view.alpha = primaryAlpha
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
+        
         return view
     }
     public func button() -> UIButton {

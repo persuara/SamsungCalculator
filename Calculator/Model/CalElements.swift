@@ -6,17 +6,17 @@
 //
 
 import Foundation
-enum CalElements {
-    case zero, one, two, three,
-         four, five, six, seven,
-         eight, nine, percentage,
-         division, multiplication,
-         subtraction,addition, decimal,
-         negetive, parantheses
-}
-enum Validity {
-    case valid, notValid
-}
-//enum CalculatorElements: String {
+//enum CalElements {
+//    case zero, one, two, three,
+//         four, five, six, seven,
+//         eight, nine, percentage,
+//         division, multiplication,
+//         subtraction,addition, decimal,
+//         negetive, parantheses
 //}
+//enum Validity {
+//    case valid, notValid
+//}
+////enum CalculatorElements: String {
+////}
 

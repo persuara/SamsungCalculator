@@ -13,8 +13,6 @@ class Print {
     lazy var validation = Validation()
     lazy var leftOver = Leftover()
     lazy var ui = MainUI()
-    var displayEl: [Character] = ["×","÷","+","-","%"]
-    var resultEl: [String] = ["*","/","+","-", "/100*"]
     var label = UILabel()
     
     var flag : Bool = false
@@ -51,7 +49,8 @@ class Print {
             text = "\(text ?? "")("
         } else {
             validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
-            viewModel.arrayOfElements.forEach({ c in
+            viewModel.arrayOfElements.forEach({ [weak self] c in
+                guard (self != nil) else { return }
                 if text?.last! == c {
                     doesContainSuffix = true
                 }
@@ -85,11 +84,13 @@ class Print {
         }
     }
     public func decimalRegulation(_ sender: UIButton, on text: inout String?) {
-        viewModel.arrayOfNumbers.forEach({ c in
-            if text?.last! == c {
-                decimalFlag = true
-            }
-        })
+        if text != nil {
+            viewModel.arrayOfNumbers.forEach({ c in
+                if text?.last! == c {
+                    decimalFlag = true
+                }
+            })
+        }
         if text == nil {
             text = "\(text ?? "")0."
         } else {

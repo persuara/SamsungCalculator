@@ -35,7 +35,8 @@ class MainUI: UIView {
     private lazy var rowFourStackView = config.stackView()
     private lazy var rowFiveStackView = config.stackView()
     public lazy var deleteButton = config.button()
-    private lazy var errorMessage = config.label(numberOfLines: 1, isHidden: false, backgroundColor: .gray.withAlphaComponent(0.7), size: 27)
+    private lazy var errorMessage = config.label(numberOfLines: 1, isHidden: false, backgroundColor: .gray.withAlphaComponent(0.7), size: 15, primaryAlpha: 0)
+    
     
     private lazy var hairline: UIView = {
         let view = UIView()
@@ -58,12 +59,14 @@ class MainUI: UIView {
         hairline.constraintLeadingTrainlingToSuperview()
         
         addSubview(deleteButton)
-
+        
         addSubview(resultLabel)
         resultLabel.constraintLeadingTrainlingToSuperview(leadingConstant: 20, trailingConstant: -30)
         
         addSubview(errorMessage)
         errorSetting.label = errorMessage
+        errorMessage.textAlignment = .center
+        errorMessage.layer.cornerRadius = 25
         
         cstacksArray.enumerated().forEach { [weak self] element in
             guard let self else { return }
@@ -89,7 +92,12 @@ class MainUI: UIView {
             mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             resultLabel.bottomAnchor.constraint(equalTo: deleteButton.topAnchor, constant: -25),
-            resultLabel.heightAnchor.constraint(equalToConstant: 40)
+            resultLabel.heightAnchor.constraint(equalToConstant: 40),
+            
+            errorMessage.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
+            errorMessage.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),
+            errorMessage.widthAnchor.constraint(equalToConstant: 190),
+            errorMessage.heightAnchor.constraint(equalToConstant: 50),
         ]
         NSLayoutConstraint.activate(constraints)
     }
@@ -112,214 +120,133 @@ class MainUI: UIView {
             stack.addArrangedSubview(btn)
         }
     }
-     func hideResultLabel() {
-         resultLabel.isHidden = true
-     }
+    func hideResultLabel() {
+        resultLabel.isHidden = true
+    }
     private func emptyAll() {
         displayLabel.text = nil
         resultLabel.text = nil
         ViewController.temp = nil
     }
-     
-     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
-         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
-         if sender.tag == 19 {
-             pe.decimalRegulation(sender, on: &displayLabel.text)
-             pe.decimalRegulation(sender, on: &resultLabel.text)
-             pe.decimalRegulation(sender, on: &ViewController.temp)
-         } else if sender.tag == 17 {
-             pe.negatationRegulation(sender, on: &displayLabel.text)
-             pe.negatationRegulation(sender, on: &resultLabel.text)
-             pe.negatationRegulation(sender, on: &ViewController.temp)
-         }
-         else {
-             if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16  {
-                 if displayLabel.text != nil {
-                     pe.arithmicExpressionRegulation(on: &displayLabel.text, sender: sender)
-                     pe.arithmicExpressionRegulation(on: &resultLabel.text, sender: sender)
-                     pe.arithmicExpressionRegulation(on: &ViewController.temp, sender: sender)
-                 } else {
-                     print("An error message will pop up here :]")
-                 }
-             } else {
-                 pe.printTitle(sender, On: &displayLabel.text, sign: "×")
-                 pe.printTitle(sender, On: &resultLabel.text, sign: "*")
-                 pe.printTitle(sender, On: &ViewController.temp, sign: "*")
-             }
-         }
-         
-         for _ in 0...sender.tag {
-//             hideResultLabel()
-             resultLabel.isHidden = false
-             if sender.tag == 35 {
-                 resultLabel.isHidden = false
-             }
-         }
-         switch sender.tag {
-         case 1:
-             emptyAll()
-         case 3:
-             if displayLabel.text == nil {
-//                 displayErrorMessage(.normal, from: displayLabel.text)
-             } else {
-                 if (displayLabel.text?.last)! == "%"  {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else {
-//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-//                                      display: &displayLabel,
-//                                      result: &resultLabel,
-//                                      substitudeLabel: &ViewController.resultSubstitude,
-//                                      element: .percentage)
-                 }
-             }
-         case 4:
-             if displayLabel.text == nil {
-//                 showErrorMessage(.normal)
-             } else {
-                 if (displayLabel.text?.last)! == "÷"  {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else if lastElement.isLastAnElement(displayLabel.text!) == true {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else {
-//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-//                                      display: &displayLabel,
-//                                      result: &resultLabel,
-//                                      substitudeLabel: &ViewController.resultSubstitude,
-//                                      element: .division)
-                 }
-             }
-         case 8:
-             if displayLabel.text == nil {
-//                 showErrorMessage(.normal)
-             } else {
-                 if (displayLabel.text?.last)! == "×"  {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else {
-//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-//                                      display: &displayLabel,
-//                                      result: &resultLabel,
-//                                      substitudeLabel: &ViewController.resultSubstitude,
-//                                      element: .multiplication)
-                 }
-             }
-         case 12:
-             if displayLabel.text == nil {
-//                 showErrorMessage(.normal)
-             } else {
-                 if (displayLabel.text?.last)! == "-"  {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else {
-//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-//                                      display: &displayLabel,
-//                                      result: &resultLabel,
-//                                      substitudeLabel: &ViewController.resultSubstitude,
-//                                      element: .subtraction)
-                 }
-             }
-         case 16:
-             if displayLabel.text == nil {
-//                 showErrorMessage(.normal)
-             } else {
-                 if (displayLabel.text?.last)! == "+"  {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else if  lastElement.isLastAnElement(displayLabel.text!) == true {
-//                     showErrorMessage(.normal)
-                 } else {
-//                     pe.actuallyPrint(isTapped: isDeleteButtonTapped,
-//                                      display: &displayLabel,
-//                                      result: &resultLabel,
-//                                      substitudeLabel: &ViewController.resultSubstitude,
-//                                      element: .addition)
-                 }
-             }
-         case 20:
-             ViewController.temp = resultLabel.text ?? ""
-             if isDeleteButtonTapped {
-                 if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
-//                     displayErrorMessage(.normal, from: displayLabel.text)
-                 } else {
-                     if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
-                         ViewController.temp = ViewController.resultSubstitude
-                         if lastElement.validToParse(ViewController.resultSubstitude ?? "") == true {
-                             resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
-                             ViewController.resultSubstitude = nil
-                         }
-                         resultLabel.isHidden = false
-                     } else {
-                         isExtraParanthesesNeeded = true
-                         let tempii = leftover.placeParatheses(ViewController.resultSubstitude!)
-                         ViewController.resultSubstitude = "\(ViewController.resultSubstitude ?? "")\(tempii)"
-                         print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
-                         ViewController.temp = ViewController.resultSubstitude
-                         print("Temp: \(String(describing: ViewController.temp))")
-                         if lastElement.validToParse(ViewController.temp!) {
-                             resultLabel.text = "\(ViewController.temp!.calculate()!.truncate(places: 5))"
-                         }
-                         print("Ready to Show result: \(String(describing: resultLabel.text))")
-                         ViewController.resultSubstitude = nil
-                         resultLabel.isHidden = false
-                     }
-                 }
-             } else {
-                 if resultLabel.text != nil {
-                     if lastElement.isLastAnElement(resultLabel.text!) == true {
-//                         displayErrorMessage(.normal, from: displayLabel.text)
-                         resultLabel.isHidden = true
-                     } else {
-                         if leftover.sameParanthesesCount(resultLabel.text!) {
-                             if lastElement.validToParse(resultLabel.text!) == true {
-                                 print("Valid to Parse: \(String(describing: resultLabel.text))")
-                                 resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
-                                 resultLabel.isHidden = false
-                             } else {
-                                 print("Invalid to parse")
-//                                 displayErrorMessage(.error, from: resultLabel.text)
-                             }
-                         } else {
-
-                             if leftover.diffInParanthesesCount(resultLabel.text!) > 0 {
-                                 let tempii = leftover.placeParatheses(resultLabel.text!)
-                                 resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
-
-                             } else {
-                                 let tempii = leftover.placeParatheses(resultLabel.text!)
-                                 print("We are here: \(tempii)")
-                                 resultLabel.text = "\(tempii)\(resultLabel.text ?? "")"
-
-                             }
-
-                             print("Diff Para \(String(describing: resultLabel.text))")
-                             if lastElement.validToParse(resultLabel.text!) == true {
-                                 print("Valid to parse: And Barakets added:  YAAY \(String(describing: resultLabel.text))")
-                                 resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
-                                 resultLabel.isHidden = false
-                             } else {
-                                 print("Does not compute")
-//                                 displayErrorMessage(.error, from: resultLabel.text)
-                             }
-
-                         }
-                     }
-                 } else {
-//                     displayErrorMessage(.nothing, from: displayLabel.text)
-                 }
-             }
-         default:
-             print(sender.tag)
-         }
-     }
+    
+    @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
+        animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
+        if sender.tag == 19 {
+            pe.decimalRegulation(sender, on: &displayLabel.text)
+            pe.decimalRegulation(sender, on: &resultLabel.text)
+            pe.decimalRegulation(sender, on: &ViewController.temp)
+        } else if sender.tag == 17 {
+            pe.negatationRegulation(sender, on: &displayLabel.text)
+            pe.negatationRegulation(sender, on: &resultLabel.text)
+            pe.negatationRegulation(sender, on: &ViewController.temp)
+        }
+        else {
+            if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16  {
+                errorSetting.displayErrorMessage(.normal, from: displayLabel.text)
+                if displayLabel.text != nil {
+                    pe.arithmicExpressionRegulation(on: &displayLabel.text, sender: sender)
+                    pe.arithmicExpressionRegulation(on: &resultLabel.text, sender: sender)
+                    pe.arithmicExpressionRegulation(on: &ViewController.temp, sender: sender)
+                }
+            } else {
+                pe.printTitle(sender, On: &displayLabel.text, sign: "×")
+                pe.printTitle(sender, On: &resultLabel.text, sign: "*")
+                pe.printTitle(sender, On: &ViewController.temp, sign: "*")
+            }
+        }
+        
+        for _ in 0...sender.tag {
+            //             hideResultLabel()
+            resultLabel.isHidden = false
+            if sender.tag == 35 {
+                resultLabel.isHidden = false
+            }
+        }
+        switch sender.tag {
+        case 1:
+            emptyAll()
+        case 20:
+            ViewController.temp = resultLabel.text ?? ""
+            if isDeleteButtonTapped {
+                if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
+                    //                     displayErrorMessage(.normal, from: displayLabel.text)
+                } else {
+                    if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
+                        ViewController.temp = ViewController.resultSubstitude
+                        if lastElement.validToParse(ViewController.resultSubstitude ?? "") == true {
+                            resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
+                            ViewController.resultSubstitude = nil
+                        }
+                        resultLabel.isHidden = false
+                    } else {
+                        isExtraParanthesesNeeded = true
+                        let tempii = leftover.placeParatheses(ViewController.resultSubstitude!)
+                        ViewController.resultSubstitude = "\(ViewController.resultSubstitude ?? "")\(tempii)"
+                        print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
+                        ViewController.temp = ViewController.resultSubstitude
+                        print("Temp: \(String(describing: ViewController.temp))")
+                        if lastElement.validToParse(ViewController.temp!) {
+                            resultLabel.text = "\(ViewController.temp!.calculate()!.truncate(places: 5))"
+                        }
+                        print("Ready to Show result: \(String(describing: resultLabel.text))")
+                        ViewController.resultSubstitude = nil
+                        resultLabel.isHidden = false
+                    }
+                }
+            } else {
+                if resultLabel.text != nil {
+                    if lastElement.isLastAnElement(resultLabel.text!) == true {
+                        //                         displayErrorMessage(.normal, from: displayLabel.text)
+                        resultLabel.isHidden = true
+                    } else {
+                        if leftover.sameParanthesesCount(resultLabel.text!) {
+                            if lastElement.validToParse(resultLabel.text!) == true {
+                                print("Valid to Parse: \(String(describing: resultLabel.text))")
+                                resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                                resultLabel.isHidden = false
+                            } else {
+                                print("Invalid to parse")
+                                //                                 displayErrorMessage(.error, from: resultLabel.text)
+                            }
+                        } else {
+                            
+                            if leftover.diffInParanthesesCount(resultLabel.text!) > 0 {
+                                let tempii = leftover.placeParatheses(resultLabel.text!)
+                                resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
+                                
+                            } else {
+                                let tempii = leftover.placeParatheses(resultLabel.text!)
+                                print("We are here: \(tempii)")
+                                resultLabel.text = "\(tempii)\(resultLabel.text ?? "")"
+                                
+                            }
+                            
+                            print("Diff Para \(String(describing: resultLabel.text))")
+                            if lastElement.validToParse(resultLabel.text!) == true {
+                                print("Valid to parse: And Barakets added:  YAAY \(String(describing: resultLabel.text))")
+                                resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                                resultLabel.isHidden = false
+                            } else {
+                                print("Does not compute")
+                                //                                 displayErrorMessage(.error, from: resultLabel.text)
+                            }
+                            
+                        }
+                    }
+                } else {
+                    errorSetting.displayErrorMessage(.nothing, from: displayLabel.text)
+                }
+            }
+        default:
+            print(sender.tag)
+        }
+    }
 }
 
 extension UIView {
     
     public func constraintLeadingTrainlingToSuperview(leadingConstant: CGFloat = 0.0,
-                                         trailingConstant: CGFloat = 0.0) {
+                                                      trailingConstant: CGFloat = 0.0) {
         guard let superview else { return }
         translatesAutoresizingMaskIntoConstraints = false
         leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: leadingConstant).isActive = true
@@ -331,5 +258,5 @@ extension UIView {
         topAnchor.constraint(equalTo: superview.topAnchor, constant: topConstant).isActive = true
         bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: bottomConstant).isActive = true
     }
-
+    
 }

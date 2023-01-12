@@ -50,7 +50,7 @@ class ErrorSettings {
 enum ErrorMessage: String {
     case error = "Couldn't Compute the given input!"
     case sameStatus = "Result stays the same!"
-    case nothing = "WTF Comrade!"
+    case nothing = "Nothing to compute"
     case normal = "Invalid format used."
 
 }
