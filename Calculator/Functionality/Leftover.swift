@@ -30,12 +30,16 @@ class Leftover {
         number = numOfRightFacingParantheses(textInQuestion) - numOfLeftFacingParantheses(textInQuestion)
         return number
     }
-
-
+    
     public func placeParatheses(_ text: String) -> String{
         var endResultString: String = ""
-        let numRight = numOfRightFacingParantheses(text) - 1
-        let numLeft = numOfLeftFacingParantheses(text) - 1
+        var numRight = numOfRightFacingParantheses(text) - 1
+        var numLeft = numOfLeftFacingParantheses(text) - 1
+        if numRight < 0 {
+            numRight = 1
+        } else if numLeft < 0 {
+            numLeft = 1
+        }
 
         if diffInParanthesesCount(text) > 0 {
             for _ in 0...numRight {

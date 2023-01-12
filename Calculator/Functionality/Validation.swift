@@ -87,8 +87,7 @@ class Validation {
         return flag
     }
     public func placeArithmicElementifOnlyOneNumber(_ text: inout String, which element: String) -> Void {
-        if isOnlyOneNumber(text) {
             text = "\(text)\(element)("
-        }
+        
     }
 }

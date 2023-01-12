@@ -14,10 +14,11 @@ class MainUI: UIView {
     lazy var viewModel = ViewModel()
     lazy var config = ConfigUi()
     lazy var animate = Animation()
-    lazy var pe = Print()
+    lazy var pe = Regulations()
     lazy var errorSetting = ErrorSettings()
     lazy var lastElement = Validation()
     lazy var leftover = Leftover()
+    var temp: String?
     
     var isDeleteButtonTapped: Bool = false
     var isLastCharElement: Bool = false
@@ -37,7 +38,6 @@ class MainUI: UIView {
     public lazy var deleteButton = config.button()
     private lazy var errorMessage = config.label(numberOfLines: 1, isHidden: false, backgroundColor: .gray.withAlphaComponent(0.7), size: 15, primaryAlpha: 0)
     
-    
     private lazy var hairline: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(red: 40.0/255.0, green: 40.0/255.0, blue: 40.0/255.0, alpha: 1.0)
@@ -45,9 +45,10 @@ class MainUI: UIView {
     }()
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         backgroundColor = .black
         pe.label = displayLabel
+        pe.resLabel = resultLabel
+        pe.temp = temp
         
         addSubview(mainStackView)
         mainStackView.constraintLeadingTrainlingToSuperview()
@@ -59,6 +60,7 @@ class MainUI: UIView {
         hairline.constraintLeadingTrainlingToSuperview()
         
         addSubview(deleteButton)
+        deleteButton.addTarget(self, action: #selector(addDeleteFunctionality), for: .touchUpInside)
         
         addSubview(resultLabel)
         resultLabel.constraintLeadingTrainlingToSuperview(leadingConstant: 20, trailingConstant: -30)
@@ -104,7 +106,6 @@ class MainUI: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     func addButton(_ number: Int, from array: [ModelButton], which stack: UIStackView) -> Void {
         for i in 0...number {
             numbersTag += 1
@@ -126,53 +127,69 @@ class MainUI: UIView {
     private func emptyAll() {
         displayLabel.text = nil
         resultLabel.text = nil
-        ViewController.temp = nil
+        temp = nil
     }
+    @objc func addDeleteFunctionality() -> Void {
+            isDeleteButtonTapped = true
+            var s: String?
+            var r: String?
+            guard let text = displayLabel.text else { return  deleteButton.isEnabled = false }
+            s = text
+            r = temp
+            if s?.isEmpty == false && r?.isEmpty == false {
+                let absDiff = abs(leftover.diffInParanthesesCount(r!))
+                if isExtraParanthesesNeeded {
+                    print("Extra delete needed!x")
+                    for _ in 0...absDiff{
+                        r!.removeLast()
+                    }
+                    if s?.last == "%" {
+                        for _ in 1...4 {
+                            r!.removeLast()
+                        }
+                    }
+                    isExtraParanthesesNeeded = !isExtraParanthesesNeeded
+                } else {
+                    print("Normal Delete")
+                    s!.removeLast()
+                    r!.removeLast()
+                    displayLabel.text = s
+                    temp = r
+                    ViewController.resultSubstitude = r
+                    print("Inside Delete Button: ResultSubstitude =  \(ViewController.resultSubstitude ?? "")")
+                }
+            } else {
+                displayLabel.text = nil
+                deleteButton.isEnabled = false
+                resultLabel.isHidden = true
+    
+            }
+                    isDeleteButtonTapped = !isDeleteButtonTapped
+        }
     
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
-        if sender.tag == 19 {
-            pe.decimalRegulation(sender, on: &displayLabel.text)
-            pe.decimalRegulation(sender, on: &resultLabel.text)
-            pe.decimalRegulation(sender, on: &ViewController.temp)
-        } else if sender.tag == 17 {
-            pe.negatationRegulation(sender, on: &displayLabel.text)
-            pe.negatationRegulation(sender, on: &resultLabel.text)
-            pe.negatationRegulation(sender, on: &ViewController.temp)
-        }
-        else {
-            if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16  {
-                errorSetting.displayErrorMessage(.normal, from: displayLabel.text)
-                if displayLabel.text != nil {
-                    pe.arithmicExpressionRegulation(on: &displayLabel.text, sender: sender)
-                    pe.arithmicExpressionRegulation(on: &resultLabel.text, sender: sender)
-                    pe.arithmicExpressionRegulation(on: &ViewController.temp, sender: sender)
-                }
-            } else {
-                pe.printTitle(sender, On: &displayLabel.text, sign: "×")
-                pe.printTitle(sender, On: &resultLabel.text, sign: "*")
-                pe.printTitle(sender, On: &ViewController.temp, sign: "*")
-            }
+        
+        pe.printTitle(sender, On: &displayLabel.text, sign: "×")
+        pe.printTitle(sender, On: &resultLabel.text, sign: "*")
+        pe.printTitle(sender, On: &temp, sign: "*")
+        if sender.tag == 20 {              // you can fix this later
+            resultLabel.isHidden = false
+        } else {
+            resultLabel.isHidden = false
         }
         
-        for _ in 0...sender.tag {
-            //             hideResultLabel()
-            resultLabel.isHidden = false
-            if sender.tag == 35 {
-                resultLabel.isHidden = false
-            }
-        }
         switch sender.tag {
         case 1:
             emptyAll()
         case 20:
-            ViewController.temp = resultLabel.text ?? ""
+            temp = resultLabel.text ?? ""
             if isDeleteButtonTapped {
                 if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
                     //                     displayErrorMessage(.normal, from: displayLabel.text)
                 } else {
                     if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
-                        ViewController.temp = ViewController.resultSubstitude
+                        temp = ViewController.resultSubstitude
                         if lastElement.validToParse(ViewController.resultSubstitude ?? "") == true {
                             resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
                             ViewController.resultSubstitude = nil
@@ -183,10 +200,10 @@ class MainUI: UIView {
                         let tempii = leftover.placeParatheses(ViewController.resultSubstitude!)
                         ViewController.resultSubstitude = "\(ViewController.resultSubstitude ?? "")\(tempii)"
                         print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
-                        ViewController.temp = ViewController.resultSubstitude
-                        print("Temp: \(String(describing: ViewController.temp))")
-                        if lastElement.validToParse(ViewController.temp!) {
-                            resultLabel.text = "\(ViewController.temp!.calculate()!.truncate(places: 5))"
+                        temp = ViewController.resultSubstitude
+                        print("Temp: \(String(describing: temp))")
+                        if lastElement.validToParse(temp!) {
+                            resultLabel.text = "\(temp!.calculate()!.truncate(places: 5))"
                         }
                         print("Ready to Show result: \(String(describing: resultLabel.text))")
                         ViewController.resultSubstitude = nil
@@ -196,7 +213,7 @@ class MainUI: UIView {
             } else {
                 if resultLabel.text != nil {
                     if lastElement.isLastAnElement(resultLabel.text!) == true {
-                        //                         displayErrorMessage(.normal, from: displayLabel.text)
+                        errorSetting.displayErrorMessage(.normal, from: displayLabel.text)
                         resultLabel.isHidden = true
                     } else {
                         if leftover.sameParanthesesCount(resultLabel.text!) {
@@ -206,10 +223,9 @@ class MainUI: UIView {
                                 resultLabel.isHidden = false
                             } else {
                                 print("Invalid to parse")
-                                //                                 displayErrorMessage(.error, from: resultLabel.text)
+                                errorSetting.displayErrorMessage(.error, from: resultLabel.text)
                             }
                         } else {
-                            
                             if leftover.diffInParanthesesCount(resultLabel.text!) > 0 {
                                 let tempii = leftover.placeParatheses(resultLabel.text!)
                                 resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
@@ -218,9 +234,7 @@ class MainUI: UIView {
                                 let tempii = leftover.placeParatheses(resultLabel.text!)
                                 print("We are here: \(tempii)")
                                 resultLabel.text = "\(tempii)\(resultLabel.text ?? "")"
-                                
                             }
-                            
                             print("Diff Para \(String(describing: resultLabel.text))")
                             if lastElement.validToParse(resultLabel.text!) == true {
                                 print("Valid to parse: And Barakets added:  YAAY \(String(describing: resultLabel.text))")
@@ -228,7 +242,7 @@ class MainUI: UIView {
                                 resultLabel.isHidden = false
                             } else {
                                 print("Does not compute")
-                                //                                 displayErrorMessage(.error, from: resultLabel.text)
+                                errorSetting.displayErrorMessage(.error, from: resultLabel.text)
                             }
                             
                         }

@@ -8,18 +8,21 @@
 import Foundation
 import UIKit
 
-class Print {
+class Regulations {
     lazy var viewModel = ViewModel()
     lazy var validation = Validation()
     lazy var leftOver = Leftover()
     lazy var ui = MainUI()
+    lazy var errorSetting = ErrorSettings()
     var label = UILabel()
+    var resLabel = UILabel()
+    var temp: String?
+
     
     var flag : Bool = false
     var decimalFlag = false
     var doesContainSuffix: Bool = false
     var isLastCharacterANumber: Bool = false
-    
     
     public func printTitle(_ sender: UIButton, On text: inout String?, sign: String) -> Void {
         guard text == text else { return }
@@ -33,8 +36,23 @@ class Print {
             numbersRegulation(sender, on: &text)
             flag = !flag
         } else {
-            if sender.tag == 2 {
+            if sender.tag == 19 {
+                decimalRegulation(sender, on: &label.text)
+                decimalRegulation(sender, on: &resLabel.text)
+                decimalRegulation(sender, on: &temp)
+            } else if sender.tag == 17 {
+                negatationRegulation(sender, on: &label.text)
+                negatationRegulation(sender, on: &resLabel.text)
+                negatationRegulation(sender, on: &temp)
+            } else if sender.tag == 2 {
                 paranthesesRegulation(on: &text, sign: sign)
+            } else if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16  {
+                errorSetting.displayErrorMessage(.normal, from: label.text)
+                if label.text != nil {
+                    arithmicExpressionRegulation(on: &label.text, sender: sender)
+                    arithmicExpressionRegulation(on: &resLabel.text, sender: sender)
+                    arithmicExpressionRegulation(on: &temp, sender: sender)
+                }
             } else {
                 if sender.tag == 20 {
                     print("tapped on =")
@@ -48,26 +66,30 @@ class Print {
         if text == nil {
             text = "\(text ?? "")("
         } else {
-            validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
-            viewModel.arrayOfElements.forEach({ [weak self] c in
-                guard (self != nil) else { return }
-                if text?.last! == c {
-                    doesContainSuffix = true
-                }
-            })
-            
-            viewModel.arrayOfNumbers.forEach({ c in
-                if text?.last! == c {
-                    isLastCharacterANumber = true
-                }
-            })
-            if isLastCharacterANumber == true {
-                text = "\(text ?? ""))"
-                isLastCharacterANumber = !isLastCharacterANumber
+            if validation.isOnlyOneNumber(text!) {
+                validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
             } else {
-                if doesContainSuffix == true {
-                    text = "\(text ?? "")("
-                    doesContainSuffix = !doesContainSuffix
+                validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
+                viewModel.arrayOfElements.forEach({ [weak self] c in
+                    guard (self != nil) else { return }
+                    if text?.last! == c {
+                        doesContainSuffix = true
+                    }
+                })
+                viewModel.arrayOfNumbers.forEach({ [weak self] c in
+                    guard (self != nil) else { return }
+                    if text?.last! == c {
+                        isLastCharacterANumber = true
+                    }
+                })
+                if isLastCharacterANumber == true {
+                    text = "\(text ?? ""))"
+                    isLastCharacterANumber = !isLastCharacterANumber
+                } else {
+                    if doesContainSuffix == true {
+                        text = "\(text ?? "")("
+                        doesContainSuffix = !doesContainSuffix
+                    }
                 }
             }
         }
@@ -86,7 +108,7 @@ class Print {
     public func decimalRegulation(_ sender: UIButton, on text: inout String?) {
         if text != nil {
             viewModel.arrayOfNumbers.forEach({ c in
-                if text?.last! == c {
+                if text?.last == c {
                     decimalFlag = true
                 }
             })
