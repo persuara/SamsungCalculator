@@ -13,9 +13,6 @@ class ErrorSettings {
     var lastElement = Validation()
     lazy var animate = Animation()
     
-    public func showErrorMessage(_ modelText: ErrorMessage, which label: UILabel) {
-        animate.animateErrorMessage(modelText, label: label)
-    }
     public func displayErrorMessage(_ modelText: ErrorMessage, from text: String?) {
           if text == nil {
               animate.animateErrorMessage(modelText, label: label)

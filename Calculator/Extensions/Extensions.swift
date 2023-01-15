@@ -53,8 +53,10 @@ extension String {
 
     func calculate() -> Double? {
         let transformedString = allNumsToDouble()
-        let expr = NSExpression(format: transformedString)
-        return expr.expressionValue(with: nil, context: nil) as? Double
+     
+       let expr = NSExpression(format: transformedString)
+       
+        return expr.expressionValue(with: nil , context: nil) as? Double
     }
     
     func matches(for regex: String, in text: String) -> [String] {

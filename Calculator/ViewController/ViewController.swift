@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     lazy var ui = MainUI()
-    static var resultSubstitude: String?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -76,7 +76,7 @@
 			children = (
 				C7120E7C2951CCFE000FFCB7 /* AppDelegate.swift */,
 				C7120E7E2951CCFE000FFCB7 /* SceneDelegate.swift */,
-				C717ED7329646CD000C87FDF /* UI */,
+				C717ED7329646CD000C87FDF /* Apperiance  */,
 				C717ED6F29646C1800C87FDF /* ViewController */,
 				C7BE90962965D2790030DA58 /* Functionality */,
 				C717ED76296478B500C87FDF /* Extensions */,
@@ -96,22 +96,22 @@
 			path = ViewController;
 			sourceTree = "<group>";
 		};
-		C717ED7029646C2800C87FDF /* ViewModel */ = {
+		C717ED7029646C2800C87FDF /* Data */ = {
 			isa = PBXGroup;
 			children = (
 				C7CA4F2F2963328A00D6A3BD /* Model.swift */,
 				C717ED7129646C4E00C87FDF /* ViewModel.swift */,
 			);
-			path = ViewModel;
+			path = Data;
 			sourceTree = "<group>";
 		};
-		C717ED7329646CD000C87FDF /* UI */ = {
+		C717ED7329646CD000C87FDF /* Apperiance  */ = {
 			isa = PBXGroup;
 			children = (
 				C717ED7429646CF300C87FDF /* MainUI.swift */,
 				C7EDF34D296FF488006DC9A5 /* ConfigUi.swift */,
 			);
-			path = UI;
+			path = "Apperiance ";
 			sourceTree = "<group>";
 		};
 		C717ED76296478B500C87FDF /* Extensions */ = {
@@ -137,7 +137,7 @@
 		C7CA4F312963329500D6A3BD /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				C717ED7029646C2800C87FDF /* ViewModel */,
+				C717ED7029646C2800C87FDF /* Data */,
 			);
 			path = Model;
 			sourceTree = "<group>";

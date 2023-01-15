@@ -40,17 +40,21 @@ class Validation {
         }
         return flag
     }
-    public func lastNumber(_ textInQuestion: String) -> Double {
-        var dignified = [String]()
-        let arrayNum = textInQuestion.matches(for:  "(\\d)*(\\d*\\.?\\d*)", in: textInQuestion)
-        arrayNum.forEach({ c in
-            if c != "" {
-                dignified.append(c)
-            }
-        })
-        return Double(dignified[dignified.count - 1]) ?? 0
+    public func lastNumber(_ textInQuestion: String?) -> Double {
+        guard textInQuestion != nil else { return 0 }
+        if textInQuestion == "-" {
+            return 0
+        } else {
+            var dignified = [String]()
+            let lastNum = textInQuestion!.matches(for: "(\\d)*(\\d*\\.?\\d*)", in: textInQuestion!)
+            lastNum.forEach({ c in
+                if c != "" {
+                    dignified.append(c)
+                }
+            })
+            return Double(dignified[dignified.count - 1])!
+        }
     }
-    
     public func negetateAndReplaceLastNum(_ textInQuestion: inout String) -> Void {
         let lastNum: Double = lastNumber(textInQuestion)
         if lastNum.truncatingRemainder(dividingBy: 1) != 0 {
@@ -72,16 +76,13 @@ class Validation {
         var flag: Bool = true
         var dignifiled = [String]()
         let arrayNum = ourText.matches(for: "(\\d)*(\\d*\\.?\\d*)*", in: ourText)
-        print("ArrayNum in Valid to parse method: \(arrayNum)")
         arrayNum.forEach({ c in
             if c != "" {
                 dignifiled.append(c)
             }
         })
         let arrayEle = ourText.matches(for: "[\\+\\-\\*\\/\\%]", in: ourText)
-        print("array of Elements in Valid to parse method: \(arrayEle)")
-        print("diginified Set in Valid to parse method: \(dignifiled)")
-        if arrayEle.count > dignifiled.count  {
+        if arrayEle.count > dignifiled.count + 1 {
             flag = false
         }
         return flag
@@ -89,5 +90,17 @@ class Validation {
     public func placeArithmicElementifOnlyOneNumber(_ text: inout String, which element: String) -> Void {
             text = "\(text)\(element)("
         
+    }
+    
+    public func findlastPercentage(_ text: String, flag: inout Bool ) -> String {
+        let array = text.matches(for: "(\\/100\\*)+", in: text)
+        
+        if array.count > 0 {
+            flag = true
+            print("flag\(flag)")
+        } else {
+            return ""
+        }
+        return array[array.count - 1]
     }
 }

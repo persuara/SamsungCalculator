@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 class Regulations {
+    
     lazy var viewModel = ViewModel()
     lazy var validation = Validation()
     lazy var leftOver = Leftover()
@@ -22,10 +23,11 @@ class Regulations {
     var decimalFlag = false
     var doesContainSuffix: Bool = false
     var isLastCharacterANumber: Bool = false
+    var doesContainPercentage: Bool = false
     
     public func printTitle(_ sender: UIButton, On text: inout String?, sign: String) -> Void {
         guard text == text else { return }
-        let array = [5,6,7,9,10,11,13,14,15,18]
+        let array = [5, 6, 7, 9, 10, 11, 13, 14, 15, 18]
         array.forEach({ numbersTag in
             if sender.tag == numbersTag {
                 flag = true
@@ -36,13 +38,10 @@ class Regulations {
             flag = !flag
         } else {
             if sender.tag == 19 {
+                print("currently handling decimal Reg")
                 decimalRegulation(sender, on: &label.text)
                 decimalRegulation(sender, on: &resLabel.text)
                 decimalRegulation(sender, on: &temp)
-            } else if sender.tag == 17 {
-                negatationRegulation(sender, on: &label.text)
-                negatationRegulation(sender, on: &resLabel.text)
-                negatationRegulation(sender, on: &temp)
             } else if sender.tag == 2 {
                 paranthesesRegulation(on: &text, sign: sign)
             } else if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16  {
@@ -54,7 +53,7 @@ class Regulations {
                 }
             } else {
                 if sender.tag == 20 {
-                    print("tapped on =")
+//                    print("tapped on =")
                 } else {
                     text = "\(text ?? "")\(sender.titleLabel!.text!)"
                 }
@@ -65,7 +64,16 @@ class Regulations {
         if text == nil {
             text = "\(text ?? "")("
         } else {
-            if validation.isOnlyOneNumber(text!) {
+            viewModel.arrayOfElements.forEach({ [weak self] c in
+                guard (self != nil) else { return }
+                if text?.last! == c {
+                    doesContainSuffix = true
+                }
+            })
+            if doesContainSuffix {
+                text = "\(text ?? "")("
+                doesContainSuffix = !doesContainSuffix
+            } else if validation.isOnlyOneNumber(text!) {
                 validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
             } else {
                 validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
@@ -117,15 +125,16 @@ class Regulations {
         } else {
             if decimalFlag == true {
                 text = "\(text!)."
+                decimalFlag = !decimalFlag
             } else {
                 if !(text?.last == ".") {
-                    text = "\(text ?? "")."
                 }
             }
         }
     }
     public func negatationRegulation(_ sender: UIButton, on text: inout String?) {
         if text != nil {
+            print("text is not nil so ")
             validation.negetateAndReplaceLastNum(&text!)
         } else {
             text = "-"
@@ -142,12 +151,12 @@ class Regulations {
     }
     public func arithmicExpressionRegulation(on text: inout String?, sender: UIButton) -> Void {
         var flag: Bool = false
+//        let lastPercent = validation.findlastPercentage(text ?? "", flag: &doesContainPercentage)
         viewModel.arrayOfElements.forEach({ c in
             if text?.last! == c {
                 flag = true
             }
         })
-        
         if text == label.text {
             if flag {
                 text = text?.replacingOccurrences(of: "\(text!.last!)", with: "\(sender.titleLabel!.text!)")
@@ -176,7 +185,6 @@ class Regulations {
                 } else if sender.tag == 16 {
                     text = text?.replacingOccurrences(of: "\(text!.last!)", with: "+")
                 } else if sender.tag == 3 {
-//                    Think About this!
                 }
                 flag = !flag
             } else {

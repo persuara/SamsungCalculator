@@ -18,7 +18,8 @@ class MainUI: UIView {
     lazy var errorSetting = ErrorSettings()
     lazy var lastElement = Validation()
     lazy var leftover = Leftover()
-    var temp: String?
+    static var resultSubstitude: String?
+    static var temp: String?
     
     var isDeleteButtonTapped: Bool = false
     var isLastCharElement: Bool = false
@@ -28,15 +29,15 @@ class MainUI: UIView {
         rowFiveStackView, rowFourStackView, rowThreeStackView, rowTwoStackView, rowOneStackView
     ]
     private lazy var mainStackView = config.stackView(spacing: 10, axis: .vertical)
-    public lazy var displayLabel = config.label()
-    public lazy var resultLabel = config.label(numberOfLines: 1, isHidden: false, alpha: 0.7, size: 25)
+    public lazy var displayLabel = config.label(backgroundColor: .blue)
+    public lazy var resultLabel = config.label(numberOfLines: 1,isHidden: false, alpha: 0.7, backgroundColor: .yellow ,size: 25)
     private lazy var rowOneStackView = config.stackView()
     private lazy var rowTwoStackView = config.stackView()
     private lazy var rowThreeStackView = config.stackView()
     private lazy var rowFourStackView = config.stackView()
     private lazy var rowFiveStackView = config.stackView()
     public lazy var deleteButton = config.button()
-    private lazy var errorMessage = config.label(numberOfLines: 1, isHidden: false, backgroundColor: .gray.withAlphaComponent(0.7), size: 15, primaryAlpha: 0)
+    private lazy var errorMessage = config.label(numberOfLines: 1, isHidden: false, backgroundColor: .gray.withAlphaComponent(0.7), size: 15, primaryAlpha: 0, textAlignment: .center, cornerRadius: 25.0)
     
     private lazy var hairline: UIView = {
         let view = UIView()
@@ -48,27 +49,26 @@ class MainUI: UIView {
         backgroundColor = .black
         pe.label = displayLabel
         pe.resLabel = resultLabel
-        pe.temp = temp
+        pe.temp = MainUI.temp
         
         addSubview(mainStackView)
-        mainStackView.constraintLeadingTrainlingToSuperview()
-        
+        mainStackView.setConstraints(isHeightWidthNeeded: false)
         addSubview(displayLabel)
-        displayLabel.constraintLeadingTrainlingToSuperview(leadingConstant: 15, trailingConstant: -20)
-        
+        displayLabel.setConstraints(isHeightWidthNeeded: false, leadingConstant: 15, trailingConstant: -20)
         addSubview(hairline)
-        hairline.constraintLeadingTrainlingToSuperview()
+        hairline.setConstraints(isHeightWidthNeeded: false)
         
         addSubview(deleteButton)
         deleteButton.addTarget(self, action: #selector(addDeleteFunctionality), for: .touchUpInside)
+        deleteButton.setConstraints(isHeightWidthNeeded: true, widthConst: 23, heightConstant: 18)
         
         addSubview(resultLabel)
-        resultLabel.constraintLeadingTrainlingToSuperview(leadingConstant: 20, trailingConstant: -30)
+        resultLabel.setConstraints(isHeightWidthNeeded: false, leadingConstant: 20, trailingConstant: -30)
         
         addSubview(errorMessage)
         errorSetting.label = errorMessage
-        errorMessage.textAlignment = .center
-        errorMessage.layer.cornerRadius = 25
+        errorMessage.setConstraints(isHeightWidthNeeded: true, widthConst: 190, heightConstant: 50)
+        
         
         cstacksArray.enumerated().forEach { [weak self] element in
             guard let self else { return }
@@ -81,25 +81,23 @@ class MainUI: UIView {
         
         let constraints: [NSLayoutConstraint] = [
             displayLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            displayLabel.heightAnchor.constraint(equalToConstant: 130),
-            hairline.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 50),
-            hairline.heightAnchor.constraint(equalToConstant: 2),
+            displayLabel.heightAnchor.constraint(equalToConstant: 150),
             
-            deleteButton.bottomAnchor.constraint(equalTo: hairline.topAnchor, constant: -30),
+            resultLabel.topAnchor.constraint(equalTo: displayLabel.topAnchor, constant: 240),
+            resultLabel.heightAnchor.constraint(equalToConstant: 40),
+            
+
+            deleteButton.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 10),
             deleteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
-            deleteButton.heightAnchor.constraint(equalToConstant: 18),
-            deleteButton.widthAnchor.constraint(equalToConstant: 23),
+            
+            hairline.topAnchor.constraint(equalTo: deleteButton.bottomAnchor, constant: 20),
+            hairline.heightAnchor.constraint(equalToConstant: 2),
             
             mainStackView.topAnchor.constraint(equalTo: hairline.topAnchor, constant: 20),
             mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            resultLabel.bottomAnchor.constraint(equalTo: deleteButton.topAnchor, constant: -25),
-            resultLabel.heightAnchor.constraint(equalToConstant: 40),
-            
             errorMessage.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
             errorMessage.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),
-            errorMessage.widthAnchor.constraint(equalToConstant: 190),
-            errorMessage.heightAnchor.constraint(equalToConstant: 50),
         ]
         NSLayoutConstraint.activate(constraints)
     }
@@ -127,7 +125,7 @@ class MainUI: UIView {
     private func emptyAll() {
         displayLabel.text = nil
         resultLabel.text = nil
-        temp = nil
+        MainUI.temp = nil
     }
     @objc func addDeleteFunctionality() -> Void {
             isDeleteButtonTapped = true
@@ -135,11 +133,13 @@ class MainUI: UIView {
             var r: String?
             guard let text = displayLabel.text else { return  deleteButton.isEnabled = false }
             s = text
-            r = temp
+            r = MainUI.temp
+//          🫡
             if s?.isEmpty == false && r?.isEmpty == false {
                 let absDiff = abs(leftover.diffInParanthesesCount(r!))
+                print(" abs Different: \(absDiff)")
                 if isExtraParanthesesNeeded {
-                    print("Extra delete needed!x")
+                    print("Extra delete needed! x")
                     for _ in 0...absDiff{
                         r!.removeLast()
                     }
@@ -148,31 +148,40 @@ class MainUI: UIView {
                             r!.removeLast()
                         }
                     }
+//                    displayLabel.text = s
+//                    MainUI.temp = r
+//                    MainUI.resultSubstitude = r
                     isExtraParanthesesNeeded = !isExtraParanthesesNeeded
                 } else {
                     print("Normal Delete")
                     s!.removeLast()
                     r!.removeLast()
                     displayLabel.text = s
-                    temp = r
-                    ViewController.resultSubstitude = r
-                    print("Inside Delete Button: ResultSubstitude =  \(ViewController.resultSubstitude ?? "")")
+                    
                 }
             } else {
                 displayLabel.text = nil
                 deleteButton.isEnabled = false
                 resultLabel.isHidden = true
-    
             }
-                    isDeleteButtonTapped = !isDeleteButtonTapped
+        MainUI.temp = r
+        print("Inside Delete Button: Temp: \(MainUI.temp ?? "")")
+        MainUI.resultSubstitude = r
+        print("Inside Delete Button: ResultSubstitude =  \( MainUI.resultSubstitude ?? "")")
         }
     
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
-        
-        pe.printTitle(sender, On: &displayLabel.text, sign: "×")
-        pe.printTitle(sender, On: &resultLabel.text, sign: "*")
-        pe.printTitle(sender, On: &temp, sign: "*")
+        if sender.tag == 17 {
+            print("computing sender.tag -- 17")
+            pe.negatationRegulation(sender, on: &displayLabel.text)
+            pe.negatationRegulation(sender, on: &resultLabel.text)
+            pe.negatationRegulation(sender, on: &MainUI.temp)
+        } else {
+            pe.printTitle(sender, On: &displayLabel.text, sign: "×")
+            pe.printTitle(sender, On: &resultLabel.text, sign: "*")
+            pe.printTitle(sender, On: &MainUI.temp, sign: "*")
+        }
         if sender.tag == 20 {              // you can fix this later
             resultLabel.isHidden = false
         } else {
@@ -183,34 +192,47 @@ class MainUI: UIView {
         case 1:
             emptyAll()
         case 20:
-            temp = resultLabel.text ?? ""
-            if isDeleteButtonTapped {
-                if lastElement.isLastAnElement(ViewController.resultSubstitude ?? "=") == true {
+            
+            print("before anything else, temp equals: \(MainUI.temp ?? "")")
+            if isDeleteButtonTapped == true {
+                print("Delete Button is tapped!")
+                if lastElement.isLastAnElement( MainUI.resultSubstitude ?? "=") == true {
+//                     Works! 🫡
                     errorSetting.displayErrorMessage(.normal, from: displayLabel.text)
                 } else {
-                    if leftover.sameParanthesesCount(ViewController.resultSubstitude ?? "") {
-                        temp = ViewController.resultSubstitude
-                        if lastElement.validToParse(ViewController.resultSubstitude ?? "") == true {
-                            resultLabel.text = "\(ViewController.resultSubstitude?.calculate()?.truncate(places: 5) ?? 0)"
-                            ViewController.resultSubstitude = nil
+                    print("resultSubstitude: \(MainUI.resultSubstitude ?? "")")
+                    if leftover.sameParanthesesCount( MainUI.resultSubstitude ?? "") {
+                        print("SameParantheses")
+                        print("resultSubstitude: \(MainUI.resultSubstitude ?? "")")
+                        MainUI.temp =  MainUI.resultSubstitude
+                        // CHANGED THIS
+                        if lastElement.validToParse( MainUI.temp ?? "") == true {
+                            resultLabel.text = "\( MainUI.temp?.calculate()?.truncate(places: 5) ?? 0)"
                         }
+//                        isDeleteButtonTapped = !isDeleteButtonTapped
+                        MainUI.resultSubstitude = nil
                         resultLabel.isHidden = false
                     } else {
+                        print("In need of parantheses!")
                         isExtraParanthesesNeeded = true
-                        let tempii = leftover.placeParatheses(ViewController.resultSubstitude!)
-                        ViewController.resultSubstitude = "\(ViewController.resultSubstitude ?? "")\(tempii)"
-                        print("Placing, endResult: \(String(describing: ViewController.resultSubstitude))")
-                        temp = ViewController.resultSubstitude
-                        print("Temp: \(String(describing: temp))")
-                        if lastElement.validToParse(temp!) {
-                            resultLabel.text = "\(temp!.calculate()!.truncate(places: 5))"
+                        let tempii = leftover.placeParatheses(MainUI.resultSubstitude!)
+                        MainUI.resultSubstitude = "\(MainUI.resultSubstitude ?? "")\(tempii)"
+                        print("Placing, endResult: \(String(describing: MainUI.resultSubstitude))")
+                        MainUI.temp = MainUI.resultSubstitude
+                        print("Temp: \(String(describing: MainUI.temp))")
+                        if lastElement.validToParse(MainUI.temp!) {
+                            resultLabel.text = "\(MainUI.temp!.calculate()!.truncate(places: 5))"
                         }
                         print("Ready to Show result: \(String(describing: resultLabel.text))")
-                        ViewController.resultSubstitude = nil
+                        MainUI.resultSubstitude = nil
                         resultLabel.isHidden = false
+
                     }
                 }
+                isDeleteButtonTapped = !isDeleteButtonTapped
+                
             } else {
+                
                 if resultLabel.text != nil {
                     if lastElement.isLastAnElement(resultLabel.text!) == true {
                         errorSetting.displayErrorMessage(.normal, from: displayLabel.text)
@@ -218,8 +240,8 @@ class MainUI: UIView {
                     } else {
                         if leftover.sameParanthesesCount(resultLabel.text!) {
                             if lastElement.validToParse(resultLabel.text!) == true {
-                                print("Valid to Parse: \(String(describing: resultLabel.text))")
-                                resultLabel.text = "\(resultLabel.text!.calculate()?.truncate(places: 5) ?? 0 )"
+                                print("Valid to Parse: \(String(describing: MainUI.temp!))")
+                                resultLabel.text = "\(MainUI.temp!.calculate()?.truncate(places: 5) ?? 0 )"
                                 resultLabel.isHidden = false
                             } else {
                                 print("Invalid to parse")
@@ -252,22 +274,30 @@ class MainUI: UIView {
                 }
             }
         default:
-            print(sender.tag)
+//            MainUI.temp = resultLabel.text ?? ""
+            print("---------")
         }
     }
 }
 extension UIView {
-    public func constraintLeadingTrainlingToSuperview(leadingConstant: CGFloat = 0.0,
-                                                      trailingConstant: CGFloat = 0.0) {
-        guard let superview else { return }
-        translatesAutoresizingMaskIntoConstraints = false
-        leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: leadingConstant).isActive = true
-        trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: trailingConstant).isActive = true
-    }
     public func constraintTopBottomToSuperview(topConstant: CGFloat = 0.0,
                                                bottomConstant: CGFloat = 0.0) {
         guard let superview else { return }
         topAnchor.constraint(equalTo: superview.topAnchor, constant: topConstant).isActive = true
         bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: bottomConstant).isActive = true
+    }
+
+    public func setConstraints(isHeightWidthNeeded: Bool, leadingConstant: CGFloat = 0.0,
+                               trailingConstant: CGFloat = 0.0, widthConst: CGFloat = 0.0, heightConstant: CGFloat =  0.0) {
+        guard let superview else { return }
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        if isHeightWidthNeeded == true {
+            widthAnchor.constraint(equalToConstant: widthConst).isActive = true
+            heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
+        } else {
+            leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: leadingConstant).isActive = true
+            trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: trailingConstant).isActive = true
+        }
     }
 }
