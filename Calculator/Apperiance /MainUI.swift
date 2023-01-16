@@ -20,8 +20,7 @@ class MainUI: UIView {
     lazy var leftover = Leftover()
     static var resultSubstitude: String?
     static var temp: String?
-    var niled: String = "Nil Returned!"
-    
+
     var isDeleteButtonTapped: Bool = false
     var isLastCharElement: Bool = false
     var isExtraParanthesesNeeded: Bool = false
@@ -29,7 +28,7 @@ class MainUI: UIView {
     private lazy var cstacksArray: [UIStackView] = [
         rowFiveStackView, rowFourStackView, rowThreeStackView, rowTwoStackView, rowOneStackView
     ]
-    private lazy var mainStackView = config.stackView(spacing: 10, axis: .vertical)
+    private lazy var mainStackView = config.stackView(spacing: 10, distribustion: .equalCentering, axis: .vertical)
     public lazy var displayLabel = config.label()
     public lazy var resultLabel = config.label(numberOfLines: 1,isHidden: false, alpha: 0.7 ,size: 25)
     private lazy var rowOneStackView = config.stackView()
@@ -54,8 +53,10 @@ class MainUI: UIView {
         
         addSubview(mainStackView)
         mainStackView.setConstraints(isHeightWidthNeeded: false)
+        mainStackView.constraintTopBottomToSuperview(both: false, onlyTop: false)
         addSubview(displayLabel)
         displayLabel.setConstraints(isHeightWidthNeeded: false, leadingConstant: 15, trailingConstant: -20)
+        displayLabel.constraintTopBottomToSuperview(both: false, onlyTop: true,topConstant: 20)
         addSubview(hairline)
         hairline.setConstraints(isHeightWidthNeeded: false)
         
@@ -69,6 +70,7 @@ class MainUI: UIView {
         addSubview(errorMessage)
         errorSetting.label = errorMessage
         errorMessage.setConstraints(isHeightWidthNeeded: true, widthConst: 190, heightConstant: 50)
+        errorMessage.constraintTopBottomToSuperview(both: false, onlyTop: false, bottomConstant: -50)
         
         
         cstacksArray.enumerated().forEach { [weak self] element in
@@ -81,12 +83,10 @@ class MainUI: UIView {
         }
         
         let constraints: [NSLayoutConstraint] = [
-            displayLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             displayLabel.heightAnchor.constraint(equalToConstant: 150),
             
             resultLabel.topAnchor.constraint(equalTo: displayLabel.topAnchor, constant: 240),
             resultLabel.heightAnchor.constraint(equalToConstant: 40),
-            
             
             deleteButton.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 10),
             deleteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
@@ -95,9 +95,7 @@ class MainUI: UIView {
             hairline.heightAnchor.constraint(equalToConstant: 2),
             
             mainStackView.topAnchor.constraint(equalTo: hairline.topAnchor, constant: 20),
-            mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            errorMessage.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
             errorMessage.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),
         ]
         NSLayoutConstraint.activate(constraints)
@@ -151,6 +149,7 @@ class MainUI: UIView {
                            }
                        }
                        isExtraParanthesesNeeded = !isExtraParanthesesNeeded
+                       resultLabel.isHidden = true
                    } else {
                        print("Normal Delete")
                        s!.removeLast()
@@ -160,6 +159,7 @@ class MainUI: UIView {
                        MainUI.resultSubstitude = r
                        resultLabel.text = MainUI.temp
                        print("Inside Delete Button: ResultSubstitude =  \(MainUI.resultSubstitude ?? "")")
+                       resultLabel.isHidden = true
                    }
                } else {
                    displayLabel.text = nil
@@ -171,6 +171,11 @@ class MainUI: UIView {
     
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
+        if sender.tag == 20 {              // you can fix this later
+            resultLabel.isHidden = false
+        } else {
+            hideResultLabel()
+        }
         if sender.tag == 17 {
             print("computing sender.tag -- 17")
             pe.negatationRegulation(sender, on: &displayLabel.text)
@@ -180,11 +185,7 @@ class MainUI: UIView {
             pe.printTitle(sender, On: &resultLabel.text, sign: "*")
             
         }
-        if sender.tag == 20 {              // you can fix this later
-            resultLabel.isHidden = false
-        } else {
-            resultLabel.isHidden = false
-        }
+        
         
         switch sender.tag {
         case 1:
@@ -256,24 +257,37 @@ class MainUI: UIView {
     }
 }
 extension UIView {
-    public func constraintTopBottomToSuperview(topConstant: CGFloat = 0.0,
+    public func constraintTopBottomToSuperview(both: Bool = true, onlyTop: Bool = false, topConstant: CGFloat = 0.0,
                                                bottomConstant: CGFloat = 0.0) {
         guard let superview else { return }
-        topAnchor.constraint(equalTo: superview.topAnchor, constant: topConstant).isActive = true
-        bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: bottomConstant).isActive = true
+        if both == true {
+            topAnchor.constraint(equalTo: superview.topAnchor, constant: topConstant).isActive = true
+            bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: bottomConstant).isActive = true
+        } else if onlyTop {
+            topAnchor.constraint(equalTo: superview.topAnchor, constant: topConstant).isActive = true
+        } else {
+            bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: bottomConstant).isActive = true
+        }
     }
-    
-    public func setConstraints(isHeightWidthNeeded: Bool, leadingConstant: CGFloat = 0.0,
+    public func setConstraints(both: Bool = true, onlyTrail: Bool = false,isHeightWidthNeeded: Bool, leadingConstant: CGFloat = 0.0,
                                trailingConstant: CGFloat = 0.0, widthConst: CGFloat = 0.0, heightConstant: CGFloat =  0.0) {
         guard let superview else { return }
         translatesAutoresizingMaskIntoConstraints = false
         
+    
         if isHeightWidthNeeded == true {
             widthAnchor.constraint(equalToConstant: widthConst).isActive = true
             heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
         } else {
-            leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: leadingConstant).isActive = true
-            trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: trailingConstant).isActive = true
+            if both {
+                leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: leadingConstant).isActive = true
+                trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: trailingConstant).isActive = true
+            } else if onlyTrail {
+                trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: trailingConstant).isActive = true
+            } else {
+                leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: leadingConstant).isActive = true
+            }
         }
     }
+    
 }

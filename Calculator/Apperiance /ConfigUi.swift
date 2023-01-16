@@ -9,10 +9,10 @@ import UIKit
 
 class ConfigUi: UIView {
 
-    public func stackView(spacing: CGFloat = 16.0, axis: NSLayoutConstraint.Axis = .horizontal) -> UIStackView {
+    public func stackView(spacing: CGFloat = 16.0, distribustion: UIStackView.Distribution = .fillEqually, axis: NSLayoutConstraint.Axis = .horizontal) -> UIStackView {
         let view: UIStackView = .init(frame: .zero)
         view.axis = axis
-        view.distribution = .fillEqually
+        view.distribution = distribustion
         view.spacing = spacing
         view.backgroundColor = .clear
         return view

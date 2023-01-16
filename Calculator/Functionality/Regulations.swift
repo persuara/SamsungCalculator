@@ -151,7 +151,6 @@ class Regulations {
     }
     public func arithmicExpressionRegulation(on text: inout String?, sender: UIButton) -> Void {
         var flag: Bool = false
-//        let lastPercent = validation.findlastPercentage(text ?? "", flag: &doesContainPercentage)
         viewModel.arrayOfElements.forEach({ c in
             if text?.last  == c {
                 flag = true
