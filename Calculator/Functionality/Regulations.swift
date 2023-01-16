@@ -153,7 +153,7 @@ class Regulations {
         var flag: Bool = false
 //        let lastPercent = validation.findlastPercentage(text ?? "", flag: &doesContainPercentage)
         viewModel.arrayOfElements.forEach({ c in
-            if text?.last! == c {
+            if text?.last  == c {
                 flag = true
             }
         })
