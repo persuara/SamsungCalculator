@@ -75,17 +75,25 @@ class Validation {
     func validToParse(_ ourText: String) -> Bool {
         var flag: Bool = true
         var dignifiled = [String]()
-        let arrayNum = ourText.matches(for: "(\\d)*(\\d*\\.?\\d*)*", in: ourText)
-        arrayNum.forEach({ c in
-            if c != "" {
-                dignifiled.append(c)
+        let arrayAgain = ourText.matches(for: "\\(\\)$", in: ourText)
+        print(arrayAgain)
+        
+        let arrayTest = ourText.matches(for: "\\([\\+\\*\\/]", in: ourText)
+        if  arrayAgain.count != 0 || arrayTest.count != 0  {
+            return false
+        } else {
+            let arrayNum = ourText.matches(for: "(\\d)*(\\d*\\.?\\d*)*", in: ourText)
+            arrayNum.forEach({ c in
+                if c != "" {
+                    dignifiled.append(c)
+                }
+            })
+            let arrayEle = ourText.matches(for: "[\\+\\-\\*\\/\\%]", in: ourText)
+            if arrayEle.count == dignifiled.count || arrayEle.count > dignifiled.count + 1 {
+                flag = false
             }
-        })
-        let arrayEle = ourText.matches(for: "[\\+\\-\\*\\/\\%]", in: ourText)
-        if arrayEle.count > dignifiled.count + 1 {
-            flag = false
+            return flag
         }
-        return flag
     }
     public func placeArithmicElementifOnlyOneNumber(_ text: inout String, which element: String) -> Void {
             text = "\(text)\(element)("

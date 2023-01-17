@@ -8,12 +8,10 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
     lazy var ui = MainUI()
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         ui.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(ui)
         let constraints: [NSLayoutConstraint] = [

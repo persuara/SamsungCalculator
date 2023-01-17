@@ -15,6 +15,7 @@ class Regulations {
     lazy var leftOver = Leftover()
     lazy var ui = MainUI()
     lazy var errorSetting = ErrorSettings()
+    
     var label = UILabel()
     var resLabel = UILabel()
     var temp: String?
@@ -24,6 +25,8 @@ class Regulations {
     var doesContainSuffix: Bool = false
     var isLastCharacterANumber: Bool = false
     var doesContainPercentage: Bool = false
+    
+    
     
     public func printTitle(_ sender: UIButton, On text: inout String?, sign: String) -> Void {
         guard text == text else { return }
@@ -41,7 +44,6 @@ class Regulations {
                 print("currently handling decimal Reg")
                 decimalRegulation(sender, on: &label.text)
                 decimalRegulation(sender, on: &resLabel.text)
-                decimalRegulation(sender, on: &temp)
             } else if sender.tag == 2 {
                 paranthesesRegulation(on: &text, sign: sign)
             } else if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16  {
@@ -49,7 +51,6 @@ class Regulations {
                 if label.text != nil {
                     arithmicExpressionRegulation(on: &label.text, sender: sender)
                     arithmicExpressionRegulation(on: &resLabel.text, sender: sender)
-                    arithmicExpressionRegulation(on: &temp, sender: sender)
                 }
             } else {
                 if sender.tag == 20 {
@@ -66,7 +67,7 @@ class Regulations {
         } else {
             viewModel.arrayOfElements.forEach({ [weak self] c in
                 guard (self != nil) else { return }
-                if text?.last! == c {
+                if text!.last == c {
                     doesContainSuffix = true
                 }
             })
@@ -134,7 +135,7 @@ class Regulations {
     }
     public func negatationRegulation(_ sender: UIButton, on text: inout String?) {
         if text != nil {
-            print("text is not nil so ")
+            print("text is not nil so")
             validation.negetateAndReplaceLastNum(&text!)
         } else {
             text = "-"

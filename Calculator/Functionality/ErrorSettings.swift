@@ -9,15 +9,17 @@ import Foundation
 import UIKit
 class ErrorSettings {
     var label = UILabel()
-    var viewModel = ViewModel()
-    var lastElement = Validation()
+    lazy var viewModel = ViewModel()
+    lazy var validate = Validation()
     lazy var animate = Animation()
     
     public func displayErrorMessage(_ modelText: ErrorMessage, from text: String?) {
+          
           if text == nil {
+              if validate.validToParse(text ?? "") == false {animate.animateErrorMessage(modelText, label: label)}
               animate.animateErrorMessage(modelText, label: label)
           } else {
-              if lastElement.validToParse(text!) != true {
+              if validate.validToParse(text!) != true {
                   animate.animateErrorMessage(modelText, label: label)
               }
               viewModel.arrayOfElements.forEach({ c in
@@ -29,7 +31,7 @@ class ErrorSettings {
       }
 }
 enum ErrorMessage: String {
-    case error = "Couldn't Compute the given input!"
+    case error = "No Way Jose!"
     case sameStatus = "Result stays the same!"
     case nothing = "Nothing to compute"
     case normal = "Invalid format used."
