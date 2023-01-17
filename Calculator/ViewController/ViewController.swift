@@ -12,17 +12,12 @@ class ViewController: UIViewController {
     lazy var ui = MainUI()
     override func viewDidLoad() {
         super.viewDidLoad()
-        ui.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(ui)
-        let constraints: [NSLayoutConstraint] = [
-            ui.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            ui.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-            ui.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
-            ui.topAnchor.constraint(equalTo: view.topAnchor)]
-        NSLayoutConstraint.activate(constraints)
+        ui.constraintTopBottomToSuperview(view: view, both: true, onlyTop: false, bottomConstant: -25)
+        ui.setConstraints(both: true, isHeightWidthNeeded: false, leadingConstant: 15, trailingConstant: -15)
     }
     override func viewDidLayoutSubviews() {
-        
         if ui.displayLabel.text != nil {
             ui.deleteButton.isEnabled = true
         } else {
