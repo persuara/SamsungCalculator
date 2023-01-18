@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct ModelButton {
     var title: String
@@ -15,4 +16,7 @@ struct ModelButton {
     var size: Int
 }
 
-
+@objc protocol ObjCDelegate: AnyObject {
+   @objc func didTapDeleteButton(view: MainUI)
+    @objc func didTapPrint(view: MainUI, sender: UIButton)
+}
