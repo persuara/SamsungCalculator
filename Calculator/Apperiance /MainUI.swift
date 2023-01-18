@@ -7,7 +7,7 @@
 import UIKit
 class MainUI: UIView {
     
-    static var resultSubstitude: String?
+//    static var resultSubstitude: String?
     static var temp: String?
     lazy var viewModel = ViewModel()
     lazy var config = ConfigUi()
@@ -22,9 +22,7 @@ class MainUI: UIView {
     var isLastCharElement: Bool = false
     var isExtraParanthesesNeeded: Bool = false
     private lazy var subviewArray: [UIView] = [displayLabel, resultLabel, deleteButton, hairline, mainStackView, errorMessage]
-    private lazy var cstacksArray: [UIStackView] = [
-        rowFiveStackView, rowFourStackView, rowThreeStackView, rowTwoStackView, rowOneStackView
-    ]
+    private lazy var cstacksArray: [UIStackView] = [ rowFiveStackView, rowFourStackView, rowThreeStackView, rowTwoStackView, rowOneStackView]
     private lazy var mainStackView = config.stackView(spacing: 10, distribustion: .equalCentering, axis: .vertical)
     public lazy var displayLabel = config.label(heightConstant: 150)
     public lazy var resultLabel = config.label(numberOfLines: 1,isHidden: false, alpha: 0.7 ,size: 25)
@@ -46,18 +44,20 @@ class MainUI: UIView {
             guard self != nil else {return}
             addSubview(element.element)
         })
-        
         mainStackView.setConstraints(isHeightWidthNeeded: false)
         mainStackView.constraintTopBottomToSuperview(view: self ,both: false, onlyTop: false)
+        mainStackView.constraintTopBottomToSuperview(view: hairline, both: false, onlyTop: true ,topConstant: 20)
         displayLabel.setConstraints(isHeightWidthNeeded: false, leadingConstant: 15, trailingConstant: -20)
         displayLabel.constraintTopBottomToSuperview(view: self ,both: false, onlyTop: true,topConstant: 20)
-        
         hairline.setConstraints(isHeightWidthNeeded: false)
+        
         deleteButton.addTarget(self, action: #selector(addDeleteFunctionality), for: .touchUpInside)
+        
         deleteButton.setConstraints(isHeightWidthNeeded: true, widthConst: 23, heightConstant: 18)
         deleteButton.setConstraints(both: false, onlyTrail: true, isHeightWidthNeeded: false, trailingConstant: -40)
         resultLabel.setConstraints(isHeightWidthNeeded: false, leadingConstant: 20, trailingConstant: -30)
         resultLabel.constraintTopBottomToSuperview(view: displayLabel, both: false, onlyTop: true, topConstant: 240)
+        
         errorMessage.setConstraints(isHeightWidthNeeded: true, widthConst: 190, heightConstant: 50)
         errorMessage.constraintTopBottomToSuperview(view: self,both: false, onlyTop: false, bottomConstant: -50)
         
@@ -66,18 +66,16 @@ class MainUI: UIView {
             mainStackView.addArrangedSubview(cstacksArray[i])
             addButton(3, from: viewModel.arrayOfArrays[i], which: cstacksArray[i])
         }
-        
-        let constraints: [NSLayoutConstraint] = [
+        NSLayoutConstraint.activate([
             deleteButton.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 10),
             hairline.topAnchor.constraint(equalTo: deleteButton.bottomAnchor, constant: 20),
-            mainStackView.topAnchor.constraint(equalTo: hairline.topAnchor, constant: 20),
             errorMessage.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),
-        ]
-        NSLayoutConstraint.activate(constraints)
+        ])
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     func addButton(_ number: Int, from array: [ModelButton], which stack: UIStackView) -> Void {
         for i in 0...number {
             numbersTag += 1
@@ -123,9 +121,9 @@ class MainUI: UIView {
                        r?.removeLast()
                        displayLabel.text = s
                        MainUI.temp = r
-                       MainUI.resultSubstitude = r
+//                       MainUI.resultSubstitude = r
                        resultLabel.text = MainUI.temp
-                       print("Inside Delete Button: ResultSubstitude =  \(MainUI.resultSubstitude ?? "")")
+//                       print("Inside Delete Button: ResultSubstitude =  \(MainUI.resultSubstitude ?? "")")
                        resultLabel.isHidden = true
                    }
                } else {
@@ -134,7 +132,6 @@ class MainUI: UIView {
                    resultLabel.isHidden = true
                }
            }
-    
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
         if sender.tag == 20 {
@@ -220,10 +217,10 @@ class MainUI: UIView {
             MainUI.temp = resultLabel.text ?? ""
         }
     }
-    public func hideResultLabel() {
-        resultLabel.isHidden = true
-    }
-    public func emptyAll() {
+    func hideResultLabel() {
+    resultLabel.isHidden = true
+}
+    func emptyAll() {
         displayLabel.text = nil
         resultLabel.text = nil
         MainUI.temp = nil

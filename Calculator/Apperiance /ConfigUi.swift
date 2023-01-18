@@ -18,14 +18,14 @@ class ConfigUi: UIView {
         return view
     }
     public func label(numberOfLines: Int = 0,
-                      isHidden: Bool = false,
-                      alpha: CGFloat = 1,
-                      backgroundColor: UIColor = .clear,
-                      colors: [CGFloat] = [197.0, 163.0, 154.0], size: CGFloat = 28,
-                      primaryAlpha: CGFloat = 1.0,
-                      textAlignment: NSTextAlignment = .right,
-                      cornerRadius: CGFloat = 0,
-                      heightConstant: CGFloat = 40.0
+                    isHidden: Bool = false,
+                    alpha: CGFloat = 1,
+                    backgroundColor: UIColor = .clear,
+                    colors: [CGFloat] = [197.0, 163.0, 154.0], size: CGFloat = 28,
+                    primaryAlpha: CGFloat = 1.0,
+                    textAlignment: NSTextAlignment = .right,
+                    cornerRadius: CGFloat = 0,
+                    heightConstant: CGFloat = 40.0
     ) -> UILabel {
         let view: UILabel = .init(frame: .zero)
         view.textColor = UIColor.init(red: colors[0]/255.0, green: colors[1]/255.0, blue: colors[2]/255.0, alpha: alpha)
@@ -40,7 +40,6 @@ class ConfigUi: UIView {
         view.layer.masksToBounds = true
         view.heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }
     public func button() -> UIButton {
@@ -58,5 +57,4 @@ class ConfigUi: UIView {
         view.heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
         return view
     }
-
 }
