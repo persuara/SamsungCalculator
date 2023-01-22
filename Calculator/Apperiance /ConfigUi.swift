@@ -8,7 +8,6 @@
 import UIKit
 
 class ConfigUi: UIView {
-
     public func stackView(spacing: CGFloat = 16.0, distribustion: UIStackView.Distribution = .fillEqually, axis: NSLayoutConstraint.Axis = .horizontal) -> UIStackView {
         let view: UIStackView = .init(frame: .zero)
         view.axis = axis

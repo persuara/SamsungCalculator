@@ -7,12 +7,9 @@
 
 import Foundation
 import UIKit
-
 extension UIView {
-    
     public func constraintTopBottomToSuperview(view: UIView,both: Bool = true, onlyTop: Bool = false ,topConstant: CGFloat = 0.0,
                                                bottomConstant: CGFloat = 0.0) {
-        //        guard let superview else { return }
         if both == true {
             topAnchor.constraint(equalTo: view.topAnchor, constant: topConstant).isActive = true
             bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: bottomConstant).isActive = true
@@ -26,8 +23,6 @@ extension UIView {
                                trailingConstant: CGFloat = 0.0, widthConst: CGFloat = 0.0, heightConstant: CGFloat =  0.0) {
         guard let superview else { return }
         translatesAutoresizingMaskIntoConstraints = false
-        
-        
         if isHeightWidthNeeded == true {
             widthAnchor.constraint(equalToConstant: widthConst).isActive = true
             heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
@@ -42,13 +37,6 @@ extension UIView {
             }
         }
     }
-    //    public func setTopToBottom(view: UIView ,topToBottom: Bool = true, constant: CGFloat = 0.0) {
-    //        if topToBottom {
-    //            topAnchor.constraint(equalTo: view.bottomAnchor, constant: constant).isActive = true
-    //        } else {
-    //            bottomAnchor.constraint(equalTo: view.topAnchor, constant: constant).isActive = true
-    //        }
-    //    }
 }
 
 extension Double {
@@ -99,7 +87,6 @@ extension String {
         let expr = NSExpression(format: transformed)
         return expr.expressionValue(with: nil, context: nil) as! Double
         }
-    
         func matches(for regex: String, in text: String) -> [String] {
             
             do {
@@ -132,9 +119,6 @@ extension MainUI {
             stack.addArrangedSubview(btn)
         }
     }
-    func hideResultLabel() {
-    resultLabel.isHidden = true
-}
     func emptyAll() {
         displayLabel.text = nil
         resultLabel.text = nil
@@ -142,19 +126,12 @@ extension MainUI {
     }
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
-        if sender.tag == 20 {
-            resultLabel.isHidden = false
-        } else {
-            resultLabel.isHidden = false
-//            hideResultLabel()
-        }
+        resultLabel.isHidden = true
         if sender.tag == 17 {
             print("computing sender.tag -- 17")
             pe.negatationRegulation(sender, on: &displayLabel.text)
             pe.negatationRegulation(sender, on: &resultLabel.text)
-        } else if sender.tag == 1 { emptyAll() }
-        
-        else {
+        } else if sender.tag == 1 { emptyAll() } else {
             pe.printTitle(sender, On: &displayLabel.text, sign: "×")
             pe.printTitle(sender, On: &resultLabel.text, sign: "*")
         }
@@ -194,7 +171,7 @@ extension MainUI {
                         if leftover.sameParanthesesCount(resultLabel.text!) {
                             if validate.validToParse(resultLabel.text!) == true {
                                 print("valid to parse")
-                                print(resultLabel.text)
+                                print(resultLabel.text as Any)
                                 resultLabel.text = "\(resultLabel.text!.calculate().truncate(places: 5))"
                                 resultLabel.isHidden = false
                             } else {

@@ -76,8 +76,6 @@ class Validation {
         var flag: Bool = true
         var dignifiled = [String]()
         let arrayAgain = ourText.matches(for: "\\(\\)$", in: ourText)
-        print(arrayAgain)
-        
         let arrayTest = ourText.matches(for: "\\([\\+\\*\\/]", in: ourText)
         if  arrayAgain.count != 0 || arrayTest.count != 0  {
             return false
@@ -99,7 +97,6 @@ class Validation {
             text = "\(text)\(element)("
         
     }
-    
     public func findlastPercentage(_ text: String, flag: inout Bool ) -> String {
         let array = text.matches(for: "(\\/100\\*)+", in: text)
         

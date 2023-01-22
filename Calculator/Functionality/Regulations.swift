@@ -25,9 +25,6 @@ class Regulations {
     var doesContainSuffix: Bool = false
     var isLastCharacterANumber: Bool = false
     var doesContainPercentage: Bool = false
-    
-    
-    
     public func printTitle(_ sender: UIButton, On text: inout String?, sign: String) -> Void {
         guard text == text else { return }
         let array = [5, 6, 7, 9, 10, 11, 13, 14, 15, 18]
@@ -54,7 +51,7 @@ class Regulations {
                 }
             } else {
                 if sender.tag == 20 {
-//                    print("tapped on =")
+                    resLabel.isHidden = false
                 } else {
                     text = "\(text ?? "")\(sender.titleLabel!.text!)"
                 }

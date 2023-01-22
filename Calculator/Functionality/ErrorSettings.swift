@@ -12,9 +12,7 @@ class ErrorSettings {
     lazy var viewModel = ViewModel()
     lazy var validate = Validation()
     lazy var animate = Animation()
-    
     public func displayErrorMessage(_ modelText: ErrorMessage, from text: String?) {
-          
           if text == nil {
               if validate.validToParse(text ?? "") == false {animate.animateErrorMessage(modelText, label: label)}
               animate.animateErrorMessage(modelText, label: label)
