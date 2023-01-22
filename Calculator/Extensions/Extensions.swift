@@ -123,6 +123,7 @@ extension MainUI {
         displayLabel.text = nil
         resultLabel.text = nil
         MainUI.temp = nil
+        calcultaionArray.removeAll(keepingCapacity: false)
     }
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
@@ -132,74 +133,18 @@ extension MainUI {
             pe.negatationRegulation(sender, on: &displayLabel.text)
             pe.negatationRegulation(sender, on: &resultLabel.text)
         } else if sender.tag == 1 { emptyAll() } else {
-            pe.printTitle(sender, On: &displayLabel.text, sign: "×")
-            pe.printTitle(sender, On: &resultLabel.text, sign: "*")
+            pe.printTitle(sender, On: &resultLabel.text, sign: "×", collection: &calcultaionArray)
+            pe.printTitle(sender, On: &displayLabel.text, sign: "×", collection: &calcultaionArray)
         }
         switch sender.tag {
         case 20:
-            if isDeleteButtonTapped == true {
-                if validate.isLastAnElement(MainUI.temp ?? "=") == true {
-                    errorSetting.displayErrorMessage(.normal, from: displayLabel.text)
-                } else {
-                    if leftover.sameParanthesesCount(resultLabel.text ?? "") == true {
-                        if validate.validToParse(resultLabel.text ?? "") == true {
-                            resultLabel.text = "\(resultLabel.text!.calculate().truncate(places: 5))"
-                            resultLabel.isHidden = false
-                        } else {
-                            resultLabel.isHidden = true
-                        }
-                        
-                    } else {
-                        let tempii = leftover.placeParatheses(MainUI.temp!)
-                        resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
-                        if validate.validToParse(resultLabel.text!) {
-                            resultLabel.text = "\(resultLabel.text!.calculate().truncate(places: 5))"
-                            resultLabel.isHidden = false
-                        } else {
-                            resultLabel.isHidden = true
-                        }
-                    }
+            do {
+                if let text = resultLabel.text {
+                    calcultaionArray.append(text)
                 }
-                isDeleteButtonTapped = !isDeleteButtonTapped
-            } else {
-                print("Stage: NormalCalculation")
-                if resultLabel.text != nil {
-                    if validate.isLastAnElement(resultLabel.text!) == true {
-                        errorSetting.displayErrorMessage(.normal, from: displayLabel.text)
-                        resultLabel.isHidden = true
-                    } else {
-                        if leftover.sameParanthesesCount(resultLabel.text!) {
-                            if validate.validToParse(resultLabel.text!) == true {
-                                print("valid to parse")
-                                print(resultLabel.text as Any)
-                                resultLabel.text = "\(resultLabel.text!.calculate().truncate(places: 5))"
-                                resultLabel.isHidden = false
-                            } else {
-                                print("Invalid to parse")
-                                errorSetting.displayErrorMessage(.error, from: resultLabel.text)
-                                resultLabel.isHidden = true
-                            }
-                        } else {
-                            isExtraParanthesesNeeded = true
-                            if leftover.diffInParanthesesCount(resultLabel.text!) > 0 {
-                                let tempii = leftover.placeParatheses(resultLabel.text!)
-                                resultLabel.text = "\(resultLabel.text ?? "")\(tempii)"
-                            } else {
-                                let tempii = leftover.placeParatheses(resultLabel.text!)
-                                resultLabel.text = "\(tempii)\(resultLabel.text ?? "")"
-                            }
-                            if validate.validToParse(resultLabel.text!) == true {
-                                resultLabel.text = "\(resultLabel.text!.calculate().truncate(places: 5))"
-                                resultLabel.isHidden = false
-                            } else {
-                                errorSetting.displayErrorMessage(.error, from: resultLabel.text)
-                                resultLabel.isHidden = true
-                            }
-                        }
-                    }
-                } else {
-                    errorSetting.displayErrorMessage(.nothing, from: displayLabel.text)
-                }
+                print("calcultaionArray --------- \(calcultaionArray) ---------")
+                resultLabel.text = "\((calculator.calculate(array: &calcultaionArray)).truncate(places: 5))"
+                resultLabel.isHidden = false
             }
         default:
             MainUI.temp = resultLabel.text ?? ""

@@ -8,6 +8,9 @@ import UIKit
 class MainUI: UIView {
     weak var delegate: ObjCDelegate?
     
+    var calcultaionArray = [String]()
+    lazy var calculator = Calculator()
+    
     static var temp: String?
     lazy var viewModel = ViewModel()
     lazy var configurations = Configurations()
@@ -38,7 +41,9 @@ class MainUI: UIView {
         super.init(frame: frame)
         pe.label = displayLabel
         pe.resLabel = resultLabel
+        calcultaionArray = pe.array
         errorSetting.label = errorMessage
+        
         subviewArray.enumerated().forEach({ [weak self] element in
             guard self != nil else {return}
             addSubview(element.element)

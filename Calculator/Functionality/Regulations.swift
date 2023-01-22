@@ -10,6 +10,7 @@ import UIKit
 
 class Regulations {
     
+    var array = [String]()
     lazy var viewModel = ViewModel()
     lazy var validation = Validation()
     lazy var leftOver = Leftover()
@@ -25,7 +26,7 @@ class Regulations {
     var doesContainSuffix: Bool = false
     var isLastCharacterANumber: Bool = false
     var doesContainPercentage: Bool = false
-    public func printTitle(_ sender: UIButton, On text: inout String?, sign: String) -> Void {
+    public func printTitle(_ sender: UIButton, On text: inout String?, sign: String, collection: inout [String] ) -> Void {
         guard text == text else { return }
         let array = [5, 6, 7, 9, 10, 11, 13, 14, 15, 18]
         array.forEach({ numbersTag in
@@ -39,24 +40,32 @@ class Regulations {
         } else {
             if sender.tag == 19 {
                 print("currently handling decimal Reg")
-                decimalRegulation(sender, on: &label.text)
-                decimalRegulation(sender, on: &resLabel.text)
+                decimalRegulation(sender, on: &text)
+//                decimalRegulation(sender, on: &resLabel.text)
             } else if sender.tag == 2 {
                 paranthesesRegulation(on: &text, sign: sign)
-            } else if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16  {
-                errorSetting.displayErrorMessage(.normal, from: label.text)
-                if label.text != nil {
-                    arithmicExpressionRegulation(on: &label.text, sender: sender)
-                    arithmicExpressionRegulation(on: &resLabel.text, sender: sender)
+            } else if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
+                if text == resLabel.text {
+                    collection.append(text!)
+                    print("before typing arithemic exp: \(collection)")
+                    resLabel.text = nil
+                    text = "\(sender.titleLabel!.text!)"
+                    collection.append(text!)
+                    resLabel.text = nil
+                    print("After typing arithemic exp: \(collection)")
+                } else {
+                    text = "\(text ?? "")\(sender.titleLabel!.text!)"
+                    resLabel.text = nil
                 }
-            } else {
-                if sender.tag == 20 {
+            } else if sender.tag == 20 {
                     resLabel.isHidden = false
+//                    if let text = resLabel.text {
+//                        collection.append(text)
+//                    }
                 } else {
                     text = "\(text ?? "")\(sender.titleLabel!.text!)"
                 }
             }
-        }
     }
     private func paranthesesRegulation(on text: inout String?, sign: String) {
         if text == nil {
@@ -154,7 +163,6 @@ class Regulations {
                 flag = true
             }
         })
-        if text == label.text {
             if flag {
                 text = text?.replacingOccurrences(of: "\(text!.last!)", with: "\(sender.titleLabel!.text!)")
                 flag = !flag
@@ -171,32 +179,5 @@ class Regulations {
                     text = "\(text ?? "")+"
                 }
             }
-        } else {
-            if flag {
-                if sender.tag == 4 {
-                    text = text?.replacingOccurrences(of: "\(text!.last!)", with: "/")
-                } else if sender.tag == 8 {
-                    text = text?.replacingOccurrences(of: "\(text!.last!)", with: "*")
-                } else if sender.tag == 12 {
-                    text = text?.replacingOccurrences(of: "\(text!.last!)", with: "-")
-                } else if sender.tag == 16 {
-                    text = text?.replacingOccurrences(of: "\(text!.last!)", with: "+")
-                } else if sender.tag == 3 {
-                }
-                flag = !flag
-            } else {
-                if sender.tag == 3 {
-                    text = "\(text ?? "")/100*"
-                } else if sender.tag == 4 {
-                    text = "\(text ?? "")/"
-                } else if sender.tag == 8 {
-                    text = "\(text ?? "")*"
-                } else if sender.tag == 12 {
-                    text = "\(text ?? "")-"
-                } else if sender.tag == 16 {
-                    text = "\(text ?? "")+"
-                }
-            }
-        }
     }
 }
