@@ -7,7 +7,6 @@
 
 import Foundation
 class Leftover {
-    
     public func sameParanthesesCount(_ text:  String ) -> Bool {
         var flag: Bool = true
         if numOfLeftFacingParantheses(text) != numOfRightFacingParantheses(text) {
@@ -15,7 +14,6 @@ class Leftover {
         }
         return flag
     }
-    
     private func numOfRightFacingParantheses(_ thistext: String) -> Int {
         let array = thistext.matches(for: "\\(", in: thistext)
         return array.count
@@ -30,7 +28,6 @@ class Leftover {
         number = numOfRightFacingParantheses(textInQuestion) - numOfLeftFacingParantheses(textInQuestion)
         return number
     }
-    
     public func placeParatheses(_ text: String) -> String{
         var endResultString: String = ""
         var numRight = numOfRightFacingParantheses(text) - 1
@@ -40,7 +37,6 @@ class Leftover {
         } else if numLeft < 0 {
             numLeft = 1
         }
-
         if diffInParanthesesCount(text) > 0 {
             for _ in 0...numRight {
                 endResultString = "\(endResultString))"

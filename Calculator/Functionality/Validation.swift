@@ -108,4 +108,19 @@ class Validation {
         }
         return array[array.count - 1]
     }
+    
+    func arraify(text expression: String) -> [String] {
+        let inputNSString = expression as NSString
+        var matchArray = [NSTextCheckingResult]()
+        var sectionedArray = [String]()
+        let range = NSRange(location: 0, length: expression.count)
+        guard let sectioningRegex = try? NSRegularExpression(pattern:
+                                                                "([\\d.\\d]+|[\\d]+)|([\\+\\–\\÷\\×\\%])") else { return ["wrong Jose"]}
+        matchArray = sectioningRegex.matches(in: expression, range: range)
+        for match in matchArray {
+            let matchString = inputNSString.substring(with: match.range) as String
+            sectionedArray.append(matchString)
+        }
+        return sectionedArray
+    }
 }

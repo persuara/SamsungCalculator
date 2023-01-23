@@ -43,66 +43,25 @@ extension Double {
     var clean: String {
         return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
     }
-    
     func truncate(places: Int) -> Double {
         return Double(floor(pow(10.0, Double(places)) * Double(self)) / pow(10.0, Double(places)))
     }
-    
 }
-
 extension String {
-    private func allNumsToDouble() -> String {
-        
-        let symbolsCharSet = ".,()"
-        let fullCharSet = "0123456789" + symbolsCharSet
-        var i = 0
-        var result = ""
-        let chars = Array(self)
-        while i < chars.count {
-            if fullCharSet.contains(chars[i]) {
-                var numString = String(chars[i])
-                i += 1
-            loop: while i < chars.count {
-                if fullCharSet.contains(chars[i]) {
-                    numString += String(chars[i])
-                    i += 1
-                } else {
-                    break loop
-                }
+    func matches(for regex: String, in text: String) -> [String] {
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let results = regex.matches(in: text,
+                                        range: NSRange(text.startIndex..., in: text))
+            return results.map {
+                String(text[Range($0.range, in: text)!])
             }
-                if let num = Double(numString) {
-                    result += "\(num)"
-                } else {
-                    result += numString
-                }
-            } else {
-                result += String(chars[i])
-                i += 1
-            }
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
         }
-        return result
     }
-    func calculate() -> Double {
-        let transformed = allNumsToDouble()
-        let expr = NSExpression(format: transformed)
-        return expr.expressionValue(with: nil, context: nil) as! Double
-        }
-        func matches(for regex: String, in text: String) -> [String] {
-            
-            do {
-                let regex = try NSRegularExpression(pattern: regex)
-                let results = regex.matches(in: text,
-                                            range: NSRange(text.startIndex..., in: text))
-                return results.map {
-                    String(text[Range($0.range, in: text)!])
-                }
-            } catch let error {
-                print("invalid regex: \(error.localizedDescription)")
-                return []
-            }
-        }
-        
-    }
+}
 extension MainUI {
     func addButton(_ number: Int, from array: [ModelButton], which stack: UIStackView) -> Void {
         for i in 0...number {
@@ -122,14 +81,13 @@ extension MainUI {
     func emptyAll() {
         displayLabel.text = nil
         resultLabel.text = nil
-        MainUI.temp = nil
+        MainUI.temp.removeAll(keepingCapacity: false)
         calcultaionArray.removeAll(keepingCapacity: false)
     }
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
         resultLabel.isHidden = true
         if sender.tag == 17 {
-            print("computing sender.tag -- 17")
             pe.negatationRegulation(sender, on: &displayLabel.text)
             pe.negatationRegulation(sender, on: &resultLabel.text)
         } else if sender.tag == 1 { emptyAll() } else {
@@ -139,15 +97,37 @@ extension MainUI {
         switch sender.tag {
         case 20:
             do {
-                if let text = resultLabel.text {
-                    calcultaionArray.append(text)
+                if isDeleteButtonTapped {
+                    if let text = resultLabel.text {
+                        MainUI.temp.append(text)
+                    }
+                    print("tapped Delete: ")
+                    let end = MainUI.temp[MainUI.temp.count - 1]
+                    if Double(end) == nil {
+                        errorSetting.displayErrorMessage(.normal)
+                    } else {
+                        resultLabel.text = "\(calculator.calculate(array: &MainUI.temp).truncate(places: 5))"
+                    }
+                    isDeleteButtonTapped = false
+                } else {
+                    if let text = resultLabel.text {
+                        calcultaionArray.append(text)
+                    }
+                    if calcultaionArray.count != 0 {
+                        let end = calcultaionArray[calcultaionArray.count - 1]
+                        if Double(end) == nil {
+                            errorSetting.displayErrorMessage(.normal)
+                        } else {
+//                            MainUI.temp = calcultaionArray
+                            resultLabel.text = "\(calculator.calculate(array: &calcultaionArray).truncate(places: 5))"
+                        }
+                    } else {
+                        errorSetting.displayErrorMessage(.nothing)
+                    }
                 }
-                print("calcultaionArray --------- \(calcultaionArray) ---------")
-                resultLabel.text = "\(calculator.calculate(array: &calcultaionArray).truncate(places: 5))"
-                resultLabel.isHidden = false
             }
         default:
-            MainUI.temp = resultLabel.text ?? ""
+            MainUI.temp = validate.arraify(text: displayLabel.text ?? "")
         }
     }
 }
@@ -155,38 +135,33 @@ extension MainUI: ObjCDelegate {
     @objc func didTapDeleteButton(view: MainUI) {
         isDeleteButtonTapped = true
         var s: String?
-        var r: String?
         guard let text = displayLabel.text else {
             deleteButton.isEnabled = false
             emptyAll()
             return }
         s = text
-        r = MainUI.temp
-        if s?.isEmpty == false && r?.isEmpty == false {
-            let absDiff = abs(leftover.diffInParanthesesCount(r!))
-            if isExtraParanthesesNeeded {
-                print("--------------Extra delete needed!-------------")
-                for _ in 0...absDiff{
-                    r?.removeLast()
-                }
-                if s?.last == "%" {
-                    for _ in 1...4 {
-                        r?.removeLast()
-                    }
-                }
-                isExtraParanthesesNeeded = !isExtraParanthesesNeeded
-                resultLabel.isHidden = true
-            } else {
+        if s?.isEmpty == false  {
+//            let absDiff = abs(leftover.diffInParanthesesCount(s!))
+//            if isExtraParanthesesNeeded {
+//                print("--------------Extra delete needed!-------------")
+////                for _ in 0...absDiff{
+////                    r?.removeLast()
+////                }
+////                if s?.last == "%" {
+////                    for _ in 1...4 {
+////                        r?.removeLast()
+////                    }
+////                }
+//                isExtraParanthesesNeeded = !isExtraParanthesesNeeded
+//                resultLabel.isHidden = true
+//            } else {
                 print("Normal Delete")
                 s?.removeLast()
-                r?.removeLast()
                 displayLabel.text = s
-                MainUI.temp = r
-//                       MainUI.resultSubstitude = r
-                resultLabel.text = MainUI.temp
-//                  print("Inside Delete Button: ResultSubstitude =  \(MainUI.resultSubstitude ?? "")")
+            MainUI.temp = validate.arraify(text: s!)
+            print("Inside Delete Temp: \(MainUI.temp)")
                 resultLabel.isHidden = true
-            }
+//            }
         } else {
             displayLabel.text = nil
             deleteButton.isEnabled = false

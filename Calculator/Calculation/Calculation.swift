@@ -7,14 +7,13 @@
 
 import Foundation
 class Calculator {
-    
     var rsn: String = ""
     var lsn: String = ""
     
     public func calculate(array: inout [String]) -> Double {
         var element: Int = 0
         var result: Double = 0
-        let arrayElements = reverese(array: gatherAllElmentsOfTheArray(array))
+        let arrayElements = sortEndResult(array, from: sortMultAndDiv(array))
         arrayElements.forEach({ c in
             if array.count == 1 {
                 print(result)
@@ -47,15 +46,26 @@ class Calculator {
         })
         return result
     }
-   private func reverese(array: [String]) -> [String] {
-        var newValue = array.sorted(using: .localizedStandard)
-        var temp: String = ""
-        for i in 0...newValue.count / 2 - 1 {
-            temp = newValue[i]
-            newValue[i] = newValue[newValue.count - 1 - i]
-            newValue[newValue.count - 1 - i] = temp
+    func sortMultAndDiv(_ array: [String]) -> [String] {
+        var sortedMultAndDiv = [String]()
+        let original = array
+        for i in 0...original.count - 1 {
+            if original[i] == "×" || original[i] == "÷" {
+                sortedMultAndDiv.append(original[i])
+            }
         }
-        return newValue
+        return sortedMultAndDiv
+    }
+    func sortEndResult(_ array: [String], from sortedMultAndDiv: [String]) -> [String] {
+        var finalSorted = [String]()
+        let original = array
+        finalSorted = sortedMultAndDiv
+        for i in 0...original.count - 1 {
+            if original[i] == "+" || original[i] == "–" {
+                finalSorted.append(original[i])
+            }
+        }
+        return finalSorted
     }
     private func gatherAllElmentsOfTheArray(_ array: [String]) -> [String] {
         return (array.description).matches(for: "[\\+\\–\\×\\÷\\%]", in: array.description)

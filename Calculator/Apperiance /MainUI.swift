@@ -12,9 +12,8 @@ class MainUI: UIView {
     var elementsArray = [String]()
     
     lazy var calculator = Calculator()
-    static var temp: String?
+    static var temp = [String]()
     lazy var viewModel = ViewModel()
-    lazy var configurations = Configurations()
     lazy var config = ConfigUi()
     lazy var errorSetting = ErrorSettings()
     lazy var animate = Animation()

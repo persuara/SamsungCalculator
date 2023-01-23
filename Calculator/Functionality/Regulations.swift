@@ -59,9 +59,6 @@ class Regulations {
                 }
             } else if sender.tag == 20 {
                     resLabel.isHidden = false
-//                    if let text = resLabel.text {
-//                        collection.append(text)
-//                    }
                 } else {
                     text = "\(text ?? "")\(sender.titleLabel!.text!)"
                 }
