@@ -9,8 +9,9 @@ class MainUI: UIView {
     weak var delegate: ObjCDelegate?
     
     var calcultaionArray = [String]()
-    lazy var calculator = Calculator()
+    var elementsArray = [String]()
     
+    lazy var calculator = Calculator()
     static var temp: String?
     lazy var viewModel = ViewModel()
     lazy var configurations = Configurations()

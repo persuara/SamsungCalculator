@@ -143,7 +143,7 @@ extension MainUI {
                     calcultaionArray.append(text)
                 }
                 print("calcultaionArray --------- \(calcultaionArray) ---------")
-                resultLabel.text = "\((calculator.calculate(array: &calcultaionArray)).truncate(places: 5))"
+                resultLabel.text = "\(calculator.calculate(array: &calcultaionArray).truncate(places: 5))"
                 resultLabel.isHidden = false
             }
         default:
