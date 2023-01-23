@@ -9,7 +9,6 @@ import Foundation
 class Calculator {
     var rsn: String = ""
     var lsn: String = ""
-    
     public func calculate(array: inout [String]) -> Double {
         var element: Int = 0
         var result: Double = 0

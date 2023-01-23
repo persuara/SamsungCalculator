@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-
 struct ModelButton {
     var title: String
     var backGroundColor: [CGFloat]
@@ -15,8 +14,6 @@ struct ModelButton {
     var font: String
     var size: Int
 }
-
 @objc protocol ObjCDelegate: AnyObject {
    @objc func didTapDeleteButton(view: MainUI)
-    @objc func didTapPrint(view: MainUI, sender: UIButton)
 }

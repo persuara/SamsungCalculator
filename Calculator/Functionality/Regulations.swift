@@ -4,12 +4,9 @@
 //
 //  Created by AmirHossein EramAbadi on 1/2/23.
 //
-
 import Foundation
 import UIKit
-
 class Regulations {
-    
     var array = [String]()
     lazy var viewModel = ViewModel()
     lazy var validation = Validation()

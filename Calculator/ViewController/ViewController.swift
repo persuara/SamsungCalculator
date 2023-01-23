@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 class ViewController: UIViewController {
     lazy var ui = MainUI()
     override func viewDidLoad() {

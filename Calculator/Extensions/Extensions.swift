@@ -141,35 +141,17 @@ extension MainUI: ObjCDelegate {
             return }
         s = text
         if s?.isEmpty == false  {
-//            let absDiff = abs(leftover.diffInParanthesesCount(s!))
-//            if isExtraParanthesesNeeded {
-//                print("--------------Extra delete needed!-------------")
-////                for _ in 0...absDiff{
-////                    r?.removeLast()
-////                }
-////                if s?.last == "%" {
-////                    for _ in 1...4 {
-////                        r?.removeLast()
-////                    }
-////                }
-//                isExtraParanthesesNeeded = !isExtraParanthesesNeeded
-//                resultLabel.isHidden = true
-//            } else {
                 print("Normal Delete")
                 s?.removeLast()
                 displayLabel.text = s
             MainUI.temp = validate.arraify(text: s!)
             print("Inside Delete Temp: \(MainUI.temp)")
                 resultLabel.isHidden = true
-//            }
         } else {
             displayLabel.text = nil
             deleteButton.isEnabled = false
             resultLabel.isHidden = true
         }
     }
-    @objc func didTapPrint(view: MainUI, sender: UIButton) {
-       
-    }
 }
-    
+

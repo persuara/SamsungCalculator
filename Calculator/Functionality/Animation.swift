@@ -7,9 +7,7 @@
 
 import Foundation
 import UIKit
-
 class Animation: UIView {
-    
     public func animateButton(sender: UIButton, colors: [CGFloat]) {
         sender.titleLabel!.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
         let red = 71.0/255.0
