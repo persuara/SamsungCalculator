@@ -24,11 +24,9 @@ class Leftover {
     }
     
     public func diffInParanthesesCount(_ textInQuestion:  String) -> Int {
-        var number: Int = 0
-        number = numOfRightFacingParantheses(textInQuestion) - numOfLeftFacingParantheses(textInQuestion)
-        return number
+        return numOfRightFacingParantheses(textInQuestion) - numOfLeftFacingParantheses(textInQuestion)
     }
-    public func placeParatheses(_ text: String) -> String{
+    public func placeParatheses(_ text: String) -> String {
         var endResultString: String = ""
         var numRight = numOfRightFacingParantheses(text) - 1
         var numLeft = numOfLeftFacingParantheses(text) - 1

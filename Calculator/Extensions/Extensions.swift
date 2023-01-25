@@ -61,6 +61,41 @@ extension String {
             return []
         }
     }
+    func containsParantheses() -> Bool {
+        var flag: Bool = false
+        let array = self.matches(for: "([\\(|\\)]+)", in: self)
+        print("Array in contain Parantheses: \(array)")
+        if array.count != 0 {
+            flag = true
+        }
+        debugPrint("flagggggg ==== \(flag)")
+        return flag
+    }
+    subscript(_ range: CountableRange<Int>) -> String {
+        let start = index(startIndex, offsetBy: max(0, range.lowerBound))
+        let end = index(start, offsetBy: min(self.count - range.lowerBound,
+                                             range.upperBound - range.lowerBound))
+        return String(self[start..<end])
+    }
+    
+    subscript(_ range: CountablePartialRangeFrom<Int>) -> String {
+        let start = index(startIndex, offsetBy: max(0, range.lowerBound))
+        return String(self[start...])
+    }
+    func arraifyMe() -> [String] {
+        let inputNSString = self as NSString
+        var matchArray = [NSTextCheckingResult]()
+        var sectionedArray = [String]()
+        let range = NSRange(location: 0, length: self.count)
+        guard let sectioningRegex = try? NSRegularExpression(pattern:
+                                                                "([\\d.\\d]+|[\\d]+)|([\\+\\–\\÷\\×\\%])|([\\)\\(]{1})") else { return ["wrong Jose"]}
+        matchArray = sectioningRegex.matches(in: self, range: range)
+        for match in matchArray {
+            let matchString = inputNSString.substring(with: match.range) as String
+            sectionedArray.append(matchString)
+        }
+        return sectionedArray
+    }
 }
 extension MainUI {
     func addButton(_ number: Int, from array: [ModelButton], which stack: UIStackView) -> Void {
@@ -88,8 +123,8 @@ extension MainUI {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
         resultLabel.isHidden = true
         if sender.tag == 17 {
-            pe.negatationRegulation(sender, on: &displayLabel.text)
-            pe.negatationRegulation(sender, on: &resultLabel.text)
+            pe.negatationRegulation(sender, on: &displayLabel.text, collection: &calcultaionArray)
+            pe.negatationRegulation(sender, on: &resultLabel.text, collection: &calcultaionArray)
         } else if sender.tag == 1 { emptyAll() } else {
             pe.printTitle(sender, On: &resultLabel.text, sign: "×", collection: &calcultaionArray)
             pe.printTitle(sender, On: &displayLabel.text, sign: "×", collection: &calcultaionArray)
@@ -118,8 +153,15 @@ extension MainUI {
                         if Double(end) == nil {
                             errorSetting.displayErrorMessage(.normal)
                         } else {
-//                            MainUI.temp = calcultaionArray
-                            resultLabel.text = "\(calculator.calculate(array: &calcultaionArray).truncate(places: 5))"
+                            if leftover.sameParanthesesCount(displayLabel.text ?? "") != true {
+                                print("-------same nist------")
+                                var arraySame = validate.arraifyIGNORE(text: displayLabel.text ?? "")
+                                resultLabel.text = "\(calculator.calculate(array: &arraySame).truncate(places: 5))"
+                            } else {
+                                print("-------same ee------")
+                                var finalres = calculator.advancedCalculationShit(this: &displayLabel.text!)
+                                resultLabel.text = "\(finalres)"
+                            }
                         }
                     } else {
                         errorSetting.displayErrorMessage(.nothing)
@@ -141,12 +183,12 @@ extension MainUI: ObjCDelegate {
             return }
         s = text
         if s?.isEmpty == false  {
-                print("Normal Delete")
-                s?.removeLast()
-                displayLabel.text = s
+            print("Normal Delete")
+            s?.removeLast()
+            displayLabel.text = s
             MainUI.temp = validate.arraify(text: s!)
             print("Inside Delete Temp: \(MainUI.temp)")
-                resultLabel.isHidden = true
+            resultLabel.isHidden = true
         } else {
             displayLabel.text = nil
             deleteButton.isEnabled = false
@@ -154,4 +196,12 @@ extension MainUI: ObjCDelegate {
         }
     }
 }
-
+extension Array {
+    func stringME() -> String {
+        var result = ""
+        for i in 0...self.count - 1 {
+            result = "\(result)\(self[i])"
+        }
+        return result
+    }
+}

@@ -7,12 +7,13 @@
 import Foundation
 import UIKit
 class Regulations {
-    var array = [String]()
+    
     lazy var viewModel = ViewModel()
     lazy var validation = Validation()
     lazy var leftOver = Leftover()
     lazy var ui = MainUI()
     lazy var errorSetting = ErrorSettings()
+    var calculationArray = [String]()
     
     var label = UILabel()
     var resLabel = UILabel()
@@ -38,9 +39,8 @@ class Regulations {
             if sender.tag == 19 {
                 print("currently handling decimal Reg")
                 decimalRegulation(sender, on: &text)
-//                decimalRegulation(sender, on: &resLabel.text)
             } else if sender.tag == 2 {
-                paranthesesRegulation(on: &text, sign: sign)
+                paranthesesRegulation(on: &text, sign: sign, collection: &collection)
             } else if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
                 if text == resLabel.text {
                     collection.append(text!)
@@ -61,16 +61,16 @@ class Regulations {
                 }
             }
     }
-    private func paranthesesRegulation(on text: inout String?, sign: String) {
+    private func paranthesesRegulation(on text: inout String?, sign: String, collection: inout [String]) {
         if text == nil {
             text = "\(text ?? "")("
         } else {
-            viewModel.arrayOfElements.forEach({ [weak self] c in
-                guard (self != nil) else { return }
-                if text!.last == c {
+            if collection.count != 0 {
+                let end = collection[collection.count - 1]
+                if Double(end) == nil {
                     doesContainSuffix = true
                 }
-            })
+            }
             if doesContainSuffix {
                 text = "\(text ?? "")("
                 doesContainSuffix = !doesContainSuffix
@@ -78,18 +78,21 @@ class Regulations {
                 validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
             } else {
                 validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
-                viewModel.arrayOfElements.forEach({ [weak self] c in
-                    guard (self != nil) else { return }
-                    if text?.last! == c {
+                if collection.count != 0 {
+                    let end = calculationArray[calculationArray.count - 1]
+                    if Double(end) == nil {
                         doesContainSuffix = true
+                        print("does contain suffix: \(doesContainSuffix)")
                     }
-                })
-                viewModel.arrayOfNumbers.forEach({ [weak self] c in
-                    guard (self != nil) else { return }
-                    if text?.last! == c {
+                }
+                if collection.count != 0 {
+                    let endnum = collection[collection.count - 1]
+                    if Double(endnum) != nil {
                         isLastCharacterANumber = true
+                        print("is last C Number : \(isLastCharacterANumber)")
                     }
-                })
+                }
+                
                 if isLastCharacterANumber == true {
                     text = "\(text ?? ""))"
                     isLastCharacterANumber = !isLastCharacterANumber
@@ -133,14 +136,31 @@ class Regulations {
             }
         }
     }
-    public func negatationRegulation(_ sender: UIButton, on text: inout String?) {
-        if text != nil {
+    // MARK ----------------
+    public func negatationRegulation(_ sender: UIButton, on text: inout String?, collection: inout [String]) {
+//        if text != nil {
             print("text is not nil so")
-            validation.negetateAndReplaceLastNum(&text!)
+//            validation.negetateAndReplaceLastNum(&text!)
+            placeMinusSign(colletion: &collection)
+//        } else {
+//            text = "-"
+//        }
+    }
+    private func placeMinusSign(colletion: inout [String]) {
+        var flagNumber = false
+        if colletion.count != 0 {
+            let end = colletion[colletion.count - 1]
+            if Double(end) != nil {
+                flagNumber = true
+            }
+        }
+        if flagNumber == true {
+            colletion[colletion.count - 1] = "-\(colletion[colletion.count - 1])"
         } else {
-            text = "-"
+    //         print *( here!
         }
     }
+    // ----------------------END MARK ----------------
     public func goThroughArray(array: [Character], text: String?) -> Bool {
         var flag: Bool = false
         array.forEach({ c in

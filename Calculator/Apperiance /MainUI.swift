@@ -41,7 +41,8 @@ class MainUI: UIView {
         super.init(frame: frame)
         pe.label = displayLabel
         pe.resLabel = resultLabel
-        calcultaionArray = pe.array
+        pe.calculationArray = calcultaionArray
+        
         errorSetting.label = errorMessage
         
         subviewArray.enumerated().forEach({ [weak self] element in
