@@ -155,11 +155,18 @@ extension MainUI {
                         } else {
                             if leftover.sameParanthesesCount(displayLabel.text ?? "") != true {
                                 print("-------same nist------")
-                                var arraySame = validate.arraifyIGNORE(text: displayLabel.text ?? "")
-                                resultLabel.text = "\(calculator.calculate(array: &arraySame).truncate(places: 5))"
+                                let helper = leftover.placeParatheses(displayLabel.text ?? "")
+                                if leftover.diffInParanthesesCount(displayLabel.text ?? "") > 0 {
+                                    displayLabel.text = "\(displayLabel.text ?? "")\(helper)"
+                                } else {
+                                    displayLabel.text = "\(helper)\(displayLabel.text ?? "")"
+                                }
+                                debugPrint("DisplayLabel: \(displayLabel.text ?? "")")
+                                let finalres = calculator.advancedCalculationShit(this: &(displayLabel.text)!)
+                                resultLabel.text = "\(finalres)"
                             } else {
                                 print("-------same ee------")
-                                var finalres = calculator.advancedCalculationShit(this: &displayLabel.text!)
+                                let finalres = calculator.advancedCalculationShit(this: &displayLabel.text!)
                                 resultLabel.text = "\(finalres)"
                             }
                         }

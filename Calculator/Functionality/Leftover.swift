@@ -22,7 +22,6 @@ class Leftover {
         let array = thistext.matches(for: "\\)", in: thistext)
         return array.count
     }
-    
     public func diffInParanthesesCount(_ textInQuestion:  String) -> Int {
         return numOfRightFacingParantheses(textInQuestion) - numOfLeftFacingParantheses(textInQuestion)
     }

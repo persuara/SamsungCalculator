@@ -43,13 +43,13 @@ class Regulations {
                 paranthesesRegulation(on: &text, sign: sign, collection: &collection)
             } else if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
                 if text == resLabel.text {
-                    collection.append(text!)
-                    print("before typing arithemic exp: \(collection)")
+//                    collection.append(text!)
+//                    print("before typing arithemic exp: \(collection)")
                     resLabel.text = nil
                     text = "\(sender.titleLabel!.text!)"
                     collection.append(text!)
                     resLabel.text = nil
-                    print("After typing arithemic exp: \(collection)")
+//                    print("After typing arithemic exp: \(collection)")
                 } else {
                     text = "\(text ?? "")\(sender.titleLabel!.text!)"
                     resLabel.text = nil

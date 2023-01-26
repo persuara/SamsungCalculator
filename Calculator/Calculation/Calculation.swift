@@ -93,16 +93,23 @@ class Calculator {
         var temp = [String]()
         var tempString : String = ""
         var result: Double = 0.0
+        var indexOpen: Int = 0
+        var indexClose: Int = 0
+        let doubleRes = displayLabel
+        
+        if Double(doubleRes) != nil {
+            return "\(displayLabel)"
+        }
         if displayLabel.containsParantheses() == false {
             return "\(calculate(array: &arrayToPass))"
         } else {
-            var indexOpen = arrayToPass.firstIndex(of: "(")! + 1
+            indexOpen = arrayToPass.firstIndex(of: "(")! + 1
             debugPrint("new indexOpen: \(indexOpen)")
-            var indexClose = arrayToPass.lastIndex(of: ")")! + indexOpen
+            indexClose = arrayToPass.lastIndex(of: ")")! + indexOpen
             debugPrint("new indexClose: \(indexClose)")
-            var newValue = displayLabel[indexOpen..<indexClose]
+            let newValue = displayLabel[indexOpen..<indexClose]
             debugPrint("new value: \(newValue)")
-            var regexed = newValue.matches(for: "\\(([^()\"]*(?:\"[^\"]*\"\\d+\\d+.\\d+[^()\"]*)*)\\)", in: newValue)
+            let regexed = newValue.matches(for: "\\(([^()\"]*(?:\"[^\"]*\"\\d+\\d+.\\d+[^()\"]*)*)\\)", in: newValue)
             print("Regexed: \(regexed)")
             if regexed.count != 0 {
                 print("regexed is not empty baby-----------")
