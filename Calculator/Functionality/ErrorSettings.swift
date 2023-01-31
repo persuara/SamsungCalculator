@@ -19,7 +19,7 @@ class ErrorSettings {
 enum ErrorMessage: String {
     case error = "No Way Jose!"
     case sameStatus = "Result stays the same!"
-    case nothing = "Nothing to compute"
+    case nothing = "Bro, type sth first!"
     case normal = "Invalid format used."
 
 }

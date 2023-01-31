@@ -15,45 +15,50 @@ class Calculator {
         var element: Int = 0
         var result: Double = 0
         let arrayElements = sortEndResult(array, from: sortMultAndDiv(array))
-        arrayElements.forEach({ c in
-            if array.count == 1 {
-                print(result)
-            } else {
-                if array.contains(c) {
-                    element = array.firstIndex(of: c)!
-                    lsn = array[element - 1]
-                    print("Left side number: \(lsn)")
-                    rsn = array[element + 1]
-                    print("Right side number: \(rsn)")
-                    if c == "%" {
-                        result =  (Double(lsn) ?? 1) / 100
-                    } else if c == "×" {
-                        result =  (Double(lsn) ?? 1)  * (Double(rsn) ?? 1)
-                    } else if c == "÷" {
-                        result =  (Double(lsn) ?? 1) / (Double(rsn) ?? 1)
-                    } else if c == "+" {
-                        result =  (Double(lsn) ?? 1) + (Double(rsn) ?? 1)
-                    } else if c == "–" {
-                        result =  (Double(lsn) ?? 1) - (Double(rsn) ?? 1)
-                    } else {
-                        result = (Double(lsn) ?? 1)
+        if array.count == 1 {
+            var toPass = array[0]
+            result = Double(toPass) ?? -1
+        } else {
+            arrayElements.forEach({ c in
+                if array.count == 1 {
+                    print(result)
+                } else {
+                    if array.contains(c) {
+                        element = array.firstIndex(of: c)!
+                        lsn = array[element - 1]
+                        print("Left side number: \(lsn)")
+                        rsn = array[element + 1]
+                        print("Right side number: \(rsn)")
+                        if c == "%" {
+                            result =  (Double(lsn) ?? 1) / 100
+                        } else if c == "×" {
+                            result =  (Double(lsn) ?? 1)  * (Double(rsn) ?? 1)
+                        } else if c == "÷" {
+                            result =  (Double(lsn) ?? 1) / (Double(rsn) ?? 1)
+                        } else if c == "+" {
+                            result =  (Double(lsn) ?? 1) + (Double(rsn) ?? 1)
+                        } else if c == "–" {
+                            result =  (Double(lsn) ?? 1) - (Double(rsn) ?? 1)
+                        } else {
+                            result = (Double(lsn) ?? 1)
+                        }
+                        if c == "%" {
+                            array.remove(at: element - 1)
+                            array.insert(String(result), at: element - 1)
+                            print(" element: \(array[element])")
+                            array.remove(at: element)
+                        } else {
+                            array.remove(at: element - 1)
+                            array.insert(String(result), at: element - 1)
+                            print(" element: \(array[element])")
+                            array.remove(at: element + 1)
+                            array.remove(at: element)
+                        }
+                        print(array)
                     }
-                    if c == "%" {
-                        array.remove(at: element - 1)
-                        array.insert(String(result), at: element - 1)
-                        print(" element: \(array[element])")
-                        array.remove(at: element)
-                    } else {
-                        array.remove(at: element - 1)
-                        array.insert(String(result), at: element - 1)
-                        print(" element: \(array[element])")
-                        array.remove(at: element + 1)
-                        array.remove(at: element)
-                    }
-                    print(array)
                 }
-            }
-        })
+            })
+        }
         return result
     }
     func sortMultAndDiv(_ array: [String]) -> [String] {
@@ -97,21 +102,23 @@ class Calculator {
     func replaceOcc(this text: String,of str: String ,with result: Double) -> String {
         return text.replacingOccurrences(of: str, with: "\(result)")
     }
-    public func advancedCalculationShit(this displayLabel: inout String) -> String {
-        var arrayToPass = displayLabel.arraifyMe()
+    public func advancedCalculationShit(this displayLabel:  String) -> String {
+        var substitude = displayLabel
+        var arrayToPass = substitude.arraifyMe()
         var temp = [String]()
         var tempString : String = ""
         var result: Double = 0.0
         var indexOpen: Int = 0
         var indexClose: Int = 0
-//        let doubleRes = displayLabel
+//        let doubleRes = substitude
 
-        if displayLabel.containsParantheses() == false {
+        if substitude.containsParantheses() == false {
             print("Does not contain Any Para")
-            let arrayend = arraifyIGNORE(text: displayLabel)
-            return "\(arrayend[0])"
+            var arrayaga = arraifyIGNORE(text: substitude)
+            print("array without para: \(arrayaga)")
+            return "\(calculate(array: &arrayaga))"
             
-        } else if validate.isOnlyOneNumber(displayLabel) {
+        } else if validate.isOnlyOneNumber(substitude) {
             print("*************** ONLY ONE NUMBER *******************")
                 return "\(arrayToPass[1])"
             } else {
@@ -134,23 +141,23 @@ class Calculator {
                 temp = tempString.arraifyMe()
                 print("temp ignore shode: \(temp)")
                 result = calculate(array: &temp).truncate(places: 5)
-                displayLabel = replaceOcc(this: displayLabel, of: regexed[0], with: result)
-                print("DisplayLabel At the end of regex count != 0 ----> \(displayLabel)")
+                substitude = replaceOcc(this: substitude, of: regexed[0], with: result)
+                print("substitude At the end of regex count != 0 ----> \(substitude)")
             } else {
                 print("#2 else, Means Regexed.count != 0 ")
                 temp = newValue.arraifyMe()
                 if temp.count == 1 {
                     print("count == 1")
-                    displayLabel = replaceOcc(this: displayLabel, of: "\(newValue)", with: Double(newValue)!)
+                    substitude = replaceOcc(this: substitude, of: "\(newValue)", with: Double(newValue)!)
                 } else {
                     print("In ELSE TEMP arraified equal === \(temp)")
                     result = calculate(array: &temp).truncate(places: 5)
-                    displayLabel = replaceOcc(this: displayLabel, of: newValue, with: result)
+                    substitude = replaceOcc(this: substitude, of: newValue, with: result)
                 }
-                print("DisplayLabel At the end of regex count == 0 ----> \(displayLabel)")
+                print("substitude At the end of regex count == 0 ----> \(substitude)")
             }
-            print("At the end the displaylabel is: \(displayLabel)")
+            print("At the end the substitude is: \(substitude)")
         }
-        return advancedCalculationShit(this: &displayLabel)
+        return advancedCalculationShit(this: substitude)
     }
 }

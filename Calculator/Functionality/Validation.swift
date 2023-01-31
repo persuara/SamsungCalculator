@@ -71,28 +71,6 @@ class Validation {
         }
         return endResult
     }
-    
-    func validToParse(_ ourText: String) -> Bool {
-        var flag: Bool = true
-        var dignifiled = [String]()
-        let arrayAgain = ourText.matches(for: "\\(\\)$", in: ourText)
-        let arrayTest = ourText.matches(for: "\\([\\+\\*\\/]", in: ourText)
-        if  arrayAgain.count != 0 || arrayTest.count != 0  {
-            return false
-        } else {
-            let arrayNum = ourText.matches(for: "(\\d)*(\\d*\\.?\\d*)*", in: ourText)
-            arrayNum.forEach({ c in
-                if c != "" {
-                    dignifiled.append(c)
-                }
-            })
-            let arrayEle = ourText.matches(for: "[\\+\\-\\*\\/\\%]", in: ourText)
-            if arrayEle.count == dignifiled.count || arrayEle.count > dignifiled.count + 1 {
-                flag = false
-            }
-            return flag
-        }
-    }
     public func placeArithmicElementifOnlyOneNumber(_ text: inout String, which element: String) -> Void {
             text = "\(text)\(element)("
         
@@ -115,7 +93,7 @@ class Validation {
         var sectionedArray = [String]()
         let range = NSRange(location: 0, length: expression.count)
         guard let sectioningRegex = try? NSRegularExpression(pattern:
-                                                                "([\\d.\\d]+|[\\d]+)|([\\+\\–\\÷\\×\\%])|([\\)\\(]{1})") else { return ["wrong Jose"]}
+                                                                "([-?\\d.\\d]+|[-?\\d]+)|([\\+\\–\\÷\\×\\%])|([\\)\\(]{1})") else { return ["wrong Jose"]}
         matchArray = sectioningRegex.matches(in: expression, range: range)
         for match in matchArray {
             let matchString = inputNSString.substring(with: match.range) as String
@@ -129,7 +107,7 @@ class Validation {
         var sectionedArray = [String]()
         let range = NSRange(location: 0, length: expression.count)
         guard let sectioningRegex = try? NSRegularExpression(pattern:
-                                                                "([\\d.\\d]+|[\\d]+)|([\\+\\–\\÷\\×\\%])") else { return ["wrong Jose"]}
+                                                                "([-?\\d.\\d]+|[-?\\d]+)|([\\+\\–\\÷\\×\\%])") else { return ["wrong Jose"]}
         matchArray = sectioningRegex.matches(in: expression, range: range)
         for match in matchArray {
             let matchString = inputNSString.substring(with: match.range) as String

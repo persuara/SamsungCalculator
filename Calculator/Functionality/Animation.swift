@@ -39,7 +39,7 @@ class Animation: UIView {
     public func animateErrorMessage(_ modelText: ErrorMessage, label: UILabel) -> Void {
         label.alpha = 1
         label.text = modelText.rawValue
-        UIView.animate(withDuration: 3.1, delay: 0.1, options: .curveLinear, animations: { () -> Void in
+        UIView.animate(withDuration: 4.1, delay: 0.1, options: .curveLinear, animations: { () -> Void in
             label.alpha = 0
         })
     }

@@ -88,7 +88,7 @@ extension String {
         var sectionedArray = [String]()
         let range = NSRange(location: 0, length: self.count)
         guard let sectioningRegex = try? NSRegularExpression(pattern:
-                                                                "([\\d.\\d]+|[\\d]+)|([\\+\\–\\÷\\×\\%])|([\\)\\(]{1})") else { return ["wrong Jose"]}
+                                                                "([-?\\d.\\d]+|[-?\\d]+)|([\\+\\–\\÷\\×\\%])|([\\)\\(]{1})") else { return ["wrong Jose"]}
         matchArray = sectioningRegex.matches(in: self, range: range)
         for match in matchArray {
             let matchString = inputNSString.substring(with: match.range) as String
@@ -121,13 +121,23 @@ extension MainUI {
     }
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
+
         resultLabel.isHidden = true
         if sender.tag == 17 {
             pe.negatationRegulation(sender, on: &displayLabel.text, collection: &calcultaionArray)
             pe.negatationRegulation(sender, on: &resultLabel.text, collection: &calcultaionArray)
         } else if sender.tag == 1 { emptyAll() } else {
-            pe.printTitle(sender, On: &resultLabel.text, sign: "×", collection: &calcultaionArray)
-            pe.printTitle(sender, On: &displayLabel.text, sign: "×", collection: &calcultaionArray)
+            if sender.tag == 3 || sender.tag == 4 || sender.tag == 3 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
+                if displayLabel.text == nil {
+                    errorSetting.displayErrorMessage(.normal)
+                } else {
+                    pe.printTitle(sender, On: &resultLabel.text, sign: "×", collection: &calcultaionArray)
+                    pe.printTitle(sender, On: &displayLabel.text, sign: "×", collection: &calcultaionArray)
+                }
+            } else {
+                pe.printTitle(sender, On: &resultLabel.text, sign: "×", collection: &calcultaionArray)
+                pe.printTitle(sender, On: &displayLabel.text, sign: "×", collection: &calcultaionArray)
+            }
         }
         switch sender.tag {
         case 20:
@@ -144,7 +154,7 @@ extension MainUI {
                         errorSetting.displayErrorMessage(.normal)
                         isLastCharElement = !isLastCharElement
                     } else {
-                        let res = calculator.advancedCalculationShit(this: &MainUI.temp!)
+                        let res = calculator.advancedCalculationShit(this: MainUI.temp!)
                         resultLabel.text = "\(res)"
                     }
                     isDeleteButtonTapped = false
@@ -172,11 +182,11 @@ extension MainUI {
                                     displayLabel.text = "\(helper)\(displayLabel.text ?? "")"
                                 }
                                 debugPrint("DisplayLabel: \(displayLabel.text ?? "")")
-                                let finalres = calculator.advancedCalculationShit(this: &(displayLabel.text)!)
+                                let finalres = calculator.advancedCalculationShit(this: (displayLabel.text)!)
                                 resultLabel.text = "\(finalres)"
                             } else {
                                 print("-------same ee------")
-                                let finalres = calculator.advancedCalculationShit(this: &displayLabel.text!)
+                                let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
                                 resultLabel.text = "\(finalres)"
                             }
                         }

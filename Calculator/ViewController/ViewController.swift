@@ -20,5 +20,8 @@ class ViewController: UIViewController {
         } else {
             ui.deleteButton.isEnabled = false
         }
+//        var nf = NumberFormatter()
+//        nf.numberStyle = .decimal
+//        nf.string(from: NSNumber(pointer: ui.displayLabel.text ?? ""))
     }
 }

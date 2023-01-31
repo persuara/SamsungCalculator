@@ -68,30 +68,19 @@ class Regulations {
         if text == nil {
             text = "\(text ?? "")("
         } else {
-            viewModel.arrayOfElements.forEach({ c in
-                if text?.last == c {
-                    doesContainSuffix = true
-                }
-            })
-            if doesContainSuffix {
-                text = "\(text ?? "")("
-                doesContainSuffix = !doesContainSuffix
-            } else if validation.isOnlyOneNumber(text!) {
-                validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
-            } else {
-                validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
-//                viewModel.arrayOfElements.forEach({ c in
-//                    if text?.last == c {
-//                        doesContainSuffix = true
-//                    }
-//                })
-//                viewModel.arrayOfNumbers.forEach({ c in
-//                    if text?.last == c {
-//                        isLastCharacterANumber = true
-//                    }
-//                })
-                
-                if isLastCharacterANumber == true {
+                viewModel.arrayOfElements.forEach({ c in
+                    if text?.last == c {
+                        doesContainSuffix = true
+                    }
+                })
+                viewModel.arrayOfNumbers.forEach({ c in
+                    if text?.last == c {
+                        isLastCharacterANumber = true
+                    }
+                })
+            if text?.count == 1 {
+                text = "\(text ?? "")×("
+            } else if isLastCharacterANumber == true {
                     text = "\(text ?? ""))"
                     isLastCharacterANumber = !isLastCharacterANumber
                 } else {
@@ -101,7 +90,6 @@ class Regulations {
                     }
                 }
             }
-        }
     }
     public func numbersRegulation(_ sender: UIButton, on text: inout String?) {
         if text == nil {

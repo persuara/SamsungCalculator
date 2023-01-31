@@ -35,6 +35,7 @@ class MainUI: UIView {
     private lazy var hairline = config.view()
     
     public lazy var displayLabel = config.label(heightConstant: 150)
+
     public lazy var resultLabel = config.label(numberOfLines: 1,isHidden: false, alpha: 0.7 ,size: 25)
     public lazy var deleteButton = config.button()
     
@@ -76,6 +77,7 @@ class MainUI: UIView {
             errorMessage.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),
         ])
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
