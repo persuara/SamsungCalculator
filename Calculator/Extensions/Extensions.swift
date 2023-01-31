@@ -124,8 +124,8 @@ extension MainUI {
 
         resultLabel.isHidden = true
         if sender.tag == 17 {
-            pe.negatationRegulation(sender, on: &displayLabel.text, collection: &calcultaionArray)
-            pe.negatationRegulation(sender, on: &resultLabel.text, collection: &calcultaionArray)
+            pe.negatationRegulation(sender, on: &displayLabel.text)
+            pe.negatationRegulation(sender, on: &resultLabel.text)
         } else if sender.tag == 1 { emptyAll() } else {
             if sender.tag == 3 || sender.tag == 4 || sender.tag == 3 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
                 if displayLabel.text == nil {
@@ -154,8 +154,21 @@ extension MainUI {
                         errorSetting.displayErrorMessage(.normal)
                         isLastCharElement = !isLastCharElement
                     } else {
-                        let res = calculator.advancedCalculationShit(this: MainUI.temp!)
-                        resultLabel.text = "\(res)"
+                        if leftover.sameParanthesesCount(MainUI.temp ?? "") != true {
+                            print("-------same nist------")
+                            let helper = leftover.placeParatheses(MainUI.temp ?? "")
+                            if leftover.diffInParanthesesCount(MainUI.temp ?? "") > 0 {
+                                displayLabel.text = "\(MainUI.temp ?? "")\(helper)"
+                            } else {
+                                displayLabel.text = "\(helper)\(MainUI.temp ?? "")"
+                            }
+                            let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
+                            resultLabel.text = finalres
+                        } else {
+                            print("-------same ee------")
+                            let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
+                            resultLabel.text = finalres
+                        }
                     }
                     isDeleteButtonTapped = false
                 } else {
@@ -213,6 +226,7 @@ extension MainUI: ObjCDelegate {
             print("Normal Delete")
             s?.removeLast()
             displayLabel.text = s
+            
             MainUI.temp = s ?? ""
             print("Inside Delete Temp: \(MainUI.temp ?? "")")
             resultLabel.isHidden = true

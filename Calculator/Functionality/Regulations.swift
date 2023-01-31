@@ -129,28 +129,18 @@ class Regulations {
         }
     }
     // MARK ----------------
-    public func negatationRegulation(_ sender: UIButton, on text: inout String?, collection: inout [String]) {
-        //        if text != nil {
-        print("text is not nil so")
-        //            validation.negetateAndReplaceLastNum(&text!)
-        placeMinusSign(colletion: &collection)
-        //        } else {
-        //            text = "-"
-        //        }
+    public func negatationRegulation(_ sender: UIButton, on text: inout String?) {
+        if text == nil {
+            text = "-"
+        } else if text?.last == "(" {
+            text = "\(text ?? "")(-"
+            } else {
+            validation.negetateAndReplaceLastNum(&text!)
+        }
     }
-    private func placeMinusSign(colletion: inout [String]) {
-        var flagNumber = false
-        if colletion.count != 0 {
-            let end = colletion[colletion.count - 1]
-            if Double(end) != nil {
-                flagNumber = true
-            }
-        }
-        if flagNumber == true {
-            colletion[colletion.count - 1] = "-\(colletion[colletion.count - 1])"
-        } else {
-            //         print *( here!
-        }
+    private func placeMinusSign(text: inout String) {
+//        var arraified = text.arraifyMe()
+        
     }
     // ----------------------END MARK ----------------
     public func goThroughArray(array: [Character], text: String?) -> Bool {

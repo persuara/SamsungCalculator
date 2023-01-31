@@ -15,8 +15,8 @@ class Calculator {
         var element: Int = 0
         var result: Double = 0
         let arrayElements = sortEndResult(array, from: sortMultAndDiv(array))
-        if array.count == 1 {
-            var toPass = array[0]
+        if array.count == 1  {
+            let toPass = array[0]
             result = Double(toPass) ?? -1
         } else {
             arrayElements.forEach({ c in
@@ -91,7 +91,7 @@ class Calculator {
         var sectionedArray = [String]()
         let range = NSRange(location: 0, length: expression.count)
         guard let sectioningRegex = try? NSRegularExpression(pattern:
-                                                                "([\\d.\\d]+|[\\d]+)|([\\+\\–\\÷\\×\\%])") else { return ["wrong Jose"]}
+                                                                "([-?\\d.\\d]+|[-?\\d]+)|([\\+\\–\\÷\\×\\%])") else { return ["wrong Jose"]}
         matchArray = sectioningRegex.matches(in: expression, range: range)
         for match in matchArray {
             let matchString = inputNSString.substring(with: match.range) as String
@@ -116,11 +116,12 @@ class Calculator {
             print("Does not contain Any Para")
             var arrayaga = arraifyIGNORE(text: substitude)
             print("array without para: \(arrayaga)")
-            return "\(calculate(array: &arrayaga))"
+            return "\(calculate(array: &arrayaga).truncate(places: 5))"
             
         } else if validate.isOnlyOneNumber(substitude) {
             print("*************** ONLY ONE NUMBER *******************")
-                return "\(arrayToPass[1])"
+            let arraha = substitude.matches(for: "((-?\\d)+(-?\\d*\\.?\\d*)){1}", in: substitude)
+                return "\(arraha[0])"
             } else {
             indexOpen = arrayToPass.firstIndex(of: "(")!
             debugPrint("new indexOpen: \(indexOpen)")
@@ -137,10 +138,14 @@ class Calculator {
                 temp = validate.arraify(text: regexed[0])
                 print("regexed[0] =  \(regexed[0])")
                 tempString = temp.stringME()
+                let test = tempString.matches(for: "((-?\\d)+(-?\\d*\\.?\\d*)){1}", in: tempString)
                 print("TempString: \(tempString)")
                 temp = tempString.arraifyMe()
-                print("temp ignore shode: \(temp)")
-                result = calculate(array: &temp).truncate(places: 5)
+                if test.count != 1 {
+                    result = calculate(array: &temp).truncate(places: 5).truncate(places: 5)
+                } else {
+                    result = Double(test[0]) ?? 0
+                }
                 substitude = replaceOcc(this: substitude, of: regexed[0], with: result)
                 print("substitude At the end of regex count != 0 ----> \(substitude)")
             } else {
