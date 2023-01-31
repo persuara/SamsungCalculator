@@ -71,17 +71,6 @@ extension String {
         debugPrint("flagggggg ==== \(flag)")
         return flag
     }
-    subscript(_ range: CountableRange<Int>) -> String {
-        let start = index(startIndex, offsetBy: max(0, range.lowerBound))
-        let end = index(start, offsetBy: min(self.count - range.lowerBound,
-                                             range.upperBound - range.lowerBound))
-        return String(self[start..<end])
-    }
-    
-    subscript(_ range: CountablePartialRangeFrom<Int>) -> String {
-        let start = index(startIndex, offsetBy: max(0, range.lowerBound))
-        return String(self[start...])
-    }
     func arraifyMe() -> [String] {
         let inputNSString = self as NSString
         var matchArray = [NSTextCheckingResult]()
@@ -95,6 +84,20 @@ extension String {
             sectionedArray.append(matchString)
         }
         return sectionedArray
+    }
+    public mutating func addNumberFormatter(style: NumberFormatter.Style = .decimal) -> String {
+        let fmt = NumberFormatter()
+        fmt.numberStyle = style
+        var arrayWorkedOn = self.arraifyMe()
+        for i in 0...arrayWorkedOn.count - 1 {
+            if Double(arrayWorkedOn[i]) != nil {
+                var changed = fmt.string(from: Double(arrayWorkedOn[i])! as NSNumber)
+                print("arrayworkedOn[i] = \(arrayWorkedOn[i])")
+                print("To Replace it = \(changed!)")
+                self = replacingOccurrences(of: arrayWorkedOn[i], with: changed!)
+            }
+        }
+        return self
     }
 }
 extension MainUI {
@@ -121,7 +124,7 @@ extension MainUI {
     }
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
-
+//        displayLabel.text?.addNumberFormatter()
         resultLabel.isHidden = true
         if sender.tag == 17 {
             pe.negatationRegulation(sender, on: &displayLabel.text)
@@ -153,24 +156,33 @@ extension MainUI {
                     if isLastCharElement {
                         errorSetting.displayErrorMessage(.normal)
                         isLastCharElement = !isLastCharElement
+                        resultLabel.isHidden = true
                     } else {
-                        if leftover.sameParanthesesCount(MainUI.temp ?? "") != true {
+                        displayLabel.text = MainUI.temp
+                        if leftover.sameParanthesesCount(displayLabel.text ?? "") != true {
                             print("-------same nist------")
-                            let helper = leftover.placeParatheses(MainUI.temp ?? "")
-                            if leftover.diffInParanthesesCount(MainUI.temp ?? "") > 0 {
-                                displayLabel.text = "\(MainUI.temp ?? "")\(helper)"
+                            if leftover.diffInParanthesesCount(displayLabel.text ?? "") > 0 {
+                                let helper = leftover.placeParatheses(displayLabel.text ?? "")
+                                print("currently deploying helper AFTER the para helperaga:  \(helper)")
+                                displayLabel.text = "\(displayLabel.text ?? "")\(helper)"
+                                let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
+                                resultLabel.text = finalres
+                                resultLabel.isHidden = false
                             } else {
-                                displayLabel.text = "\(helper)\(MainUI.temp ?? "")"
+                                let helper = leftover.placeParatheses(displayLabel.text ?? "")
+                                print("currently deploying helper before the para helperaga:  \(helper)")
+                                displayLabel.text = "\(helper)\(displayLabel.text ?? "")"
+                                let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
+                                resultLabel.text = finalres
+                                resultLabel.isHidden = false
                             }
-                            let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
-                            resultLabel.text = finalres
                         } else {
                             print("-------same ee------")
                             let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
                             resultLabel.text = finalres
                         }
                     }
-                    isDeleteButtonTapped = false
+                    isDeleteButtonTapped = !isDeleteButtonTapped
                 } else {
                     if let text = resultLabel.text {
                         calcultaionArray.append(text)

@@ -123,7 +123,7 @@ class Calculator {
             let arraha = substitude.matches(for: "((-?\\d)+(-?\\d*\\.?\\d*)){1}", in: substitude)
                 return "\(arraha[0])"
             } else {
-            indexOpen = arrayToPass.firstIndex(of: "(")!
+                indexOpen = arrayToPass.firstIndex(of: "(") ?? 0
             debugPrint("new indexOpen: \(indexOpen)")
             indexClose = arrayToPass.lastIndex(of: ")")! + 1
             debugPrint("new indexClose: \(indexClose)")

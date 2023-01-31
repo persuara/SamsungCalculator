@@ -14,6 +14,7 @@ class Regulations {
     lazy var ui = MainUI()
     lazy var errorSetting = ErrorSettings()
     var calculationArray = [String]()
+    static var count = 0
     
     var label = UILabel()
     var resLabel = UILabel()
@@ -68,28 +69,26 @@ class Regulations {
         if text == nil {
             text = "\(text ?? "")("
         } else {
-                viewModel.arrayOfElements.forEach({ c in
-                    if text?.last == c {
-                        doesContainSuffix = true
-                    }
-                })
-                viewModel.arrayOfNumbers.forEach({ c in
-                    if text?.last == c {
-                        isLastCharacterANumber = true
-                    }
-                })
+            viewModel.arrayOfElements.forEach({ c in
+                if text?.last == c {
+                    doesContainSuffix = true
+                }
+            })
+            viewModel.arrayOfNumbers.forEach({ c in
+                if text?.last == c {
+                    isLastCharacterANumber = true
+                }
+            })
             if text?.count == 1 {
                 text = "\(text ?? "")×("
+            } else if doesContainSuffix == true {
+                text = "\(text ?? "")("
+                doesContainSuffix = !doesContainSuffix
             } else if isLastCharacterANumber == true {
-                    text = "\(text ?? ""))"
-                    isLastCharacterANumber = !isLastCharacterANumber
-                } else {
-                    if doesContainSuffix == true {
-                        text = "\(text ?? "")("
-                        doesContainSuffix = !doesContainSuffix
-                    }
-                }
+                text = "\(text ?? ""))"
+                isLastCharacterANumber = !isLastCharacterANumber
             }
+        }
     }
     public func numbersRegulation(_ sender: UIButton, on text: inout String?) {
         if text == nil {
@@ -109,6 +108,7 @@ class Regulations {
         }
     }
     public func decimalRegulation(_ sender: UIButton, on text: inout String?) {
+//        var flaggagaga = false
         if text != nil {
             viewModel.arrayOfNumbers.forEach({ c in
                 if text?.last == c {
@@ -119,27 +119,21 @@ class Regulations {
         if text == nil {
             text = "\(text ?? "")0."
         } else {
-            if decimalFlag == true {
-                text = "\(text!)."
-                decimalFlag = !decimalFlag
-            } else {
-                if !(text?.last == ".") {
-                }
-            }
+                text = "\(text ?? "")."
         }
     }
     // MARK ----------------
     public func negatationRegulation(_ sender: UIButton, on text: inout String?) {
+        
         if text == nil {
-            text = "-"
-        } else if text?.last == "(" {
-            text = "\(text ?? "")(-"
-            } else {
+            text = "(-"
+        } else {
             validation.negetateAndReplaceLastNum(&text!)
         }
+        Regulations.count += 1
     }
     private func placeMinusSign(text: inout String) {
-//        var arraified = text.arraifyMe()
+        //        var arraified = text.arraifyMe()
         
     }
     // ----------------------END MARK ----------------

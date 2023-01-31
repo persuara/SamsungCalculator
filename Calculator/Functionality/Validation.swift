@@ -46,21 +46,31 @@ class Validation {
             return 0
         } else {
             var dignified = [String]()
-            let lastNum = textInQuestion!.matches(for: "(\\d)*(\\d*\\.?\\d*)", in: textInQuestion!)
+            let lastNum = textInQuestion!.matches(for: "(-?\\d)*(-?\\d*\\.?\\d*)", in: textInQuestion!)
             lastNum.forEach({ c in
                 if c != "" {
                     dignified.append(c)
                 }
             })
-            return Double(dignified[dignified.count - 1])!
+           
+            return  Double(dignified[dignified.count - 1]) ?? 1
         }
     }
     public func negetateAndReplaceLastNum(_ textInQuestion: inout String) -> Void {
         let lastNum: Double = lastNumber(textInQuestion)
+        print("here last num equallls: \(lastNum)")
         if lastNum.truncatingRemainder(dividingBy: 1) != 0 {
-            textInQuestion = textInQuestion.replacingOccurrences(of: "\(lastNum)", with: "(-\(lastNum))")
+            if lastNum >= 0 {
+                textInQuestion = textInQuestion.replacingOccurrences(of: "\(lastNum)", with: "(\(-1 * lastNum)")
+            } else {
+                textInQuestion = textInQuestion.replacingOccurrences(of: "(\(lastNum)", with: "\(-1 * lastNum)")
+            }
         } else {
-            textInQuestion = textInQuestion.replacingOccurrences(of: "\(Int(lastNum))", with: "(-\(Int(lastNum))")
+            if lastNum >= 0 {
+                textInQuestion = textInQuestion.replacingOccurrences(of: "\(Int(lastNum))", with: "(\(Int(-1 * lastNum))")
+            } else {
+                textInQuestion = textInQuestion.replacingOccurrences(of: "(\(Int(lastNum))", with: "\(Int(-1 * lastNum))")
+            }
         }
     }
     func changeText(_ text: String? ) -> String {

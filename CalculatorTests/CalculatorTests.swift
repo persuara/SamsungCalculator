@@ -20,8 +20,8 @@ final class CalculatorTests: XCTestCase {
     }
 
     func testExample() throws {
-        var displaylabel: String = "1×(3–6%×(6+3))"
-        XCTAssertEqual(calculate.advancedCalculationShit(this: &displaylabel), "2")
+        var hi: String = "1×(3–6%×(6+3))"
+        XCTAssertEqual(calculate.advancedCalculationShit(this: hi), "2.46")
     }
 
     func testPerformanceExample() throws {
