@@ -10,9 +10,10 @@ class MainUI: UIView {
     
     var calcultaionArray = [String]()
     var elementsArray = [String]()
+    static var enteredElementsArray = [String]()
     
     lazy var calculator = Calculator()
-    static var temp = [String]()
+    static var temp: String?
     lazy var viewModel = ViewModel()
     lazy var config = ConfigUi()
     lazy var errorSetting = ErrorSettings()

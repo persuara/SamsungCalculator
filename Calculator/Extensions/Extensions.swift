@@ -116,8 +116,8 @@ extension MainUI {
     func emptyAll() {
         displayLabel.text = nil
         resultLabel.text = nil
-        MainUI.temp.removeAll(keepingCapacity: false)
-        calcultaionArray.removeAll(keepingCapacity: false)
+        MainUI.temp = nil
+        MainUI.enteredElementsArray.removeAll()
     }
     @objc func addPrintFunctionality(_ sender: UIButton) -> Void {
         animate.animateButton(sender: sender, colors: [32.0, 30.0, 30.0, 1.0])
@@ -133,25 +133,35 @@ extension MainUI {
         case 20:
             do {
                 if isDeleteButtonTapped {
-                    if let text = resultLabel.text {
-                        MainUI.temp.append(text)
-                    }
                     print("tapped Delete: ")
-                    let end = MainUI.temp[MainUI.temp.count - 1]
-                    if Double(end) == nil {
+                    viewModel.arrayOfElements.forEach({ [weak self] c in
+                        guard self != nil else {return}
+                        if MainUI.temp?.last == c {
+                            isLastCharElement = true
+                        }
+                    })
+                    if isLastCharElement {
                         errorSetting.displayErrorMessage(.normal)
+                        isLastCharElement = !isLastCharElement
                     } else {
-                        resultLabel.text = "\(calculator.calculate(array: &MainUI.temp).truncate(places: 5))"
+                        let res = calculator.advancedCalculationShit(this: &MainUI.temp!)
+                        resultLabel.text = "\(res)"
                     }
                     isDeleteButtonTapped = false
                 } else {
                     if let text = resultLabel.text {
                         calcultaionArray.append(text)
                     }
-                    if calcultaionArray.count != 0 {
-                        let end = calcultaionArray[calcultaionArray.count - 1]
-                        if Double(end) == nil {
+                    if displayLabel.text != nil {
+                        viewModel.arrayOfElements.forEach({ [weak self] c in
+                            guard self != nil else {return}
+                            if displayLabel.text?.last == c {
+                                isLastCharElement = true
+                            }
+                        })
+                        if isLastCharElement {
                             errorSetting.displayErrorMessage(.normal)
+                            isLastCharElement = !isLastCharElement
                         } else {
                             if leftover.sameParanthesesCount(displayLabel.text ?? "") != true {
                                 print("-------same nist------")
@@ -176,7 +186,7 @@ extension MainUI {
                 }
             }
         default:
-            MainUI.temp = validate.arraify(text: displayLabel.text ?? "")
+            MainUI.temp = displayLabel.text ?? ""
         }
     }
 }
@@ -193,8 +203,8 @@ extension MainUI: ObjCDelegate {
             print("Normal Delete")
             s?.removeLast()
             displayLabel.text = s
-            MainUI.temp = validate.arraify(text: s!)
-            print("Inside Delete Temp: \(MainUI.temp)")
+            MainUI.temp = s ?? ""
+            print("Inside Delete Temp: \(MainUI.temp ?? "")")
             resultLabel.isHidden = true
         } else {
             displayLabel.text = nil
@@ -203,12 +213,25 @@ extension MainUI: ObjCDelegate {
         }
     }
 }
-extension Array {
+extension Array where Element : Equatable {
     func stringME() -> String {
         var result = ""
         for i in 0...self.count - 1 {
             result = "\(result)\(self[i])"
         }
         return result
+    }
+    public subscript(safe bounds: Range<Int>) -> ArraySlice<Element> {
+        if bounds.lowerBound > count { return [] }
+        let lower = Swift.max(0, bounds.lowerBound)
+        let upper = Swift.max(0, Swift.min(count, bounds.upperBound))
+        return self[lower..<upper]
+    }
+    
+    public subscript(safe lower: Int?, _ upper: Int?) -> ArraySlice<Element> {
+        let lower = lower ?? 0
+        let upper = upper ?? count
+        if lower > upper { return [] }
+        return self[safe: lower..<upper]
     }
 }

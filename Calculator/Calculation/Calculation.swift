@@ -8,7 +8,7 @@
 import Foundation
 class Calculator {
     lazy var validate = Validation()
-    
+
     var rsn: String = ""
     var lsn: String = ""
     public func calculate(array: inout [String]) -> Double {
@@ -21,26 +21,35 @@ class Calculator {
             } else {
                 if array.contains(c) {
                     element = array.firstIndex(of: c)!
-                    rsn = array[element - 1]
+                    lsn = array[element - 1]
+                    print("Left side number: \(lsn)")
+                    rsn = array[element + 1]
                     print("Right side number: \(rsn)")
-                    lsn = array[element + 1]
-                    print("left side number: \(lsn)")
                     if c == "%" {
-                        result =  (Double(rsn)! / 100) * (Double(lsn) ?? 1)
+                        result =  (Double(lsn) ?? 1) / 100
                     } else if c == "×" {
-                        result =  (Double(rsn) ?? 1)  * (Double(lsn) ?? 1)
+                        result =  (Double(lsn) ?? 1)  * (Double(rsn) ?? 1)
                     } else if c == "÷" {
-                        result =  (Double(rsn) ?? 1) / (Double(lsn) ?? 1)
+                        result =  (Double(lsn) ?? 1) / (Double(rsn) ?? 1)
                     } else if c == "+" {
-                        result =  (Double(rsn) ?? 1) + (Double(lsn) ?? 1)
+                        result =  (Double(lsn) ?? 1) + (Double(rsn) ?? 1)
                     } else if c == "–" {
-                        result =  (Double(rsn) ?? 1) - (Double(lsn) ?? 1)
+                        result =  (Double(lsn) ?? 1) - (Double(rsn) ?? 1)
+                    } else {
+                        result = (Double(lsn) ?? 1)
                     }
-                    array.remove(at: element - 1)
-                    array.insert(String(result), at: element - 1)
-                    print(" element: \(array[element])")
-                    array.remove(at: element + 1)
-                    array.remove(at: element)
+                    if c == "%" {
+                        array.remove(at: element - 1)
+                        array.insert(String(result), at: element - 1)
+                        print(" element: \(array[element])")
+                        array.remove(at: element)
+                    } else {
+                        array.remove(at: element - 1)
+                        array.insert(String(result), at: element - 1)
+                        print(" element: \(array[element])")
+                        array.remove(at: element + 1)
+                        array.remove(at: element)
+                    }
                     print(array)
                 }
             }
@@ -95,36 +104,50 @@ class Calculator {
         var result: Double = 0.0
         var indexOpen: Int = 0
         var indexClose: Int = 0
-        let doubleRes = displayLabel
-        
-        if Double(doubleRes) != nil {
-            return "\(displayLabel)"
-        }
+//        let doubleRes = displayLabel
+
         if displayLabel.containsParantheses() == false {
-            return "\(calculate(array: &arrayToPass))"
-        } else {
-            indexOpen = arrayToPass.firstIndex(of: "(")! + 1
+            print("Does not contain Any Para")
+            let arrayend = arraifyIGNORE(text: displayLabel)
+            return "\(arrayend[0])"
+            
+        } else if validate.isOnlyOneNumber(displayLabel) {
+            print("*************** ONLY ONE NUMBER *******************")
+                return "\(arrayToPass[1])"
+            } else {
+            indexOpen = arrayToPass.firstIndex(of: "(")!
             debugPrint("new indexOpen: \(indexOpen)")
-            indexClose = arrayToPass.lastIndex(of: ")")! + indexOpen
+            indexClose = arrayToPass.lastIndex(of: ")")! + 1
             debugPrint("new indexClose: \(indexClose)")
-            let newValue = displayLabel[indexOpen..<indexClose]
+            let newValueArray = arrayToPass[indexOpen..<indexClose]
+            let arrayNewValue = Array(newValueArray)
+            let newValue = arrayNewValue.stringME()
             debugPrint("new value: \(newValue)")
-            let regexed = newValue.matches(for: "\\(([^()\"]*(?:\"[^\"]*\"\\d+\\d+.\\d+[^()\"]*)*)\\)", in: newValue)
+            let regexed = newValue.matches(for: "\\(([^()\"]*(?:\"[^\"]*\"-?\\d+-?\\d+.-?\\d+[^()\"]*)*)\\)", in: newValue)
             print("Regexed: \(regexed)")
             if regexed.count != 0 {
-                print("regexed is not empty baby-----------")
+                print("#1 regexed is not Empty")
                 temp = validate.arraify(text: regexed[0])
+                print("regexed[0] =  \(regexed[0])")
                 tempString = temp.stringME()
-                debugPrint(tempString)
-                temp = arraifyIGNORE(text: tempString)
-                debugPrint(temp)
-                result = calculate(array: &temp)
+                print("TempString: \(tempString)")
+                temp = tempString.arraifyMe()
+                print("temp ignore shode: \(temp)")
+                result = calculate(array: &temp).truncate(places: 5)
                 displayLabel = replaceOcc(this: displayLabel, of: regexed[0], with: result)
+                print("DisplayLabel At the end of regex count != 0 ----> \(displayLabel)")
             } else {
-                print("else is being run baby*************")
+                print("#2 else, Means Regexed.count != 0 ")
                 temp = newValue.arraifyMe()
-                result = calculate(array: &temp)
-                displayLabel = replaceOcc(this: displayLabel, of: "(\(newValue))", with: result)
+                if temp.count == 1 {
+                    print("count == 1")
+                    displayLabel = replaceOcc(this: displayLabel, of: "\(newValue)", with: Double(newValue)!)
+                } else {
+                    print("In ELSE TEMP arraified equal === \(temp)")
+                    result = calculate(array: &temp).truncate(places: 5)
+                    displayLabel = replaceOcc(this: displayLabel, of: newValue, with: result)
+                }
+                print("DisplayLabel At the end of regex count == 0 ----> \(displayLabel)")
             }
             print("At the end the displaylabel is: \(displayLabel)")
         }

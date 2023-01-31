@@ -32,6 +32,7 @@ class Regulations {
                 flag = true
             }
         })
+        
         if flag == true {
             numbersRegulation(sender, on: &text)
             flag = !flag
@@ -41,36 +42,37 @@ class Regulations {
                 decimalRegulation(sender, on: &text)
             } else if sender.tag == 2 {
                 paranthesesRegulation(on: &text, sign: sign, collection: &collection)
-            } else if sender.tag == 3 || sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
+            } else if sender.tag == 3 {
+                
+                text = "\(text ?? "")%×"
+                
+            } else if sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
+                MainUI.enteredElementsArray.append("\(sender.titleLabel!.text!)")
                 if text == resLabel.text {
-//                    collection.append(text!)
-//                    print("before typing arithemic exp: \(collection)")
                     resLabel.text = nil
                     text = "\(sender.titleLabel!.text!)"
                     collection.append(text!)
                     resLabel.text = nil
-//                    print("After typing arithemic exp: \(collection)")
                 } else {
                     text = "\(text ?? "")\(sender.titleLabel!.text!)"
                     resLabel.text = nil
                 }
             } else if sender.tag == 20 {
-                    resLabel.isHidden = false
-                } else {
-                    text = "\(text ?? "")\(sender.titleLabel!.text!)"
-                }
+                resLabel.isHidden = false
+            } else {
+                text = "\(text ?? "")\(sender.titleLabel!.text!)"
             }
+        }
     }
     private func paranthesesRegulation(on text: inout String?, sign: String, collection: inout [String]) {
         if text == nil {
             text = "\(text ?? "")("
         } else {
-            if collection.count != 0 {
-                let end = collection[collection.count - 1]
-                if Double(end) == nil {
+            viewModel.arrayOfElements.forEach({ c in
+                if text?.last == c {
                     doesContainSuffix = true
                 }
-            }
+            })
             if doesContainSuffix {
                 text = "\(text ?? "")("
                 doesContainSuffix = !doesContainSuffix
@@ -78,20 +80,16 @@ class Regulations {
                 validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
             } else {
                 validation.placeArithmicElementifOnlyOneNumber(&text!, which: sign)
-                if collection.count != 0 {
-                    let end = calculationArray[calculationArray.count - 1]
-                    if Double(end) == nil {
-                        doesContainSuffix = true
-                        print("does contain suffix: \(doesContainSuffix)")
-                    }
-                }
-                if collection.count != 0 {
-                    let endnum = collection[collection.count - 1]
-                    if Double(endnum) != nil {
-                        isLastCharacterANumber = true
-                        print("is last C Number : \(isLastCharacterANumber)")
-                    }
-                }
+//                viewModel.arrayOfElements.forEach({ c in
+//                    if text?.last == c {
+//                        doesContainSuffix = true
+//                    }
+//                })
+//                viewModel.arrayOfNumbers.forEach({ c in
+//                    if text?.last == c {
+//                        isLastCharacterANumber = true
+//                    }
+//                })
                 
                 if isLastCharacterANumber == true {
                     text = "\(text ?? ""))"
@@ -107,7 +105,13 @@ class Regulations {
     }
     public func numbersRegulation(_ sender: UIButton, on text: inout String?) {
         if text == nil {
-            text = "\(sender.titleLabel!.text!)"
+            if MainUI.enteredElementsArray.isEmpty == false {
+                print("πππ    With Element, Number      πππ")
+                text = "×\(sender.titleLabel!.text!)"
+            } else {
+                print("NORMAL Number")
+                text = "\(sender.titleLabel!.text!)"
+            }
         } else {
             if (text ?? "") == "0" {
                 text = "\(sender.titleLabel!.text!)"
@@ -138,13 +142,13 @@ class Regulations {
     }
     // MARK ----------------
     public func negatationRegulation(_ sender: UIButton, on text: inout String?, collection: inout [String]) {
-//        if text != nil {
-            print("text is not nil so")
-//            validation.negetateAndReplaceLastNum(&text!)
-            placeMinusSign(colletion: &collection)
-//        } else {
-//            text = "-"
-//        }
+        //        if text != nil {
+        print("text is not nil so")
+        //            validation.negetateAndReplaceLastNum(&text!)
+        placeMinusSign(colletion: &collection)
+        //        } else {
+        //            text = "-"
+        //        }
     }
     private func placeMinusSign(colletion: inout [String]) {
         var flagNumber = false
@@ -157,7 +161,7 @@ class Regulations {
         if flagNumber == true {
             colletion[colletion.count - 1] = "-\(colletion[colletion.count - 1])"
         } else {
-    //         print *( here!
+            //         print *( here!
         }
     }
     // ----------------------END MARK ----------------
@@ -177,21 +181,21 @@ class Regulations {
                 flag = true
             }
         })
-            if flag {
-                text = text?.replacingOccurrences(of: "\(text!.last!)", with: "\(sender.titleLabel!.text!)")
-                flag = !flag
-            } else {
-                if sender.tag == 3 {
-                    text = "\(text ?? "")%"
-                } else  if sender.tag == 4 {
-                    text = "\(text ?? "")÷"
-                } else if sender.tag == 8 {
-                    text = "\(text ?? "")×"
-                } else if sender.tag == 12 {
-                    text = "\(text ?? "")–"
-                } else if sender.tag == 16 {
-                    text = "\(text ?? "")+"
-                }
+        if flag {
+            text = text?.replacingOccurrences(of: "\(text!.last!)", with: "\(sender.titleLabel!.text!)")
+            flag = !flag
+        } else {
+            if sender.tag == 3 {
+                text = "\(text ?? "")%×"
+            } else  if sender.tag == 4 {
+                text = "\(text ?? "")÷"
+            } else if sender.tag == 8 {
+                text = "\(text ?? "")×"
+            } else if sender.tag == 12 {
+                text = "\(text ?? "")–"
+            } else if sender.tag == 16 {
+                text = "\(text ?? "")+"
             }
+        }
     }
 }
