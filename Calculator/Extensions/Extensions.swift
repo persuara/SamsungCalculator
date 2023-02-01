@@ -244,7 +244,6 @@ extension Array where Element : Equatable {
         let upper = Swift.max(0, Swift.min(count, bounds.upperBound))
         return self[lower..<upper]
     }
-    
     public subscript(safe lower: Int?, _ upper: Int?) -> ArraySlice<Element> {
         let lower = lower ?? 0
         let upper = upper ?? count

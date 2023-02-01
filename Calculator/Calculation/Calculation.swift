@@ -144,7 +144,6 @@ class Calculator {
                     result = calculate(array: &temp).truncate(places: 5)
                     substitude = replaceOcc(this: substitude, of: newValue, with: result)
                 }
-
             }
             print("------- Substituded is: \(substitude)")
         }

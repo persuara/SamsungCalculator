@@ -4,7 +4,6 @@
 //
 //  Created by AmirHossein EramAbadi on 1/3/23.
 //
-
 import Foundation
 class ViewModel {
     let arrayOfElements: [Character] = ["×","÷","+","-", "*", "/", "%","–"]

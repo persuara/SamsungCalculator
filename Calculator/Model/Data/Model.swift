@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Model.swift
 //  Calculator
 //
 //  Created by AmirHossein EramAbadi on 1/2/23.

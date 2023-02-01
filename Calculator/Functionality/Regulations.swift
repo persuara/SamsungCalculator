@@ -121,17 +121,13 @@ class Regulations {
         }
     }
     public func decimalRegulation(_ sender: UIButton, on text: inout String?) {
-        if text != nil {
-            viewModel.arrayOfNumbers.forEach({ c in
-                if text?.last == c {
-                    decimalFlag = true
-                }
-            })
-        }
         if text == nil {
             text = "\(text ?? "")0."
         } else {
+            if text?.last == "." {
+            } else {
                 text = "\(text ?? "")."
+            }
         }
     }
     public func negatationRegulation(_ sender: UIButton, on text: inout String?) {

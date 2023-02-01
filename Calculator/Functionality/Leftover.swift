@@ -3,8 +3,6 @@
 //  Calculator
 //
 //  Created by AmirHossein EramAbadi on 1/5/23.
-//
-
 import Foundation
 class Leftover {
     public func sameParanthesesCount(_ text:  String ) -> Bool {
