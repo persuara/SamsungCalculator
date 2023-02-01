@@ -19,5 +19,4 @@ enum ErrorMessage: String {
     case sameStatus = "Result stays the same!"
     case nothing = "Bro, type sth first!"
     case normal = "Invalid format used."
-
 }
