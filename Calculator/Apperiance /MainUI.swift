@@ -7,8 +7,6 @@
 import UIKit
 class MainUI: UIView {
     weak var delegate: ObjCDelegate?
-    var calcultaionArray = [String]()
-    var elementsArray = [String]()
     static var enteredElementsArray = [String]()
     lazy var calculator = Calculator()
     static var temp: String?
@@ -36,7 +34,6 @@ class MainUI: UIView {
         super.init(frame: frame)
         pe.label = displayLabel
         pe.resLabel = resultLabel
-        pe.calculationArray = calcultaionArray
         errorSetting.label = errorMessage
         subviewArray.enumerated().forEach({ [weak self] element in
             guard self != nil else {return}

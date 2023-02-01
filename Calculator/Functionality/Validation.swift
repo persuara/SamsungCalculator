@@ -59,7 +59,6 @@ class Validation {
     }
     public func negetateAndReplaceLastNum(_ textInQuestion: inout String) -> Void {
         let lastNum: Double = lastNumber(textInQuestion)
-        print("here last num equallls: \(lastNum)")
         if lastNum.truncatingRemainder(dividingBy: 1) != 0 {
             if lastNum >= 0 {
                 textInQuestion = textInQuestion.replacingOccurrences(of: "\(lastNum)", with: "(\(-1 * lastNum)")

@@ -21,7 +21,7 @@ class Calculator {
                     print(result)
                 } else {
                     if array.contains(c) {
-                        element = array.firstIndex(of: c)!
+                        element = array.firstIndex(of: c) ?? 1
                         lsn = array[element - 1]
                         print("Left side number: \(lsn)")
                         rsn = array[element + 1]
@@ -86,20 +86,6 @@ class Calculator {
     private func gatherAllElmentsOfTheArray(_ array: [String]) -> [String] {
         return (array.description).matches(for: "[\\+\\–\\×\\÷\\%]", in: array.description)
     }
-    func arraifyIGNORE(text expression: String) -> [String] {
-        let inputNSString = expression as NSString
-        var matchArray = [NSTextCheckingResult]()
-        var sectionedArray = [String]()
-        let range = NSRange(location: 0, length: expression.count)
-        guard let sectioningRegex = try? NSRegularExpression(pattern:
-                                                                "([-?\\d.\\d]+|[-?\\d]+)|([\\+\\–\\÷\\×\\%])") else { return ["wrong Jose"]}
-        matchArray = sectioningRegex.matches(in: expression, range: range)
-        for match in matchArray {
-            let matchString = inputNSString.substring(with: match.range) as String
-            sectionedArray.append(matchString)
-        }
-        return sectionedArray
-    }
     func replaceOcc(this text: String,of str: String ,with result: Double) -> String {
         return text.replacingOccurrences(of: str, with: "\(result)")
     }
@@ -111,10 +97,9 @@ class Calculator {
         var result: Double = 0.0
         var indexOpen: Int = 0
         var indexClose: Int = 0
-//        let doubleRes = substitude
         if substitude.containsParantheses() == false {
             print("Does not contain Any Para")
-            var arrayaga = arraifyIGNORE(text: substitude)
+            var arrayaga = validate.arraifyIGNORE(text: substitude)
             print("array without para: \(arrayaga)")
             return "\(calculate(array: &arrayaga).truncate(places: 5))"
             
@@ -159,9 +144,9 @@ class Calculator {
                     result = calculate(array: &temp).truncate(places: 5)
                     substitude = replaceOcc(this: substitude, of: newValue, with: result)
                 }
-                print("substitude At the end of regex count == 0 ----> \(substitude)")
+
             }
-            print("At the end the substitude is: \(substitude)")
+            print("------- Substituded is: \(substitude)")
         }
         return advancedCalculationShit(this: substitude)
     }

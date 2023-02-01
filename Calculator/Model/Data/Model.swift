@@ -3,8 +3,6 @@
 //  Calculator
 //
 //  Created by AmirHossein EramAbadi on 1/2/23.
-//
-
 import Foundation
 import UIKit
 struct ModelButton {

@@ -128,12 +128,12 @@ extension MainUI {
                     errorSetting.displayErrorMessage(.normal)
                     resultLabel.isHidden = true
                 } else {
-                    pe.printTitle(sender, On: &resultLabel.text, sign: "×", collection: &calcultaionArray)
-                    pe.printTitle(sender, On: &displayLabel.text, sign: "×", collection: &calcultaionArray)
+                    pe.printTitle(sender, On: &resultLabel.text)
+                    pe.printTitle(sender, On: &displayLabel.text)
                 }
             } else {
-                pe.printTitle(sender, On: &resultLabel.text, sign: "×", collection: &calcultaionArray)
-                pe.printTitle(sender, On: &displayLabel.text, sign: "×", collection: &calcultaionArray)
+                pe.printTitle(sender, On: &resultLabel.text)
+                pe.printTitle(sender, On: &displayLabel.text)
             }
         }
         switch sender.tag {
