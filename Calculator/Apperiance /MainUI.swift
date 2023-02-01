@@ -7,11 +7,9 @@
 import UIKit
 class MainUI: UIView {
     weak var delegate: ObjCDelegate?
-    
     var calcultaionArray = [String]()
     var elementsArray = [String]()
     static var enteredElementsArray = [String]()
-    
     lazy var calculator = Calculator()
     static var temp: String?
     lazy var viewModel = ViewModel()
@@ -23,30 +21,23 @@ class MainUI: UIView {
     lazy var leftover = Leftover()
     var result: String = ""
     var numbersTag: Int = 0
-    
     var isDeleteButtonTapped: Bool = false
     var isLastCharElement: Bool = false
     var isExtraParanthesesNeeded: Bool = false
-    
     private lazy var subviewArray: [UIView] = [displayLabel, resultLabel, deleteButton, hairline, mainStackView, errorMessage]
     private lazy var cstacksArray = [UIStackView]()
     private lazy var mainStackView = config.stackView(spacing: 10, distribustion: .equalCentering, axis: .vertical)
     private lazy var errorMessage = config.label(numberOfLines: 1, isHidden: false, backgroundColor: .gray.withAlphaComponent(0.7), size: 15, primaryAlpha: 0, textAlignment: .center, cornerRadius: 25.0, heightConstant: 50)
     private lazy var hairline = config.view()
-    
     public lazy var displayLabel = config.label(heightConstant: 150)
-
     public lazy var resultLabel = config.label(numberOfLines: 1,isHidden: false, alpha: 0.7 ,size: 25)
     public lazy var deleteButton = config.button()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         pe.label = displayLabel
         pe.resLabel = resultLabel
         pe.calculationArray = calcultaionArray
-        
         errorSetting.label = errorMessage
-        
         subviewArray.enumerated().forEach({ [weak self] element in
             guard self != nil else {return}
             addSubview(element.element)
@@ -77,7 +68,6 @@ class MainUI: UIView {
             errorMessage.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),
         ])
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

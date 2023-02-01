@@ -3,8 +3,6 @@
 //  Calculator
 //
 //  Created by AmirHossein EramAbadi on 1/8/23.
-//
-
 import Foundation
 class Validation {
     lazy var viewModel = ViewModel()
@@ -42,6 +40,7 @@ class Validation {
     }
     public func lastNumber(_ textInQuestion: String?) -> Double {
         guard textInQuestion != nil else { return 0 }
+        var result = 0.0
         if textInQuestion == "-" {
             return 0
         } else {
@@ -52,8 +51,10 @@ class Validation {
                     dignified.append(c)
                 }
             })
-           
-            return  Double(dignified[dignified.count - 1]) ?? 1
+            if dignified.count != 0 {
+                result = Double(dignified[dignified.count - 1]) ?? 1.0
+            }
+            return result
         }
     }
     public func negetateAndReplaceLastNum(_ textInQuestion: inout String) -> Void {
@@ -72,31 +73,7 @@ class Validation {
                 textInQuestion = textInQuestion.replacingOccurrences(of: "(\(Int(lastNum))", with: "\(Int(-1 * lastNum))")
             }
         }
-    }
-    func changeText(_ text: String? ) -> String {
-        var endResult = ""
-        guard text != nil else {return "" }
-        if (isOnlyOneNumber(text!) == true) && (isLastANumber(text!) == true) {
-            endResult = "\(text!)*("
-        }
-        return endResult
-    }
-    public func placeArithmicElementifOnlyOneNumber(_ text: inout String, which element: String) -> Void {
-            text = "\(text)\(element)("
-        
-    }
-    public func findlastPercentage(_ text: String, flag: inout Bool ) -> String {
-        let array = text.matches(for: "(\\/100\\*)+", in: text)
-        
-        if array.count > 0 {
-            flag = true
-            print("flag\(flag)")
-        } else {
-            return ""
-        }
-        return array[array.count - 1]
-    }
-    
+    }   
     func arraify(text expression: String) -> [String] {
         let inputNSString = expression as NSString
         var matchArray = [NSTextCheckingResult]()

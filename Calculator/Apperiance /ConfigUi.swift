@@ -56,4 +56,28 @@ class ConfigUi: UIView {
         view.heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
         return view
     }
+    public func textfield(numberOfLines: Int = 0,
+                          isHidden: Bool = false,
+                          alpha: CGFloat = 1,
+                          backgroundColor: UIColor = .clear,
+                          colors: [CGFloat] = [197.0, 163.0, 154.0], size: CGFloat = 28,
+                          primaryAlpha: CGFloat = 1.0,
+                          textAlignment: NSTextAlignment = .right,
+                          cornerRadius: CGFloat = 0,
+                          heightConstant: CGFloat = 40.0) -> UITextField {
+        let view: UITextField = .init(frame: .zero)
+        view.textColor = UIColor.init(red: colors[0]/255.0, green: colors[1]/255.0, blue: colors[2]/255.0, alpha: alpha)
+        view.font = UIFont(name: "Arial", size: size)
+        view.backgroundColor = backgroundColor
+        view.textAlignment = textAlignment
+        view.adjustsFontSizeToFitWidth = true
+        view.isHidden = isHidden
+        view.alpha = primaryAlpha
+        view.layer.cornerRadius = cornerRadius
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
+        view.heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 }

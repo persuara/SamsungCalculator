@@ -27,10 +27,16 @@ class Regulations {
     var doesContainPercentage: Bool = false
     public func printTitle(_ sender: UIButton, On text: inout String?, sign: String, collection: inout [String] ) -> Void {
         guard text == text else { return }
+        var lastElFlag: Bool = false
         let array = [5, 6, 7, 9, 10, 11, 13, 14, 15, 18]
         array.forEach({ numbersTag in
             if sender.tag == numbersTag {
                 flag = true
+            }
+        })
+        viewModel.arrayOfElements.forEach({ c in
+            if text?.last == c {
+                lastElFlag = true
             }
         })
         
@@ -44,19 +50,37 @@ class Regulations {
             } else if sender.tag == 2 {
                 paranthesesRegulation(on: &text, sign: sign, collection: &collection)
             } else if sender.tag == 3 {
-                
-                text = "\(text ?? "")%×"
-                
-            } else if sender.tag == 4 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
-                MainUI.enteredElementsArray.append("\(sender.titleLabel!.text!)")
-                if text == resLabel.text {
-                    resLabel.text = nil
-                    text = "\(sender.titleLabel!.text!)"
-                    collection.append(text!)
-                    resLabel.text = nil
+                if lastElFlag {
+                    text?.removeLast()
+                    text = "\(text ?? "")%×"
+                    lastElFlag = !lastElFlag
+                } else {
+                    text = "\(text ?? "")%×"
+                }
+            } else if sender.tag == 12 {
+                if lastElFlag {
+                    text?.removeLast()
+                    if text?.last == "(" {
+                        text = "\(text ?? "")-"
+                    } else {
+                        text = "\(text ?? "")\(sender.titleLabel!.text!)"
+                    }
+                    lastElFlag = !lastElFlag
+                } else {
+                    if text?.last == "(" {
+                        text = "\(text ?? "")-"
+                    } else {
+                        text = "\(text ?? "")\(sender.titleLabel!.text!)"
+                    }
+                }
+            }
+            else if sender.tag == 4 || sender.tag == 8 || sender.tag == 16 {
+                if lastElFlag {
+                    text?.removeLast()
+                    text = "\(text ?? "")\(sender.titleLabel!.text!)"
+                    lastElFlag = !lastElFlag
                 } else {
                     text = "\(text ?? "")\(sender.titleLabel!.text!)"
-                    resLabel.text = nil
                 }
             } else if sender.tag == 20 {
                 resLabel.isHidden = false
@@ -79,7 +103,9 @@ class Regulations {
                     isLastCharacterANumber = true
                 }
             })
-            if text?.count == 1 {
+            if text?.last == "(" {
+                text = "\(text ?? "")("
+            } else if text?.count == 1 {
                 text = "\(text ?? "")×("
             } else if doesContainSuffix == true {
                 text = "\(text ?? "")("
@@ -108,7 +134,6 @@ class Regulations {
         }
     }
     public func decimalRegulation(_ sender: UIButton, on text: inout String?) {
-//        var flaggagaga = false
         if text != nil {
             viewModel.arrayOfNumbers.forEach({ c in
                 if text?.last == c {
@@ -122,7 +147,6 @@ class Regulations {
                 text = "\(text ?? "")."
         }
     }
-    // MARK ----------------
     public func negatationRegulation(_ sender: UIButton, on text: inout String?) {
         
         if text == nil {
@@ -132,11 +156,6 @@ class Regulations {
         }
         Regulations.count += 1
     }
-    private func placeMinusSign(text: inout String) {
-        //        var arraified = text.arraifyMe()
-        
-    }
-    // ----------------------END MARK ----------------
     public func goThroughArray(array: [Character], text: String?) -> Bool {
         var flag: Bool = false
         array.forEach({ c in

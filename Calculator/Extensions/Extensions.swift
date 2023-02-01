@@ -3,8 +3,6 @@
 //  Calculator
 //
 //  Created by AmirHossein EramAbadi on 1/3/23.
-//
-
 import Foundation
 import UIKit
 extension UIView {
@@ -38,7 +36,6 @@ extension UIView {
         }
     }
 }
-
 extension Double {
     var clean: String {
         return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
@@ -64,11 +61,9 @@ extension String {
     func containsParantheses() -> Bool {
         var flag: Bool = false
         let array = self.matches(for: "([\\(|\\)]+)", in: self)
-        print("Array in contain Parantheses: \(array)")
         if array.count != 0 {
             flag = true
         }
-        debugPrint("flagggggg ==== \(flag)")
         return flag
     }
     func arraifyMe() -> [String] {
@@ -88,12 +83,10 @@ extension String {
     public mutating func addNumberFormatter(style: NumberFormatter.Style = .decimal) -> String {
         let fmt = NumberFormatter()
         fmt.numberStyle = style
-        var arrayWorkedOn = self.arraifyMe()
+        let arrayWorkedOn = self.arraifyMe()
         for i in 0...arrayWorkedOn.count - 1 {
             if Double(arrayWorkedOn[i]) != nil {
-                var changed = fmt.string(from: Double(arrayWorkedOn[i])! as NSNumber)
-                print("arrayworkedOn[i] = \(arrayWorkedOn[i])")
-                print("To Replace it = \(changed!)")
+                let changed = fmt.string(from: Double(arrayWorkedOn[i])! as NSNumber)
                 self = replacingOccurrences(of: arrayWorkedOn[i], with: changed!)
             }
         }
@@ -133,6 +126,7 @@ extension MainUI {
             if sender.tag == 3 || sender.tag == 4 || sender.tag == 3 || sender.tag == 8 || sender.tag == 12 || sender.tag == 16 {
                 if displayLabel.text == nil {
                     errorSetting.displayErrorMessage(.normal)
+                    resultLabel.isHidden = true
                 } else {
                     pe.printTitle(sender, On: &resultLabel.text, sign: "×", collection: &calcultaionArray)
                     pe.printTitle(sender, On: &displayLabel.text, sign: "×", collection: &calcultaionArray)
@@ -146,7 +140,6 @@ extension MainUI {
         case 20:
             do {
                 if isDeleteButtonTapped {
-                    print("tapped Delete: ")
                     viewModel.arrayOfElements.forEach({ [weak self] c in
                         guard self != nil else {return}
                         if MainUI.temp?.last == c {
@@ -160,33 +153,26 @@ extension MainUI {
                     } else {
                         displayLabel.text = MainUI.temp
                         if leftover.sameParanthesesCount(displayLabel.text ?? "") != true {
-                            print("-------same nist------")
                             if leftover.diffInParanthesesCount(displayLabel.text ?? "") > 0 {
                                 let helper = leftover.placeParatheses(displayLabel.text ?? "")
-                                print("currently deploying helper AFTER the para helperaga:  \(helper)")
                                 displayLabel.text = "\(displayLabel.text ?? "")\(helper)"
                                 let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
                                 resultLabel.text = finalres
                                 resultLabel.isHidden = false
                             } else {
                                 let helper = leftover.placeParatheses(displayLabel.text ?? "")
-                                print("currently deploying helper before the para helperaga:  \(helper)")
                                 displayLabel.text = "\(helper)\(displayLabel.text ?? "")"
                                 let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
                                 resultLabel.text = finalres
                                 resultLabel.isHidden = false
                             }
                         } else {
-                            print("-------same ee------")
                             let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
                             resultLabel.text = finalres
                         }
                     }
                     isDeleteButtonTapped = !isDeleteButtonTapped
                 } else {
-                    if let text = resultLabel.text {
-                        calcultaionArray.append(text)
-                    }
                     if displayLabel.text != nil {
                         viewModel.arrayOfElements.forEach({ [weak self] c in
                             guard self != nil else {return}
@@ -197,20 +183,18 @@ extension MainUI {
                         if isLastCharElement {
                             errorSetting.displayErrorMessage(.normal)
                             isLastCharElement = !isLastCharElement
+                            resultLabel.isHidden = true
                         } else {
                             if leftover.sameParanthesesCount(displayLabel.text ?? "") != true {
-                                print("-------same nist------")
                                 let helper = leftover.placeParatheses(displayLabel.text ?? "")
                                 if leftover.diffInParanthesesCount(displayLabel.text ?? "") > 0 {
                                     displayLabel.text = "\(displayLabel.text ?? "")\(helper)"
                                 } else {
                                     displayLabel.text = "\(helper)\(displayLabel.text ?? "")"
                                 }
-                                debugPrint("DisplayLabel: \(displayLabel.text ?? "")")
                                 let finalres = calculator.advancedCalculationShit(this: (displayLabel.text)!)
                                 resultLabel.text = "\(finalres)"
                             } else {
-                                print("-------same ee------")
                                 let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
                                 resultLabel.text = "\(finalres)"
                             }
@@ -235,12 +219,9 @@ extension MainUI: ObjCDelegate {
             return }
         s = text
         if s?.isEmpty == false  {
-            print("Normal Delete")
             s?.removeLast()
             displayLabel.text = s
-            
             MainUI.temp = s ?? ""
-            print("Inside Delete Temp: \(MainUI.temp ?? "")")
             resultLabel.isHidden = true
         } else {
             displayLabel.text = nil

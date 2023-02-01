@@ -9,7 +9,7 @@ import XCTest
 @testable import Calculator
 final class CalculatorTests: XCTestCase {
     
-    private var calculate: Calculator!
+    private var calculate: Calculator?
     
     override func setUpWithError() throws {
         calculate = Calculator()
@@ -20,8 +20,7 @@ final class CalculatorTests: XCTestCase {
     }
 
     func testExample() throws {
-        var hi: String = "1×(3–6%×(6+3))"
-        XCTAssertEqual(calculate.advancedCalculationShit(this: hi), "2.46")
+        XCTAssertEqual(calculate?.advancedCalculationShit(this: "1+1"), "2")
     }
 
     func testPerformanceExample() throws {

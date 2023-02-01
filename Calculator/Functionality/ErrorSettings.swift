@@ -3,8 +3,6 @@
 //  Calculator
 //
 //  Created by AmirHossein EramAbadi on 1/8/23.
-//
-
 import Foundation
 import UIKit
 class ErrorSettings {

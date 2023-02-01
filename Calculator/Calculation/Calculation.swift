@@ -3,12 +3,9 @@
 //  Calculator
 //
 //  Created by AmirHossein EramAbadi on 1/22/23.
-//
-
 import Foundation
 class Calculator {
     lazy var validate = Validation()
-
     var rsn: String = ""
     var lsn: String = ""
     public func calculate(array: inout [String]) -> Double {
@@ -64,9 +61,11 @@ class Calculator {
     func sortMultAndDiv(_ array: [String]) -> [String] {
         var sortedMultAndDiv = [String]()
         let original = array
-        for i in 0...original.count - 1 {
-            if original[i] == "×" || original[i] == "÷" || original[i] == "%" {
-                sortedMultAndDiv.append(original[i])
+        if original.count != 0 {
+            for i in 0...original.count - 1 {
+                if original[i] == "×" || original[i] == "÷" || original[i] == "%" {
+                    sortedMultAndDiv.append(original[i])
+                }
             }
         }
         return sortedMultAndDiv
@@ -75,9 +74,11 @@ class Calculator {
         var finalSorted = [String]()
         let original = array
         finalSorted = sortedMultAndDiv
-        for i in 0...original.count - 1 {
-            if original[i] == "+" || original[i] == "–" {
-                finalSorted.append(original[i])
+        if original.count != 0 {
+            for i in 0...original.count - 1 {
+                if original[i] == "+" || original[i] == "–" {
+                    finalSorted.append(original[i])
+                }
             }
         }
         return finalSorted
@@ -104,14 +105,13 @@ class Calculator {
     }
     public func advancedCalculationShit(this displayLabel:  String) -> String {
         var substitude = displayLabel
-        var arrayToPass = substitude.arraifyMe()
+        let arrayToPass = substitude.arraifyMe()
         var temp = [String]()
         var tempString : String = ""
         var result: Double = 0.0
         var indexOpen: Int = 0
         var indexClose: Int = 0
 //        let doubleRes = substitude
-
         if substitude.containsParantheses() == false {
             print("Does not contain Any Para")
             var arrayaga = arraifyIGNORE(text: substitude)
