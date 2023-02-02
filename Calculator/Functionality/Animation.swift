@@ -13,17 +13,17 @@ class Animation: UIView {
         let blue = colorScheme
         let green = colorScheme
         let alpha = 1.0
-        UIButton.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.40,
-                         initialSpringVelocity: 5.0, options: [.allowUserInteraction],
-                         animations: {
+        UIButton.animate(withDuration: 0.5, delay: 0, animations: {
             sender.titleLabel!.transform = .identity
             sender.backgroundColor = UIColor.init(red: red, green: green, blue: blue, alpha: alpha)
         } , completion: { _ in
-            if sender.tag == 20 {
-                sender.backgroundColor = UIColor.init(red: 208.0/255.0, green: 179.0/255.0, blue: 170.0/255.0, alpha: 1)
-            } else {
-                sender.backgroundColor = UIColor.init(red: colors[0]/255.0, green: colors[1]/255.0, blue: colors[2]/255.0, alpha: colors[3])
-            }
+            UIButton.animate(withDuration: 0.4, delay: 0, animations: {
+                if sender.tag == 20 {
+                    sender.backgroundColor = UIColor.init(red: 208.0/255.0, green: 179.0/255.0, blue: 170.0/255.0, alpha: 1)
+                } else {
+                    sender.backgroundColor = UIColor.init(red: colors[0]/255.0, green: colors[1]/255.0, blue: colors[2]/255.0, alpha: colors[3])
+                }
+            })
         })
     }
     public func animateErrorMessage(_ modelText: ErrorMessage, label: UILabel) -> Void {
