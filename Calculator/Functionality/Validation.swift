@@ -101,4 +101,14 @@ class Validation {
         }
         return sectionedArray
     }
+    public func validToParse(textString: String) -> Bool {
+        var flag: Bool = false
+        let numbers = textString.matches(for: "([-?\\d.\\d]+|[-?\\d]+)", in: textString)
+        let elements = textString.matches(for: "([\\+\\–\\÷\\×\\%])", in: textString)
+
+        if elements.count == numbers.count - 1 {
+            flag = true
+        }
+        return flag
+    }
 }

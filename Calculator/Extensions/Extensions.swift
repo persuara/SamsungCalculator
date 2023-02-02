@@ -206,6 +206,12 @@ extension MainUI {
             }
         default:
             MainUI.temp = displayLabel.text ?? ""
+            if validate.validToParse(textString: MainUI.temp ?? "") && MainUI.temp?.containsParantheses() == false {
+                resultLabel.text = calculator.advancedCalculationShit(this: MainUI.temp ?? "")
+                resultLabel.isHidden = false
+            } else {
+                resultLabel.isHidden = true
+            }
         }
     }
 }
