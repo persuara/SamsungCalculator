@@ -18,4 +18,5 @@ enum ErrorMessage: String {
     case sameStatus = "Result stays the same!"
     case nothing = "Bro, type sth first!"
     case normal = "Invalid format used."
+    case moreThan15 = "Cannot exceed 15 digits!"
 }

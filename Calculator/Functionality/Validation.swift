@@ -110,4 +110,13 @@ class Validation {
         }
         return flag
     }
+    public func isFifteenCharacters(_ text: String) -> Bool {
+        var flag: Bool = true
+        var lastNumber = "\(lastNumber(text))"
+        let arrayOfChars = lastNumber.matches(for: "[(-?\\d)*(-?\\d*\\.?\\d*)]{1,15}", in: lastNumber)
+        if arrayOfChars.count > 1 {
+            flag = false
+        }
+        return flag
+    }
 }

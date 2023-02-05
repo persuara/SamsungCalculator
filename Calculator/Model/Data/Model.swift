@@ -15,3 +15,4 @@ struct ModelButton {
 @objc protocol ObjCDelegate: AnyObject {
    @objc func didTapDeleteButton(view: MainUI)
 }
+

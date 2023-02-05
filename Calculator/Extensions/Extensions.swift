@@ -138,6 +138,17 @@ extension MainUI {
         }
         switch sender.tag {
         case 20:
+            UIView.animate(withDuration: 0.7, delay: 0.0, animations: {
+                self.resultLabel.alpha = 0
+            }, completion: { _ in
+                self.displayLabel.alpha = 0
+                self.displayLabel.text = self.resultLabel.text ?? ""
+                self.resultLabel.text = nil
+                UIView.animate(withDuration: 0.4, delay: 0.0, animations: {
+                    self.displayLabel.alpha = 1
+                    self.resultLabel.alpha = 0.7
+                })
+            })
             do {
                 if isDeleteButtonTapped {
                     viewModel.arrayOfElements.forEach({ [weak self] c in
@@ -192,11 +203,19 @@ extension MainUI {
                                 } else {
                                     displayLabel.text = "\(helper)\(displayLabel.text ?? "")"
                                 }
-                                let finalres = calculator.advancedCalculationShit(this: (displayLabel.text)!)
-                                resultLabel.text = "\(finalres)"
+                                let doRes = Double(calculator.advancedCalculationShit(this: displayLabel.text ?? ""))
+                                if doRes?.truncatingRemainder(dividingBy: 1) == 0 {
+                                    resultLabel.text = "\(Int(doRes ?? -1))"
+                                } else {
+                                    resultLabel.text = "\(doRes ?? -1)"
+                                }
                             } else {
-                                let finalres = calculator.advancedCalculationShit(this: displayLabel.text!)
-                                resultLabel.text = "\(finalres)"
+                                let doRes = Double(calculator.advancedCalculationShit(this: displayLabel.text ?? ""))
+                                if doRes?.truncatingRemainder(dividingBy: 1) == 0 {
+                                    resultLabel.text = "\(Int(doRes ?? -1))"
+                                } else {
+                                    resultLabel.text = "\(doRes ?? -1)"
+                                }
                             }
                         }
                     } else {
@@ -207,7 +226,12 @@ extension MainUI {
         default:
             MainUI.temp = displayLabel.text ?? ""
             if validate.validToParse(textString: MainUI.temp ?? "") && MainUI.temp?.containsParantheses() == false {
-                resultLabel.text = calculator.advancedCalculationShit(this: MainUI.temp ?? "")
+                let doRes = Double(calculator.advancedCalculationShit(this: MainUI.temp ?? ""))
+                if doRes?.truncatingRemainder(dividingBy: 1) == 0 {
+                    resultLabel.text = "\(Int(doRes ?? -1))"
+                } else {
+                    resultLabel.text = "\(doRes ?? -1)"
+                }
                 resultLabel.isHidden = false
             } else {
                 resultLabel.isHidden = true

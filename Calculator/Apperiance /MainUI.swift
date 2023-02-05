@@ -22,6 +22,7 @@ class MainUI: UIView {
     var isDeleteButtonTapped: Bool = false
     var isLastCharElement: Bool = false
     var isExtraParanthesesNeeded: Bool = false
+    var is15characters: Bool = true
     private lazy var subviewArray: [UIView] = [displayLabel, resultLabel, deleteButton, hairline, mainStackView, errorMessage]
     private lazy var cstacksArray = [UIStackView]()
     private lazy var mainStackView = config.stackView(spacing: 10, distribustion: .equalCentering, axis: .vertical)
